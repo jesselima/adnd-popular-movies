@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.models.Movie;
 
@@ -18,7 +19,6 @@ import java.util.List;
  * Created by jesse on 12/06/18.
  * This is a part of the project adnd-popular-movies.
  */
-// TODO 7 - Create the class MovieAdapter and extends RecyclerView.Adapter. Use ALT + ENTER to implement methods
 public class MovieAdapter extends RecyclerView.Adapter {
 
     private List<Movie> movieList;
@@ -33,14 +33,9 @@ public class MovieAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        // TODO - 10
         View view = LayoutInflater.from(context).inflate(R.layout.movie_list_item, parent, false);
-
-        // TODO - 9
-        MovieViewHolder holder = new MovieViewHolder(view);
-
-        return holder;
+//        MovieViewHolder holder = new MovieViewHolder(view);
+        return new MovieViewHolder(view);
     }
 
     @Override
@@ -48,7 +43,6 @@ public class MovieAdapter extends RecyclerView.Adapter {
         // TODO 11
         MovieViewHolder holder = (MovieViewHolder) viewHolder;
 
-        // TODO 12
         Movie movie  = movieList.get(position) ;
         holder.mTitle.setText(movie.getmTitle());
     }
@@ -65,13 +59,25 @@ public class MovieAdapter extends RecyclerView.Adapter {
 
 //        final ImageView mImagePoster;
         final TextView mTitle;
+        final ImageView mImageMoviePoster;
 
         public MovieViewHolder(View itemView) {
             super(itemView);
 
 //            mImagePoster = itemView.findViewById(R.id.iv_movie_poster);
             mTitle = itemView.findViewById(R.id.tv_movie_title);
+            mImageMoviePoster = itemView.findViewById(R.id.iv_movie_poster);
         }
     }
+
+//    public  void loadImagePoster(){
+//        Picasso
+//                .with(context)
+//                .load(imageUri)
+//                .placeholder(R.drawable.poster_place_holder)
+//                .fit().centerCrop()
+//                .error(R.drawable.poster_place_holder)
+//                .into(imageViewReference);
+//    }
 
 }
