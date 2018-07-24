@@ -1,5 +1,7 @@
 package com.udacity.popularmovies.activities;
 
+import android.app.LoaderManager;
+import android.content.Loader;
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks{
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -95,6 +97,21 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // Implementation of loader call backs
+    @Override
+    public Loader onCreateLoader(int id, Bundle args) {
+        return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader loader, Object data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader loader) {
+
+    }
 
     /**
      * Check internet connection when activity is resumed.
