@@ -1,10 +1,6 @@
 package com.udacity.popularmovies.models;
 
-/**
- * Created by jesse on 10/06/18.
- * This is a part of the project adnd-popular-movies.
- */
-// TODO 4 - Create the model
+
 public class Movie {
     private String mTitle;
     private String mOriginalTitle;
@@ -20,13 +16,9 @@ public class Movie {
     private double mPopularity;
 
 
-    public Movie(String mTitle) {
-        this.mTitle = mTitle;
-    }
-
-    public Movie(int mId, String mTitle) {
+    public Movie(int mId, String mPosterPath) {
         this.mId = mId;
-        this.mTitle = mTitle;
+        this.mPosterPath = mPosterPath;
 
     }
 

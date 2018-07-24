@@ -7,6 +7,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,15 +30,22 @@ public class MainActivity extends AppCompatActivity {
     private String loadApiLanguage = "en";
 
     // Global toast object to avoid toast objects queue
-    Toast toast;
+    private Toast toast;
 
     private TextView tvNetworkStatus;
+    private ImageView imageViewNoMovies;
+    private TextView textViewNoImageWarning;
     private RecyclerView recyclerView;
+    private ProgressBar loadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        loadingIndicator = findViewById(R.id.loading_indicator);
+        imageViewNoMovies = findViewById(R.id.iv_no_movies_placeholder);
+        textViewNoImageWarning = findViewById(R.id.tv_warning_no_movies);
 
         /**
          * Load the list of available api languages from {@link ApiConfig} according to api documentation.
@@ -56,31 +65,35 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rv_movies);
 
         // Instantiates a ArrayList of movies
-        List<Movie> movieList = new ArrayList<Movie>();
+        List<Movie> movieList = new ArrayList<>();
 
-        // Add title to the movie
-        movieList.add(new Movie("The Avengers"));
-        movieList.add(new Movie("Transformers"));
-        movieList.add(new Movie("X-Men"));
-        movieList.add(new Movie("The Lord of The Rings"));
-        movieList.add(new Movie("SALT"));
-        movieList.add(new Movie("Shooter"));
-        movieList.add(new Movie("Need for Speed"));
-        movieList.add(new Movie("Fast and Furious"));
+        movieList.add(new Movie(10, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
+        movieList.add(new Movie(11, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
+        movieList.add(new Movie(12, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
+        movieList.add(new Movie(13, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
+        movieList.add(new Movie(14, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
+        movieList.add(new Movie(15, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
+        movieList.add(new Movie(16, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
+        movieList.add(new Movie(17, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
+
+        if (movieList.isEmpty()){
+            loadingIndicator.setVisibility(View.GONE);
+            showNoResultsWarning();
+            doToast("No movies available");
+            return;
+        }
+        hideNoResultsWarning();
+
+        loadingIndicator.setVisibility(View.GONE);
 
         // Creates a new MovieAdapter, pass the ArrayList of movies and the context to this new MovieAdapter object.
         recyclerView.setAdapter(new MovieAdapter(movieList, this));
 
-        RecyclerView.LayoutManager layout = new GridLayoutManager(this,2);
+        GridLayoutManager layout = new GridLayoutManager(this,2);
 
         recyclerView.setLayoutManager(layout);
 
-        Log.v("\n", "\n");
-        Log.v("Test movieList", String.valueOf(movieList.get(0).getmTitle()));
-        Log.v("Test movieList", String.valueOf(movieList.get(1).getmTitle()));
-
     }
-
 
 
     /**
@@ -122,9 +135,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void showNoResultsWarning(){
+        imageViewNoMovies.setVisibility(View.VISIBLE);
+        textViewNoImageWarning.setVisibility(View.VISIBLE);
+    }
+    private void hideNoResultsWarning(){
+        imageViewNoMovies.setVisibility(View.GONE);
+        textViewNoImageWarning.setVisibility(View.GONE);
+    }
+
     private void showConnectionWarning(){
         recyclerView.setVisibility(View.GONE);
         tvNetworkStatus.setVisibility(View.VISIBLE);
+        hideNoResultsWarning();
     }
     private void hideConnectionWarning(){
         recyclerView.setVisibility(View.VISIBLE);
