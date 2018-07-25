@@ -132,4 +132,12 @@ public class Movie {
     public void setmPopularity(double mPopularity) {
         this.mPopularity = mPopularity;
     }
+
+    @Override
+    public String toString() {
+        return "{\n" +
+                "mId = " + mId + ",\n" +
+                "mPosterPath = '" + mPosterPath + '\'' +  "\n" +
+                '}';
+    }
 }

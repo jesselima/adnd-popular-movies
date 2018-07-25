@@ -22,7 +22,7 @@ public class MovieAdapter extends RecyclerView.Adapter {
     private List<Movie> movieList;
     private Context context;
 
-    public MovieAdapter(List<Movie> movieList, Context context) {
+    public MovieAdapter(Context context, List<Movie> movieList) {
         this.movieList = movieList;
         this.context = context;
     }
@@ -40,6 +40,7 @@ public class MovieAdapter extends RecyclerView.Adapter {
         MovieViewHolder holder = (MovieViewHolder) viewHolder;
 
         Movie movie  = movieList.get(position) ;
+
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.udacity.popularmovies.loaders;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.util.Log;
 
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.QueryUtils;
@@ -47,11 +48,15 @@ public class MovieListLoader extends AsyncTaskLoader<List<Movie>> {
     @Override
     public List<Movie> loadInBackground() {
         if (mUrl == null) {
+            // TODO: REMOVE BEFORE DELIVERY ========================================================
+            Log.v(LOG_TAG, "Request URL is Null");
             return null;
         }
 
         // Perform the network request, parse the response, and extract a list of Movie.
         // fetchNewsData() is a method from QueryUtils class.
+        // TODO: REMOVE BEFORE DELIVERY ============================================================
+        Log.v(LOG_TAG, "Request URL is " + mUrl);
         return QueryUtils.fetchMovieData(mUrl);
     }
 

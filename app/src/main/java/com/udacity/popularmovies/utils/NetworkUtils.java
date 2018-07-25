@@ -8,6 +8,10 @@ import java.util.Objects;
 
 public class NetworkUtils {
 
+    // Private empty constructor
+    private NetworkUtils() {
+    }
+
     public static final String LOG_TAG = NetworkUtils.class.getSimpleName();
 
     /**

@@ -37,7 +37,7 @@ public final class QueryUtils {
     }
 
     /**
-     * Query the The Guardin Movie API data and return a list of {@link Movie} objects.
+     * Query the API data from the server and return a list of {@link Movie} objects.
      * @param requestUrl is the URL request to the API.
      * @return a list of Movie.
      */
@@ -160,11 +160,18 @@ public final class QueryUtils {
             // Create a JSONObject from the JSON response string
             JSONObject rootJsonObject = new JSONObject(movieJSON);
 
-            JSONObject responseObject = rootJsonObject.getJSONObject("response");
+            int page = rootJsonObject.optInt("page");
+            int totalResults = rootJsonObject.optInt("total_results");
+            int totalPages = rootJsonObject.optInt("total_pages");
 
-            // Create a JSONArray and put the array of Movie (results) inside it.
-            JSONArray resultsArray = responseObject.getJSONArray("results");
+            // TODO: REMOVE BEFORE DELIVERY ========================================================
+            Log.v(LOG_TAG, "Current page" + String.valueOf(page));
+            Log.v(LOG_TAG, "Number of results" + String.valueOf(totalResults));
+            Log.v(LOG_TAG, "Total Pages" + String.valueOf(totalPages));
+            Log.v(LOG_TAG, "RESPONSE Result" + rootJsonObject.toString());
 
+            // Get the array of results (movies)
+            JSONArray resultsArray = rootJsonObject.getJSONArray("results");
 
             // For each position in the movieArray (inside the JSONArray object)
             // extract the JSON data from such position in the array and put the data into a new Movie class object.
@@ -172,21 +179,15 @@ public final class QueryUtils {
 
                 // Get a single Movie object in the movieArray (in within the list of Movie)
                 JSONObject currentMovieResult = resultsArray.getJSONObject(i);
-                JSONObject currentMovieFields = currentMovieResult.getJSONObject("fields");
-                JSONArray tagsArrayCurrentMovie = currentMovieResult.getJSONArray("tags");
 
-
-                String id = currentMovieResult.getString("id");
-
-                String type = "";
-                if (currentMovieResult.has("type")) {
-                    type = currentMovieResult.getString("type");
-                }
-
+                int movieId = currentMovieResult.optInt("id");
+                String posterPath = currentMovieResult.optString("poster_path");
 
                 // Instantiate a Movie class object and add the JSON data as inputs parameters.
-                Movie movieItem = new Movie(450, "");
+                Movie movieItem = new Movie(movieId, posterPath);
                 movieList.add(movieItem);
+                // TODO: REMOVE BEFORE DELIVERY ====================================================
+                Log.v(LOG_TAG, movieItem.toString());
             }
 
         } catch (JSONException e) {

@@ -1,8 +1,10 @@
 package com.udacity.popularmovies.activities;
 
-import android.app.LoaderManager;
+
+import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +19,10 @@ import android.widget.Toast;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.adapters.MovieAdapter;
 import com.udacity.popularmovies.config.ApiConfig;
+import com.udacity.popularmovies.config.ApiConfig.UrlParamKey;
+import com.udacity.popularmovies.config.ApiConfig.UrlParamValue;
+import com.udacity.popularmovies.config.ApiKey;
+import com.udacity.popularmovies.loaders.MovieListLoader;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
@@ -24,13 +30,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks{
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Movie>> {
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
+    private static final int MOVIE_LOADER_ID = 1;
+
     // Global variable to be used with system language abbreviation in two letters
     private String loadApiLanguage = "en";
-
+    private int page = 1;
     // Global toast object to avoid toast objects queue
     private Toast toast;
 
@@ -39,15 +47,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private TextView textViewNoImageWarning;
     private RecyclerView recyclerView;
     private ProgressBar loadingIndicator;
+    private MovieAdapter movieAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // References for loading indicator and warnings when the is no movies in the list.
         loadingIndicator = findViewById(R.id.loading_indicator);
         imageViewNoMovies = findViewById(R.id.iv_no_movies_placeholder);
         textViewNoImageWarning = findViewById(R.id.tv_warning_no_movies);
+        // Reference to the TextView that show to the user when there is no active connection to internet.
+        tvNetworkStatus = findViewById(R.id.tv_network_status);
+        recyclerView = findViewById(R.id.rv_movies);
 
         /**
          * Load the list of available api languages from {@link ApiConfig} according to api documentation.
@@ -61,56 +74,70 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             doToast(getResources().getString(R.string.warning_language));
         }
 
-        // Reference to the TextView that show to the user when there is no active connection to internet.
-        tvNetworkStatus = findViewById(R.id.tv_network_status);
-
-        recyclerView = findViewById(R.id.rv_movies);
-
-        // Instantiates a ArrayList of movies
-        List<Movie> movieList = new ArrayList<>();
-
-        movieList.add(new Movie(10, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
-        movieList.add(new Movie(11, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
-        movieList.add(new Movie(12, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
-        movieList.add(new Movie(13, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
-        movieList.add(new Movie(14, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
-        movieList.add(new Movie(15, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
-        movieList.add(new Movie(16, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
-        movieList.add(new Movie(17, "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
-
-        if (movieList.isEmpty()){
-            loadingIndicator.setVisibility(View.GONE);
-            showNoResultsWarning();
-            doToast("No movies available");
-            return;
+        if (!NetworkUtils.isDeviceConnected(this)){
+            // TODO: REMOVE BEFORE DELIVERY
+            Log.v(LOG_TAG, "Device is NOT connected!");
+            hideLoanding();
+            hideNoResultsWarning();
+            showConnectionWarning();
+        }else {
+            Log.v(LOG_TAG, "Device is connected!");
+            // Kick off the loader
+            android.app.LoaderManager loaderManager = getLoaderManager();
+            loaderManager.initLoader(MOVIE_LOADER_ID, null, this);
         }
-        hideNoResultsWarning();
 
-        loadingIndicator.setVisibility(View.GONE);
 
+        movieAdapter = new MovieAdapter(this, new ArrayList<Movie>());
         // Creates a new MovieAdapter, pass the ArrayList of movies and the context to this new MovieAdapter object.
-        recyclerView.setAdapter(new MovieAdapter(movieList, this));
+        recyclerView.setAdapter(movieAdapter);
 
         GridLayoutManager layout = new GridLayoutManager(this,2);
-
         recyclerView.setLayoutManager(layout);
 
-    }
+    } // Closes onCreate
+
 
     // Implementation of loader call backs
     @Override
-    public Loader onCreateLoader(int id, Bundle args) {
-        return null;
+    public Loader<List<Movie>> onCreateLoader(int id, Bundle bundle) {
+
+        Uri getBaseMovieListUrl = Uri.parse(ApiConfig.getBaseMovieApiUrlV3());
+        Uri.Builder uriBuilder = getBaseMovieListUrl.buildUpon();
+
+        uriBuilder.appendQueryParameter(UrlParamKey.API_KEY, ApiKey.getApiKey());
+        uriBuilder.appendQueryParameter(UrlParamKey.LANGUAGE, loadApiLanguage);
+        uriBuilder.appendQueryParameter(UrlParamKey.SORT_BY, UrlParamValue.POPULARITY_DESC);
+        uriBuilder.appendQueryParameter(UrlParamKey.INCLUDE_ADULT, UrlParamValue.INCLUDE_ADULT_FALSE);
+        uriBuilder.appendQueryParameter(UrlParamKey.PAGE, String.valueOf(page));
+
+        // TODO: REMOVE THIS LOG BEFORE PROJECT DELIVERY
+        Log.v(LOG_TAG, "Requested URL: " + uriBuilder.toString());
+
+        return new MovieListLoader(this, uriBuilder.toString());
     }
 
     @Override
-    public void onLoadFinished(Loader loader, Object data) {
+    public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movies) {
+
+        hideLoanding();
+
+        // When the onCreateLoader finish its job, it will pass the data do this method.
+        if (movies == null && movies.isEmpty()){
+            showNoResultsWarning();
+        }
+//        else {
+//            movieAdapter.
+//        }
+
+
+
 
     }
 
     @Override
     public void onLoaderReset(Loader loader) {
-
+//        movieAdapter.
     }
 
     /**
@@ -150,6 +177,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }else {
             showConnectionWarning();
         }
+    }
+
+    private void showLoanding(){
+        loadingIndicator.setVisibility(View.VISIBLE);
+    }
+    private void hideLoanding(){
+        loadingIndicator.setVisibility(View.GONE);
     }
 
     private void showNoResultsWarning(){
