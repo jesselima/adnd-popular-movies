@@ -3,6 +3,7 @@ package com.udacity.popularmovies.utils;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.udacity.popularmovies.config.ApiConfig.UrlParamKey;
 import com.udacity.popularmovies.models.Movie;
 
 import org.json.JSONArray;
@@ -19,6 +20,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.udacity.popularmovies.config.ApiConfig.getMovieBaseImageUrl;
 
 /**
  * This class offers Helper methods related to requesting and receiving a list of movies data from The TMDB.
@@ -165,10 +168,11 @@ public final class QueryUtils {
             int totalPages = rootJsonObject.optInt("total_pages");
 
             // TODO: REMOVE BEFORE DELIVERY ========================================================
-            Log.v(LOG_TAG, "Current page" + String.valueOf(page));
-            Log.v(LOG_TAG, "Number of results" + String.valueOf(totalResults));
-            Log.v(LOG_TAG, "Total Pages" + String.valueOf(totalPages));
-            Log.v(LOG_TAG, "RESPONSE Result" + rootJsonObject.toString());
+            Log.v(LOG_TAG, "===========================");
+            Log.v(LOG_TAG, "Current page:       " + String.valueOf(page));
+            Log.v(LOG_TAG, "Number of results:  " + String.valueOf(totalResults));
+            Log.v(LOG_TAG, "Total Pages:        " + String.valueOf(totalPages));
+            Log.v(LOG_TAG, "RESPONSE Result:    " + rootJsonObject.toString());
 
             // Get the array of results (movies)
             JSONArray resultsArray = rootJsonObject.getJSONArray("results");
@@ -181,13 +185,15 @@ public final class QueryUtils {
                 JSONObject currentMovieResult = resultsArray.getJSONObject(i);
 
                 int movieId = currentMovieResult.optInt("id");
+                String movieTitle = currentMovieResult.optString("title");
                 String posterPath = currentMovieResult.optString("poster_path");
+                String fullPosterPathUrl = getMovieBaseImageUrl() + UrlParamKey.IMAGE_POSTER_W500 + posterPath;
+
+                Log.v(LOG_TAG, fullPosterPathUrl);
 
                 // Instantiate a Movie class object and add the JSON data as inputs parameters.
-                Movie movieItem = new Movie(movieId, posterPath);
+                Movie movieItem = new Movie(movieId, movieTitle, fullPosterPathUrl);
                 movieList.add(movieItem);
-                // TODO: REMOVE BEFORE DELIVERY ====================================================
-                Log.v(LOG_TAG, movieItem.toString());
             }
 
         } catch (JSONException e) {

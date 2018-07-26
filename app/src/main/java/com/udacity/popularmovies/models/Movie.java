@@ -16,8 +16,9 @@ public class Movie {
     private double mPopularity;
 
 
-    public Movie(int mId, String mPosterPath) {
+    public Movie(int mId, String mTitle, String mPosterPath) {
         this.mId = mId;
+        this.mTitle = mTitle;
         this.mPosterPath = mPosterPath;
 
     }
@@ -137,6 +138,7 @@ public class Movie {
     public String toString() {
         return "{\n" +
                 "mId = " + mId + ",\n" +
+                "mTitle = '" + mTitle + '\'' +  "\n" +
                 "mPosterPath = '" + mPosterPath + '\'' +  "\n" +
                 '}';
     }

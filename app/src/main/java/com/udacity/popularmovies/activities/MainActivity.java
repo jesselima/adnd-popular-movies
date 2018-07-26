@@ -17,7 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.udacity.popularmovies.R;
-import com.udacity.popularmovies.adapters.MovieAdapter;
+import com.udacity.popularmovies.adapters.MovieListAdapter;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamKey;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamValue;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private static final int MOVIE_LOADER_ID = 1;
 
     // Global variable to be used with system language abbreviation in two letters
-    private String loadApiLanguage = "en";
+    private String loadApiLanguage = "it";
     private int page = 1;
     // Global toast object to avoid toast objects queue
     private Toast toast;
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private TextView textViewNoImageWarning;
     private RecyclerView recyclerView;
     private ProgressBar loadingIndicator;
-    private MovieAdapter movieAdapter;
+    private MovieListAdapter movieListAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,9 +88,21 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         }
 
 
-        movieAdapter = new MovieAdapter(this, new ArrayList<Movie>());
-        // Creates a new MovieAdapter, pass the ArrayList of movies and the context to this new MovieAdapter object.
-        recyclerView.setAdapter(movieAdapter);
+        List<Movie> movieListHardCoded = new ArrayList<>();
+
+        movieListHardCoded.add(new Movie(351286, "Jurassic World: Fallen Kingdom", "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
+        movieListHardCoded.add(new Movie(363088, "Ant-Man and the Wasp", "http://image.tmdb.org/t/p/w185/rv1AWImgx386ULjcf62VYaW8zSt.jpg"));
+        movieListHardCoded.add(new Movie(353081, "Mission: Impossible - Fallout", "http://image.tmdb.org/t/p/w185/80PWnSTkygi3QWWmJ3hrAwqvLnO.jpg"));
+        movieListHardCoded.add(new Movie(299536, "Avengers: Infinity War", "http://image.tmdb.org/t/p/w185/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg"));
+        movieListHardCoded.add(new Movie(260513, "Incredibles 2", "http://image.tmdb.org/t/p/w185/x1txcDXkcM65gl7w20PwYSxAYah.jpg"));
+        movieListHardCoded.add(new Movie(442249, "The First Purge", "http://image.tmdb.org/t/p/w185/2slvblTroiT1lY9bYLK7Amigo1k.jpg"));
+        movieListHardCoded.add(new Movie(284053, "Thor: Ragnarok", "http://image.tmdb.org/t/p/w185/rzRwTcFvttcN1ZpX2xv4j3tSdJu.jpg"));
+
+        movieListAdapter = new MovieListAdapter(this, movieListHardCoded);
+//        movieListAdapter.addAll(movieListHardCoded);
+
+        // Creates a new MovieListAdapter, pass the ArrayList of movies and the context to this new MovieListAdapter object.
+        recyclerView.setAdapter(movieListAdapter);
 
         GridLayoutManager layout = new GridLayoutManager(this,2);
         recyclerView.setLayoutManager(layout);
@@ -121,23 +133,24 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movies) {
 
         hideLoanding();
+        hideConnectionWarning();
 
         // When the onCreateLoader finish its job, it will pass the data do this method.
         if (movies == null && movies.isEmpty()){
-            showNoResultsWarning();
+            doToast("movies has NO data!!!!");
+        }else {
+//            movieListAdapter.
+            doToast(movies.size() + " movies results !!!!");
         }
-//        else {
-//            movieAdapter.
-//        }
-
-
-
-
     }
+
+//    public void getLoaderData(Context context, List<Movie> movies){
+//        movieListAdapter = new MovieListAdapter(context, movies);
+//    }
 
     @Override
     public void onLoaderReset(Loader loader) {
-//        movieAdapter.
+//        movieListAdapter.clear;
     }
 
     /**

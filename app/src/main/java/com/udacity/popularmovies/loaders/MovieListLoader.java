@@ -48,15 +48,11 @@ public class MovieListLoader extends AsyncTaskLoader<List<Movie>> {
     @Override
     public List<Movie> loadInBackground() {
         if (mUrl == null) {
-            // TODO: REMOVE BEFORE DELIVERY ========================================================
-            Log.v(LOG_TAG, "Request URL is Null");
             return null;
         }
 
-        // Perform the network request, parse the response, and extract a list of Movie.
+        // Perform the network request, parse the response, and extract a List of Movie.
         // fetchNewsData() is a method from QueryUtils class.
-        // TODO: REMOVE BEFORE DELIVERY ============================================================
-        Log.v(LOG_TAG, "Request URL is " + mUrl);
         return QueryUtils.fetchMovieData(mUrl);
     }
 

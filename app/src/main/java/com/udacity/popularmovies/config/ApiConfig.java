@@ -35,8 +35,8 @@ public final class ApiConfig {
     private static final String ORIGINAL    = "original";
 
     private static final String BASE_URL_V3_DISCOVER    = "https://api.themoviedb.org/3/discover/movie";
-    private static final String BASE_IMAGE_URL          = "http://image.tmdb.org/t/p";
-    private static final String SECURE_BASE_IMAGE_URL   = "https://image.tmdb.org/t/p";
+    private static final String BASE_IMAGE_URL          = "http://image.tmdb.org/t/p/";
+    private static final String SECURE_BASE_IMAGE_URL   = "https://image.tmdb.org/t/p/";
 
     public static String getBaseMovieApiUrlV3() {
         return BASE_URL_V3_DISCOVER;
