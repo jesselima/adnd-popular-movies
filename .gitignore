@@ -8,4 +8,4 @@
 /build
 /captures
 .externalNativeBuild
-/src/main/java/com/udacity/popularmovies/TmdbApiKey.java
+/app/src/main/java/com/udacity/popularmovies/config/ApiKey.java

@@ -3,7 +3,6 @@ package com.udacity.popularmovies.adapters;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.models.Movie;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,8 +49,6 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                 .fit().centerInside()
                 .error(R.drawable.poster_image_place_holder)
                 .into(holder.mImageViewMoviePoster);
-
-              Log.v("----> onBindViewHolder", movie.getmTitle());
 
     }
 

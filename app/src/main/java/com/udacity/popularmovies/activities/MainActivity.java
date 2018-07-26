@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -26,7 +25,6 @@ import com.udacity.popularmovies.loaders.MovieListLoader;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -75,37 +73,14 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         }
 
         if (!NetworkUtils.isDeviceConnected(this)){
-            // TODO: REMOVE BEFORE DELIVERY
-            Log.v(LOG_TAG, "Device is NOT connected!");
-            hideLoanding();
+            hideLoadingIndicator();
             hideNoResultsWarning();
             showConnectionWarning();
         }else {
-            Log.v(LOG_TAG, "Device is connected!");
             // Kick off the loader
             android.app.LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_LOADER_ID, null, this);
         }
-
-
-        List<Movie> movieListHardCoded = new ArrayList<>();
-
-        movieListHardCoded.add(new Movie(351286, "Jurassic World: Fallen Kingdom", "http://image.tmdb.org/t/p/w185/c9XxwwhPHdaImA2f1WEfEsbhaFB.jpg"));
-        movieListHardCoded.add(new Movie(363088, "Ant-Man and the Wasp", "http://image.tmdb.org/t/p/w185/rv1AWImgx386ULjcf62VYaW8zSt.jpg"));
-        movieListHardCoded.add(new Movie(353081, "Mission: Impossible - Fallout", "http://image.tmdb.org/t/p/w185/80PWnSTkygi3QWWmJ3hrAwqvLnO.jpg"));
-        movieListHardCoded.add(new Movie(299536, "Avengers: Infinity War", "http://image.tmdb.org/t/p/w185/7WsyChQLEftFiDOVTGkv3hFpyyt.jpg"));
-        movieListHardCoded.add(new Movie(260513, "Incredibles 2", "http://image.tmdb.org/t/p/w185/x1txcDXkcM65gl7w20PwYSxAYah.jpg"));
-        movieListHardCoded.add(new Movie(442249, "The First Purge", "http://image.tmdb.org/t/p/w185/2slvblTroiT1lY9bYLK7Amigo1k.jpg"));
-        movieListHardCoded.add(new Movie(284053, "Thor: Ragnarok", "http://image.tmdb.org/t/p/w185/rzRwTcFvttcN1ZpX2xv4j3tSdJu.jpg"));
-
-        movieListAdapter = new MovieListAdapter(this, movieListHardCoded);
-//        movieListAdapter.addAll(movieListHardCoded);
-
-        // Creates a new MovieListAdapter, pass the ArrayList of movies and the context to this new MovieListAdapter object.
-        recyclerView.setAdapter(movieListAdapter);
-
-        GridLayoutManager layout = new GridLayoutManager(this,2);
-        recyclerView.setLayoutManager(layout);
 
     } // Closes onCreate
 
@@ -123,34 +98,29 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         uriBuilder.appendQueryParameter(UrlParamKey.INCLUDE_ADULT, UrlParamValue.INCLUDE_ADULT_FALSE);
         uriBuilder.appendQueryParameter(UrlParamKey.PAGE, String.valueOf(page));
 
-        // TODO: REMOVE THIS LOG BEFORE PROJECT DELIVERY
-        Log.v(LOG_TAG, "Requested URL: " + uriBuilder.toString());
-
         return new MovieListLoader(this, uriBuilder.toString());
     }
 
     @Override
     public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movies) {
 
-        hideLoanding();
+        hideLoadingIndicator();
         hideConnectionWarning();
 
         // When the onCreateLoader finish its job, it will pass the data do this method.
         if (movies == null && movies.isEmpty()){
-            doToast("movies has NO data!!!!");
+            showNoResultsWarning();
         }else {
-//            movieListAdapter.
-            doToast(movies.size() + " movies results !!!!");
+            movieListAdapter = new MovieListAdapter(this, movies);
+            recyclerView.setAdapter(movieListAdapter);
+            GridLayoutManager layout = new GridLayoutManager(this,2);
+            recyclerView.setLayoutManager(layout);
         }
     }
 
-//    public void getLoaderData(Context context, List<Movie> movies){
-//        movieListAdapter = new MovieListAdapter(context, movies);
-//    }
-
     @Override
     public void onLoaderReset(Loader loader) {
-//        movieListAdapter.clear;
+
     }
 
     /**
@@ -192,10 +162,10 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         }
     }
 
-    private void showLoanding(){
+    private void showLoadingIndicator(){
         loadingIndicator.setVisibility(View.VISIBLE);
     }
-    private void hideLoanding(){
+    private void hideLoadingIndicator(){
         loadingIndicator.setVisibility(View.GONE);
     }
 
