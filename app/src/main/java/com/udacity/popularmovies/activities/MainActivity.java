@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private static final int MOVIE_LOADER_ID = 1;
 
     // Global variable to be used with system language abbreviation in two letters
-    private String loadApiLanguage = "it";
+    private String loadApiLanguage = UrlParamValue.LANGUAGE_DEFAULT;
     private int page = 1;
     // Global toast object to avoid toast objects queue
     private Toast toast;
@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         hideConnectionWarning();
 
         // When the onCreateLoader finish its job, it will pass the data do this method.
-        if (movies == null && movies.isEmpty()){
+        if (movies == null || movies.isEmpty()){
             showNoResultsWarning();
         }else {
             movieListAdapter = new MovieListAdapter(this, movies);
