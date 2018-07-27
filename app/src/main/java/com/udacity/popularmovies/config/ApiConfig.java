@@ -61,7 +61,6 @@ public final class ApiConfig {
         public static final String WITH_GENRES = "with_genres";
         public static final String YEAR = "year";
 
-
         // API backdrop_sizes constants
         public static final String IMAGE_BACKDROP_W300      = W45;
         public static final String IMAGE_BACKDROP_W780      = W780;
@@ -113,6 +112,7 @@ public final class ApiConfig {
         public static final String VOTE_COUNT_DESC_           = "vote_count.desc";
         public static final String INCLUDE_ADULT_TRUE         = "true";
         public static final String INCLUDE_ADULT_FALSE        = "false";
+        public static final String LANGUAGE_DEFAULT           = "en";
 
     }
 
