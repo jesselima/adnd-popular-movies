@@ -24,7 +24,7 @@ import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamKey;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamValue;
 import com.udacity.popularmovies.config.ApiKey;
-import com.udacity.popularmovies.loaders.MovieListLoader;
+import com.udacity.popularmovies.loaders.MovieLoader;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         uriBuilder.appendQueryParameter(UrlParamKey.INCLUDE_ADULT, UrlParamValue.INCLUDE_ADULT_FALSE);
         uriBuilder.appendQueryParameter(UrlParamKey.PAGE, String.valueOf(page));
 
-        return new MovieListLoader(this, uriBuilder.toString());
+        return new MovieLoader(this, uriBuilder.toString());
     }
 
     @Override

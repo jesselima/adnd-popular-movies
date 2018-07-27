@@ -2,7 +2,6 @@ package com.udacity.popularmovies.loaders;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
-import android.util.Log;
 
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.QueryUtils;
@@ -13,12 +12,12 @@ import java.util.List;
  * Created by jesse on 12/06/18.
  * This is a part of the project adnd-popular-movies.
  */
-public class MovieListLoader extends AsyncTaskLoader<List<Movie>> {
+public class MovieLoader extends AsyncTaskLoader<List<Movie>> {
 
     /**
      * Tag for log messages
      */
-    private static final String LOG_TAG = MovieListLoader.class.getName();
+    private static final String LOG_TAG = MovieLoader.class.getName();
 
     /**
      * Query URL
@@ -26,12 +25,12 @@ public class MovieListLoader extends AsyncTaskLoader<List<Movie>> {
     private final String mUrl;
 
     /**
-     * Constructs a new {@link MovieListLoader}.
+     * Constructs a new {@link MovieLoader}.
      *
      * @param context of the activity
      * @param url     to load data from
      */
-    public MovieListLoader(Context context, String url) {
+    public MovieLoader(Context context, String url) {
         super(context);
         mUrl = url;
     }
