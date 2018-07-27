@@ -163,17 +163,6 @@ public final class QueryUtils {
             // Create a JSONObject from the JSON response string
             JSONObject rootJsonObject = new JSONObject(movieJSON);
 
-            int page = rootJsonObject.optInt("page");
-            int totalResults = rootJsonObject.optInt("total_results");
-            int totalPages = rootJsonObject.optInt("total_pages");
-
-            // TODO: REMOVE BEFORE DELIVERY ========================================================
-            Log.v(LOG_TAG, "===========================");
-            Log.v(LOG_TAG, "Current page:       " + String.valueOf(page));
-            Log.v(LOG_TAG, "Number of results:  " + String.valueOf(totalResults));
-            Log.v(LOG_TAG, "Total Pages:        " + String.valueOf(totalPages));
-            Log.v(LOG_TAG, "RESPONSE Result:    " + rootJsonObject.toString());
-
             // Get the array of results (movies)
             JSONArray resultsArray = rootJsonObject.getJSONArray("results");
 

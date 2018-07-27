@@ -9,6 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -77,7 +80,8 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             hideNoResultsWarning();
             showConnectionWarning();
         }else {
-            // Kick off the loader
+            // Shows loading indicator and Kick off the loader
+            showLoadingIndicator();
             android.app.LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_LOADER_ID, null, this);
         }
@@ -199,5 +203,30 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         }
         toast = Toast.makeText(this, toastThisText, Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    /* Action menu Sort menu implementation for sort by popularity and sort by most rated */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater =  getMenuInflater();
+        menuInflater.inflate(R.menu.sort_by, menu);
+        // return the menu layout inflated with the item objects
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_sort_by_most_popular:
+                doToast("Sort by most popular selected");
+                return true;
+            case R.id.action_sort_by_highest_rated:
+                doToast("Sort by highest selected");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
     }
 }

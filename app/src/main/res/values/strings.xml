@@ -8,4 +8,7 @@
     <string name="warning_language">Movie data not available in your language. \nEnglish will be used.</string>
     <string name="warning_no_movies_found">Ooops! We did not find any movies.</string>
     <string name="no_movies_found_image">No movies found image</string>
+    <string name="action_menu_sort_by_most_popular">Sort By Most Popular</string>
+    <string name="action_menu_sort_by_highest_rated">Sort By Highest Rated</string>
+    <string name="sort_by">Sort by</string>
 </resources>
