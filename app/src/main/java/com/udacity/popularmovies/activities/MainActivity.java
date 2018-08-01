@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private RecyclerView recyclerView;
     private ProgressBar loadingIndicator;
     private MovieListAdapter movieListAdapter;
+    private String sortBy = UrlParamValue.POPULARITY_DESC;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,10 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
     } // Closes onCreate
 
+    private void restartLoaderFromMenu(String sortByFromMenu){
+        sortBy = sortByFromMenu;
+        getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
+    }
 
     // Implementation of loader call backs
     @Override
@@ -98,10 +104,11 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
         uriBuilder.appendQueryParameter(UrlParamKey.API_KEY, ApiKey.getApiKey());
         uriBuilder.appendQueryParameter(UrlParamKey.LANGUAGE, loadApiLanguage);
-        uriBuilder.appendQueryParameter(UrlParamKey.SORT_BY, UrlParamValue.POPULARITY_DESC);
+        uriBuilder.appendQueryParameter(UrlParamKey.SORT_BY, sortBy);
         uriBuilder.appendQueryParameter(UrlParamKey.INCLUDE_ADULT, UrlParamValue.INCLUDE_ADULT_FALSE);
         uriBuilder.appendQueryParameter(UrlParamKey.PAGE, String.valueOf(page));
 
+//        Log.v(LOG_TAG, "==>>Request URL: " + uriBuilder.toString());
         return new MovieLoader(this, uriBuilder.toString());
     }
 
@@ -219,10 +226,12 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_sort_by_most_popular:
-                doToast("Sort by most popular selected");
+                restartLoaderFromMenu(UrlParamValue.POPULARITY_DESC);
+                doToast(getString(R.string.sorting_by_most_popular));
                 return true;
             case R.id.action_sort_by_highest_rated:
-                doToast("Sort by highest selected");
+                restartLoaderFromMenu(UrlParamValue.VOTE_COUNT_DESC);
+                doToast(getString(R.string.sorting_by_highest_rated));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

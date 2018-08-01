@@ -11,4 +11,6 @@
     <string name="action_menu_sort_by_most_popular">Sort By Most Popular</string>
     <string name="action_menu_sort_by_highest_rated">Sort By Highest Rated</string>
     <string name="sort_by">Sort by</string>
+    <string name="sorting_by_most_popular">Sorting by most popular</string>
+    <string name="sorting_by_highest_rated">Sorting by highest rated</string>
 </resources>

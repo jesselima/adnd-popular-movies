@@ -109,7 +109,7 @@ public final class ApiConfig {
         public static final String VOTE_AVERAGE_ASC_          = "vote_average.asc";
         public static final String VOTE_AVERAGE_DESC          = "vote_average.desc";
         public static final String VOTE_COUNT_ASC_            = "vote_count.asc";
-        public static final String VOTE_COUNT_DESC_           = "vote_count.desc";
+        public static final String VOTE_COUNT_DESC            = "vote_count.desc";
         public static final String INCLUDE_ADULT_TRUE         = "true";
         public static final String INCLUDE_ADULT_FALSE        = "false";
         public static final String LANGUAGE_DEFAULT           = "en";

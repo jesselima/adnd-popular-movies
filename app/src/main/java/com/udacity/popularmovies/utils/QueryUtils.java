@@ -178,8 +178,6 @@ public final class QueryUtils {
                 String posterPath = currentMovieResult.optString("poster_path");
                 String fullPosterPathUrl = getMovieBaseImageUrl() + UrlParamKey.IMAGE_POSTER_W500 + posterPath;
 
-                Log.v(LOG_TAG, fullPosterPathUrl);
-
                 // Instantiate a Movie class object and add the JSON data as inputs parameters.
                 Movie movieItem = new Movie(movieId, movieTitle, fullPosterPathUrl);
                 movieList.add(movieItem);
