@@ -5,8 +5,8 @@ import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,10 +29,11 @@ import com.udacity.popularmovies.loaders.MovieLoader;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Movie>> {
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Movie>>{
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -47,9 +48,11 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private TextView tvNetworkStatus;
     private ImageView imageViewNoMovies;
     private TextView textViewNoImageWarning;
+
     private RecyclerView recyclerView;
     private ProgressBar loadingIndicator;
     private MovieListAdapter movieListAdapter;
+    private List<Movie> movieList = new ArrayList<>(); // Creates a empty movieList
     private String sortBy = UrlParamValue.POPULARITY_DESC;
 
     @Override
@@ -57,13 +60,25 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // References for loading indicator and warnings when the is no movies in the list.
         loadingIndicator = findViewById(R.id.loading_indicator);
         imageViewNoMovies = findViewById(R.id.iv_no_movies_placeholder);
         textViewNoImageWarning = findViewById(R.id.tv_warning_no_movies);
-        // Reference to the TextView that show to the user when there is no active connection to internet.
         tvNetworkStatus = findViewById(R.id.tv_network_status);
+
         recyclerView = findViewById(R.id.rv_movies);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setHasFixedSize(true);
+
+        movieListAdapter = new MovieListAdapter(movieList, this);
+        recyclerView.setAdapter(movieListAdapter);
+
+        movieListAdapter.setOnItemClickListener(new MovieListAdapter.ClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                Log.d(LOG_TAG, "onItemClick position: " + position);
+            }
+        });
 
         /**
          * Load the list of available api languages from {@link ApiConfig} according to api documentation.
@@ -87,8 +102,8 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
             android.app.LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_LOADER_ID, null, this);
         }
-
     } // Closes onCreate
+
 
     private void restartLoaderFromMenu(String sortByFromMenu){
         sortBy = sortByFromMenu;
@@ -121,11 +136,11 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         // When the onCreateLoader finish its job, it will pass the data do this method.
         if (movies == null || movies.isEmpty()){
             showNoResultsWarning();
-        }else {
-            movieListAdapter = new MovieListAdapter(this, movies);
-            recyclerView.setAdapter(movieListAdapter);
-            GridLayoutManager layout = new GridLayoutManager(this,2);
-            recyclerView.setLayoutManager(layout);
+        }
+        else {
+            movieList.clear();
+            movieList.addAll(movies);
+            movieListAdapter.notifyDataSetChanged();
         }
     }
 
