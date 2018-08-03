@@ -1,6 +1,7 @@
 package com.udacity.popularmovies.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.R;
+import com.udacity.popularmovies.activities.MovieDetailsActivity;
 import com.udacity.popularmovies.models.Movie;
 
 import java.util.ArrayList;
@@ -55,6 +57,10 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
                 int id =  movieList.get(position).getmId();
                 String title =  movieList.get(position).getmTitle();
                 Toast.makeText(mContext, "ID: " +String.valueOf(id) + " - "+ title , Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(mContext, MovieDetailsActivity.class);
+                intent.putExtra("movieId", id);
+                mContext.startActivity(intent);
             }
         });
 
