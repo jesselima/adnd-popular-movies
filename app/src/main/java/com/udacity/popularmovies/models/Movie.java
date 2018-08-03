@@ -15,7 +15,10 @@ public class Movie {
     private int mVoteCount;
     private double mPopularity;
 
+    // Empty constructor
+    public Movie() {}
 
+    // Constructor to use in posters movie list object
     public Movie(int mId, String mTitle, String mPosterPath) {
         this.mId = mId;
         this.mTitle = mTitle;
@@ -23,6 +26,7 @@ public class Movie {
 
     }
 
+    // Constructor for movie details object.
     public Movie(String mTitle, String mOriginalTitle, String mOverview, String mReleaseDate, String mPosterPath, String mBackdropPath, String mOriginalLanguage, int mId, int[] mGenreIds, double mVoteAverage, int mVoteCount, double mPopularity) {
         this.mTitle = mTitle;
         this.mOriginalTitle = mOriginalTitle;

@@ -3,12 +3,7 @@ package com.udacity.popularmovies.utils;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.udacity.popularmovies.config.ApiConfig.UrlParamKey;
 import com.udacity.popularmovies.models.Movie;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,10 +13,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.udacity.popularmovies.config.ApiConfig.getMovieBaseImageUrl;
 
 /**
  * This class offers Helper methods related to requesting and receiving a list of movies data from The TMDB.
@@ -151,43 +143,13 @@ public final class QueryUtils {
      * Return a list of {@link Movie} objects that has been built up from
      * parsing the given JSON response.
      */
-    private static List<Movie> extractFeatureFromJson(String movieJSON) {
+    private static List<Movie> extractFeatureFromJson(String jsonResponseMovieList) {
         // If the JSON string is empty or null, then return early.
-        if (TextUtils.isEmpty(movieJSON)) {
+        if (TextUtils.isEmpty(jsonResponseMovieList)) {
             return null;
         }
-        // Create an empty ArrayList that we can start adding Movie.
-        List<Movie> movieList = new ArrayList<>();
 
-        try {
-            // Create a JSONObject from the JSON response string
-            JSONObject rootJsonObject = new JSONObject(movieJSON);
-
-            // Get the array of results (movies)
-            JSONArray resultsArray = rootJsonObject.getJSONArray("results");
-
-            // For each position in the movieArray (inside the JSONArray object)
-            // extract the JSON data from such position in the array and put the data into a new Movie class object.
-            for (int i = 0; i < resultsArray.length(); i++) {
-
-                // Get a single Movie object in the movieArray (in within the list of Movie)
-                JSONObject currentMovieResult = resultsArray.getJSONObject(i);
-
-                int movieId = currentMovieResult.optInt("id");
-                String movieTitle = currentMovieResult.optString("title");
-                String posterPath = currentMovieResult.optString("poster_path");
-                String fullPosterPathUrl = getMovieBaseImageUrl() + UrlParamKey.IMAGE_POSTER_W500 + posterPath;
-
-                // Instantiate a Movie class object and add the JSON data as inputs parameters.
-                Movie movieItem = new Movie(movieId, movieTitle, fullPosterPathUrl);
-                movieList.add(movieItem);
-            }
-
-        } catch (JSONException e) {
-            Log.e("QueryUtils", "Problem parsing the movie JSON results", e);
-        }
-        // Return the list of movie
-        return movieList;
+        return GetJsonData.extractMovieListData(jsonResponseMovieList);
     }
 
 }
