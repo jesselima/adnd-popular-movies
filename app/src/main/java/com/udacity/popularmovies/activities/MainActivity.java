@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Movie>>{
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Movie>>/*, MovieListAdapter.ListItemClickListener*/{
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private RecyclerView recyclerView;
     private ProgressBar loadingIndicator;
     private MovieListAdapter movieListAdapter;
-    private List<Movie> movieList = new ArrayList<>(); // Creates a empty movieList
+    private ArrayList<Movie> movieList = new ArrayList<>(); // Creates a empty movieList
     private String sortBy = UrlParamValue.POPULARITY_DESC;
 
     @Override
@@ -65,20 +65,11 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         textViewNoImageWarning = findViewById(R.id.tv_warning_no_movies);
         tvNetworkStatus = findViewById(R.id.tv_network_status);
 
+        movieListAdapter = new MovieListAdapter(this, movieList);
         recyclerView = findViewById(R.id.rv_movies);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.setHasFixedSize(true);
-
-        movieListAdapter = new MovieListAdapter(movieList, this);
         recyclerView.setAdapter(movieListAdapter);
-
-        movieListAdapter.setOnItemClickListener(new MovieListAdapter.ClickListener() {
-            @Override
-            public void onItemClick(int position, View v) {
-                Log.d(LOG_TAG, "onItemClick position: " + position);
-            }
-        });
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        recyclerView.setHasFixedSize(true);
 
         /**
          * Load the list of available api languages from {@link ApiConfig} according to api documentation.
