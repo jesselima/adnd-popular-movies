@@ -13,4 +13,6 @@
     <string name="sort_by">Sort by</string>
     <string name="sorting_by_most_popular">Sorting by most popular</string>
     <string name="sorting_by_highest_rated">Sorting by highest rated</string>
+    <string name="min">min</string>
+    <string name="slash_10">/10</string>
 </resources>

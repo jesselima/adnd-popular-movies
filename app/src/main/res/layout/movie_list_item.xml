@@ -13,6 +13,6 @@
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            android:src="@drawable/poster_image_sample"/>
+            android:src="@drawable/poster_image_place_holder"/>
 
 </LinearLayout>

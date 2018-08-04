@@ -7,13 +7,17 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.config.ApiKey;
 import com.udacity.popularmovies.loaders.MovieLoader;
 import com.udacity.popularmovies.models.Movie;
+import com.udacity.popularmovies.utils.DateUtils;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
 import java.util.Arrays;
@@ -27,25 +31,34 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     private Toast toast;
 
+    private ImageView imageViewMoviePoster;
+    private TextView textViewOriginalTitle, textViewOverview, textViewReleaseDate, textViewVoteAverage, textViewRuntime;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
-        getIncomingIntent();
+        imageViewMoviePoster = findViewById(R.id.iv_movie_poster);
+        textViewOriginalTitle = findViewById(R.id.tv_original_title);
+        textViewOverview = findViewById(R.id.tv_overview);
+        textViewReleaseDate = findViewById(R.id.tv_release_date);
+        textViewVoteAverage = findViewById(R.id.tv_vote_average);
+        textViewRuntime = findViewById(R.id.tv_runtime);
 
+        getIncomingIntent();
 
         if (!NetworkUtils.isDeviceConnected(this)){
             doToast("You are not connected!");
         }else {
             // Shows loading indicator and Kick off the loader
-            doToast("Kicking loader off...");
+            Log.d("onCreate ===>","Starting loader...");
             android.app.LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
         }
 
         String[] apiLanguagesList = ApiConfig.LANGUAGES;
-
         // Verify is the api supports the system language. If not API data will be load in english as default
         if (Arrays.asList(apiLanguagesList).contains(Resources.getSystem().getConfiguration().locale.getLanguage())){
             loadApiLanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
@@ -78,10 +91,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     @Override
     public void onLoadFinished(Loader<Movie> loader, Movie movie) {
-        Log.d(LOG_TAG, "onLoadFinished Started... Outputting data");
-        Log.v("onLoadFinished: ", movie.toString());
-
-
+        Log.d(LOG_TAG, "onLoadFinished Started. Outputting data..");
+        updateUI(movie);
     }
 
     @Override
@@ -100,5 +111,23 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         toast.show();
     }
 
+    private void updateUI(Movie movie){
+
+        textViewOriginalTitle.setText(movie.getmOriginalTitle());
+        textViewOverview.setText(movie.getmOverview());
+        textViewVoteAverage.setText(String.valueOf(movie.getmVoteAverage() + getString(R.string.slash_10)));
+        textViewRuntime.setText(String.valueOf(movie.getmRunTime() + getString(R.string.min)));
+
+        String formatedDate = DateUtils.simpleDateFormat(movie.getmReleaseDate());
+        textViewReleaseDate.setText(formatedDate);
+
+        Picasso.get()
+            .load(movie.getmPosterPath())
+            .placeholder(R.drawable.poster_image_place_holder)
+            .fit().centerInside()
+            .error(R.drawable.poster_image_place_holder)
+            .into(imageViewMoviePoster);
+
+    }
 
 }

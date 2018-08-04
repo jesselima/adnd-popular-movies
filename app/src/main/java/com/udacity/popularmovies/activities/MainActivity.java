@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     // Implementation of loader call backs
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, Bundle bundle) {
-        Log.d(LOG_TAG, "onCreateLoader Started.");
+        Log.d(LOG_TAG, "onCreateLoader Started...");
 
         Uri getBaseMovieListUrl = Uri.parse(ApiConfig.getBaseMovieApiUrlV3());
         Uri.Builder uriBuilder = getBaseMovieListUrl.buildUpon();
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
 
     @Override
     public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movies) {
-        Log.d(LOG_TAG, "onLoadFinished completed.");
+        Log.d(LOG_TAG, "onLoadFinished Started. Outputting data...");
 
         hideLoadingIndicator();
         hideConnectionWarning();

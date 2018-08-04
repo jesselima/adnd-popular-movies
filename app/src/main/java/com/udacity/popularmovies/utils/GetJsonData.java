@@ -70,22 +70,21 @@ public final class GetJsonData {
             JSONObject rootJsonObject = new JSONObject(jsonResponseMovieDetails);
 
             movie.setmId(rootJsonObject.optInt(JsonKey.ID));
-            movie.setmPosterPath(rootJsonObject.optString(JsonKey.POSTER_PATH));
             movie.setmOriginalTitle(rootJsonObject.optString(JsonKey.ORIGINAL_TITLE));
+            movie.setmTitle(rootJsonObject.optString(JsonKey.TITLE));
             movie.setmOverview(rootJsonObject.optString(JsonKey.OVERVIEW));
             movie.setmReleaseDate(rootJsonObject.optString(JsonKey.RELEASE_DATE));
-            movie.setmTitle(rootJsonObject.optString(JsonKey.TITLE));
             movie.setmOriginalLanguage(rootJsonObject.optString(JsonKey.ORIGINAL_LANGUAGE));
-            movie.setmBackdropPath(rootJsonObject.optString(JsonKey.BACKDROP_PATH));
             movie.setmTagline(rootJsonObject.optString(JsonKey.TAGLINE));
             movie.setmPopularity(rootJsonObject.optDouble(JsonKey.POPULARITY));
-            movie.setmVoteAverage(rootJsonObject.optDouble(JsonKey.POPULARITY));
+            movie.setmVoteAverage(rootJsonObject.optDouble(JsonKey.VOTE_AVERAGE));
             movie.setmVoteCount(rootJsonObject.optInt(JsonKey.VOTE_COUNT));
             movie.setmMdbId(rootJsonObject.optInt(JsonKey.MDB_ID));
             movie.setmBuget(rootJsonObject.optInt(JsonKey.BUGET));
             movie.setmRevenue(rootJsonObject.optInt(JsonKey.REVENUE));
             movie.setmRunTime(rootJsonObject.optInt(JsonKey.RUNTIME));
-//            movie.setmGenreIds(rootJsonObject.(JsonKey.GENRE_IDS));
+            movie.setmPosterPath(   ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W154 + rootJsonObject.optString(JsonKey.POSTER_PATH));
+            movie.setmBackdropPath( ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W154 + rootJsonObject.optString(JsonKey.BACKDROP_PATH));
 
         } catch (JSONException e) {
             Log.e("QueryUtilsMovieList", "Problem parsing the movie JSON results", e);
