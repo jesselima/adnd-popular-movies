@@ -25,7 +25,7 @@ import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamKey;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamValue;
 import com.udacity.popularmovies.config.ApiKey;
-import com.udacity.popularmovies.loaders.MovieLoader;
+import com.udacity.popularmovies.loaders.MovieListLoader;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Movie>>/*, MovieListAdapter.ListItemClickListener*/{
+public class MainActivity extends AppCompatActivity implements LoaderCallbacks<List<Movie>> {
 
     public static final String LOG_TAG = MainActivity.class.getSimpleName();
 
@@ -99,11 +99,13 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
     private void restartLoaderFromMenu(String sortByFromMenu){
         sortBy = sortByFromMenu;
         getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
+        Log.d(LOG_TAG, "Loader restarted from action menu. Sorting by " + sortBy);
     }
 
     // Implementation of loader call backs
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, Bundle bundle) {
+        Log.d(LOG_TAG, "onCreateLoader Started.");
 
         Uri getBaseMovieListUrl = Uri.parse(ApiConfig.getBaseMovieApiUrlV3());
         Uri.Builder uriBuilder = getBaseMovieListUrl.buildUpon();
@@ -114,12 +116,12 @@ public class MainActivity extends AppCompatActivity implements LoaderCallbacks<L
         uriBuilder.appendQueryParameter(UrlParamKey.INCLUDE_ADULT, UrlParamValue.INCLUDE_ADULT_FALSE);
         uriBuilder.appendQueryParameter(UrlParamKey.PAGE, String.valueOf(page));
 
-//        Log.v(LOG_TAG, "==>>Request URL: " + uriBuilder.toString());
-        return new MovieLoader(this, uriBuilder.toString());
+        return new MovieListLoader(this, uriBuilder.toString());
     }
 
     @Override
     public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movies) {
+        Log.d(LOG_TAG, "onLoadFinished completed.");
 
         hideLoadingIndicator();
         hideConnectionWarning();

@@ -18,17 +18,17 @@ import java.util.List;
 /**
  * This class offers Helper methods related to requesting and receiving a list of movies data from The TMDB.
  */
-public final class QueryUtils {
+public final class QueryUtilsMovieList {
 
     /** Tag for the log messages output */
-    private static final String LOG_TAG = QueryUtils.class.getSimpleName();
+    private static final String LOG_TAG = QueryUtilsMovieList.class.getSimpleName();
 
     /**
-     * Create a private constructor because no one should ever create a {@link QueryUtils} object.
+     * Create a private constructor because no one should ever create a {@link QueryUtilsMovieList} object.
      * This class is only meant to hold static variables and methods, which can be accessed
-     * directly from the class name QueryUtils (and an object instance of QueryUtils is not needed).
+     * directly from the class name QueryUtilsMovieList (and an object instance of QueryUtilsMovieList is not needed).
      */
-    private QueryUtils() {
+    private QueryUtilsMovieList() {
     }
 
     /**
