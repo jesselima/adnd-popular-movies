@@ -37,6 +37,7 @@ public final class ApiConfig {
     private static final String BASE_URL_V3_DISCOVER    = "https://api.themoviedb.org/3/discover/movie";
     private static final String BASE_IMAGE_URL          = "http://image.tmdb.org/t/p/";
     private static final String SECURE_BASE_IMAGE_URL   = "https://image.tmdb.org/t/p/";
+    private static final String BASE_MOVIE_DETAILS_URL   = "https://api.themoviedb.org/3/movie/";
 
     public static String getBaseMovieApiUrlV3() {
         return BASE_URL_V3_DISCOVER;
@@ -48,6 +49,10 @@ public final class ApiConfig {
 
     public static String getSecureBaseImageUrl() {
         return SECURE_BASE_IMAGE_URL;
+    }
+
+    public static String getBaseMovieDetailsUrl() {
+        return BASE_MOVIE_DETAILS_URL;
     }
 
     /* URL CONSTANT PARAMS KEYS */
@@ -134,6 +139,11 @@ public final class ApiConfig {
         public static final String ADULT = "adult";
         public static final String OVERVIEW = "overview";
         public static final String RELEASE_DATE = "release_date";
+        public static final String TAGLINE = "release_date";
+        public static final String MDB_ID = "imdb_id";
+        public static final String BUGET = "buget";
+        public static final String REVENUE = "buget";
+        public static final String RUNTIME = "runtime";
 
     }
 

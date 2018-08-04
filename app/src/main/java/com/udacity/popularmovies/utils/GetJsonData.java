@@ -68,10 +68,24 @@ public final class GetJsonData {
         try {
             // Create a JSONObject from the JSON response string
             JSONObject rootJsonObject = new JSONObject(jsonResponseMovieDetails);
-            Log.v("Movie Details: ", rootJsonObject.toString());
 
             movie.setmId(rootJsonObject.optInt(JsonKey.ID));
-
+            movie.setmPosterPath(rootJsonObject.optString(JsonKey.POSTER_PATH));
+            movie.setmOriginalTitle(rootJsonObject.optString(JsonKey.ORIGINAL_TITLE));
+            movie.setmOverview(rootJsonObject.optString(JsonKey.OVERVIEW));
+            movie.setmReleaseDate(rootJsonObject.optString(JsonKey.RELEASE_DATE));
+            movie.setmTitle(rootJsonObject.optString(JsonKey.TITLE));
+            movie.setmOriginalLanguage(rootJsonObject.optString(JsonKey.ORIGINAL_LANGUAGE));
+            movie.setmBackdropPath(rootJsonObject.optString(JsonKey.BACKDROP_PATH));
+            movie.setmTagline(rootJsonObject.optString(JsonKey.TAGLINE));
+            movie.setmPopularity(rootJsonObject.optDouble(JsonKey.POPULARITY));
+            movie.setmVoteAverage(rootJsonObject.optDouble(JsonKey.POPULARITY));
+            movie.setmVoteCount(rootJsonObject.optInt(JsonKey.VOTE_COUNT));
+            movie.setmMdbId(rootJsonObject.optInt(JsonKey.MDB_ID));
+            movie.setmBuget(rootJsonObject.optInt(JsonKey.BUGET));
+            movie.setmRevenue(rootJsonObject.optInt(JsonKey.REVENUE));
+            movie.setmRunTime(rootJsonObject.optInt(JsonKey.RUNTIME));
+//            movie.setmGenreIds(rootJsonObject.(JsonKey.GENRE_IDS));
 
         } catch (JSONException e) {
             Log.e("QueryUtilsMovieList", "Problem parsing the movie JSON results", e);
