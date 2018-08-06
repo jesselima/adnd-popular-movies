@@ -13,6 +13,7 @@
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
             android:scaleType="center"
-            android:src="@drawable/poster_image_place_holder"/>
+            android:src="@drawable/poster_image_place_holder"
+            android:contentDescription="@string/movie_poster" />
 
 </LinearLayout>

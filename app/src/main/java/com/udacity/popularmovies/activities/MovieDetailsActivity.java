@@ -7,7 +7,9 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +35,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     private ImageView imageViewMoviePoster;
     private TextView textViewOriginalTitle, textViewOverview, textViewReleaseDate, textViewVoteAverage, textViewRuntime;
-
+    private TextView textViewNetworkStatus, textViewNoMovieDetails;
+    private LinearLayout linearLayoutDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +49,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         textViewReleaseDate = findViewById(R.id.tv_release_date);
         textViewVoteAverage = findViewById(R.id.tv_vote_average);
         textViewRuntime = findViewById(R.id.tv_runtime);
+        linearLayoutDetails = findViewById(R.id.container_layout_details);
+        textViewNetworkStatus = findViewById(R.id.tv_network_status);
+        textViewNoMovieDetails = findViewById(R.id.tv_no_movie_details);
 
         getIncomingIntent();
 
         if (!NetworkUtils.isDeviceConnected(this)){
             doToast("You are not connected!");
+            linearLayoutDetails.setVisibility(View.GONE);
+            textViewNetworkStatus.setVisibility(View.VISIBLE);
         }else {
             // Shows loading indicator and Kick off the loader
             Log.d("onCreate ===>","Starting loader...");
@@ -92,7 +100,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     @Override
     public void onLoadFinished(Loader<Movie> loader, Movie movie) {
         Log.d(LOG_TAG, "onLoadFinished Started. Outputting data..");
-        updateUI(movie);
+        if (!isMovieValid(movie)){
+            textViewNetworkStatus.setVisibility(View.GONE);
+            linearLayoutDetails.setVisibility(View.VISIBLE);
+            updateUI(movie);
+        }else {
+            linearLayoutDetails.setVisibility(View.GONE);
+            textViewNoMovieDetails.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private boolean isMovieValid(Movie movie) {
+        return movie == null;
     }
 
     @Override
@@ -129,5 +148,4 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             .into(imageViewMoviePoster);
 
     }
-
 }

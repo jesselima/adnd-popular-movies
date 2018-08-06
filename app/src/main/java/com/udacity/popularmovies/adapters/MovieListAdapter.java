@@ -36,22 +36,25 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieListAdapter.MovieViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull MovieListAdapter.MovieViewHolder holder, int position) {
+
+        final int adapterPosition = holder.getAdapterPosition();
 
         Picasso.get()
-            .load(movieList.get(position).getmPosterPath())
-            .placeholder(R.drawable.poster_image_place_holder)
-            .fit().centerInside()
-            .error(R.drawable.poster_image_place_holder)
-            .into(holder.mImageViewMoviePoster);
+                .load(movieList.get(position).getmPosterPath())
+                .placeholder(R.drawable.poster_image_place_holder)
+                .fit().centerInside()
+                .error(R.drawable.poster_image_place_holder)
+                .into(holder.mImageViewMoviePoster);
+
 
         holder.mImageViewMoviePoster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            int id =  movieList.get(position).getmId();
-            Intent intent = new Intent(mContext, MovieDetailsActivity.class);
-            intent.putExtra("movieId", id);
-            mContext.startActivity(intent);
+                int id =  movieList.get(adapterPosition).getmId();
+                Intent intent = new Intent(mContext, MovieDetailsActivity.class);
+                intent.putExtra("movieId", id);
+                mContext.startActivity(intent);
             }
         });
 
