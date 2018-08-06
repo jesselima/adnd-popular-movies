@@ -6,23 +6,6 @@
     android:orientation="vertical"
     tools:context=".activities.MovieDetailsActivity">
 
-    <TextView
-        android:id="@+id/tv_network_status"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/no_internet_connection"
-        android:textColor="@color/colorAccent"
-        android:visibility="gone"/>
-    <TextView
-        android:id="@+id/tv_no_movie_details"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="@string/movie_details_could_not_be_loaded"
-        android:textColor="@color/colorAccent"
-        android:visibility="gone"/>
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -31,7 +14,7 @@
             android:id="@+id/container_layout_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             android:orientation="vertical">
 
             <TextView
@@ -161,25 +144,13 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:textSize="12sp"
-                        android:textStyle="italic"
+                        style="@style/FooterText"
                         android:text="@string/tmdb_branding_reference"/>
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:textSize="12sp"
-                        android:textStyle="italic"
+                        style="@style/FooterText"
                         android:text="@string/tmdb_notice"/>
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:textSize="12sp"
-                        android:textStyle="italic"
+                        style="@style/FooterText"
                         android:autoLink="web"
                         android:text="@string/tmdb_official_link"/>
                 </LinearLayout>
@@ -188,4 +159,22 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <TextView
+        android:id="@+id/tv_network_status"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/no_internet_connection"
+        android:textColor="@color/colorWarning"
+        android:visibility="gone"/>
+    <TextView
+        android:id="@+id/tv_no_movie_details"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/movie_details_could_not_be_loaded"
+        android:textColor="@color/colorWarning"
+        android:visibility="gone"/>
+
 </LinearLayout>
