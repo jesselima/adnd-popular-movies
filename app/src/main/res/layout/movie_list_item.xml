@@ -9,10 +9,10 @@
             android:layout_width="500dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:scaleType="center"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
+            android:scaleType="center"
             android:src="@drawable/poster_image_place_holder"/>
 
 </LinearLayout>
