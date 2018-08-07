@@ -3,12 +3,7 @@ package com.udacity.popularmovies.utils;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.udacity.popularmovies.config.ApiConfig.UrlParamKey;
 import com.udacity.popularmovies.models.Movie;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,33 +13,32 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.udacity.popularmovies.config.ApiConfig.getMovieBaseImageUrl;
 
 /**
  * This class offers Helper methods related to requesting and receiving a list of movies data from The TMDB.
  */
-public final class QueryUtils {
-
-    /** Tag for the log messages output */
-    private static final String LOG_TAG = QueryUtils.class.getSimpleName();
+public final class QueryUtilsMovieDetails {
 
     /**
-     * Create a private constructor because no one should ever create a {@link QueryUtils} object.
-     * This class is only meant to hold static variables and methods, which can be accessed
-     * directly from the class name QueryUtils (and an object instance of QueryUtils is not needed).
+     * Tag for the log messages output
      */
-    private QueryUtils() {
+    private static final String LOG_TAG = QueryUtilsMovieDetails.class.getSimpleName();
+
+    /**
+     * Create a private constructor because no one should ever create a {@link QueryUtilsMovieList} object.
+     * This class is only meant to hold static variables and methods, which can be accessed
+     * directly from the class name QueryUtilsMovieList (and an object instance of QueryUtilsMovieList is not needed).
+     */
+    private QueryUtilsMovieDetails() {
     }
 
     /**
      * Query the API data from the server and return a list of {@link Movie} objects.
+     *
      * @param requestUrl is the URL request to the API.
      * @return a list of Movie.
      */
-    public static List<Movie> fetchMovieData(String requestUrl) {
+    public static Movie fetchMovieData(String requestUrl) {
 
         // Create URL object
         URL url = createUrl(requestUrl);
@@ -58,14 +52,13 @@ public final class QueryUtils {
         }
 
         // Extract relevant fields from the JSON response and create a list of {@link Movie}
-        List<Movie> movieList = extractFeatureFromJson(jsonResponse);
-
         // Return the list of {@link Movie}
-        return movieList;
+        return extractFeatureFromJson(jsonResponse);
     }
 
     /**
      * Returns new URL object from the given string URL.
+     *
      * @param stringUrl is the String URl for the request
      * @return a URL object
      */
@@ -81,6 +74,7 @@ public final class QueryUtils {
 
     /**
      * Make an HTTP request to the given URL and return a String as the response.
+     *
      * @param url is the given URL object
      * @return a json in a String data type
      * @throws IOException if there is a problem during the request throw a error at the log.
@@ -129,9 +123,10 @@ public final class QueryUtils {
 
     /**
      * Convert the {@link InputStream} into a String which contains the whole JSON response from the server.
-     * @param inputStream
+     *
+     * @param inputStream is the stream of data from the server.
      * @return a String with the JSON data inside it.
-     * @throws IOException
+     * @throws IOException gives a error info if inputStream does not work.
      */
     private static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
@@ -151,43 +146,14 @@ public final class QueryUtils {
      * Return a list of {@link Movie} objects that has been built up from
      * parsing the given JSON response.
      */
-    private static List<Movie> extractFeatureFromJson(String movieJSON) {
+    private static Movie extractFeatureFromJson(String jsonResponseMovieList) {
         // If the JSON string is empty or null, then return early.
-        if (TextUtils.isEmpty(movieJSON)) {
+        if (TextUtils.isEmpty(jsonResponseMovieList)) {
             return null;
         }
-        // Create an empty ArrayList that we can start adding Movie.
-        List<Movie> movieList = new ArrayList<>();
 
-        try {
-            // Create a JSONObject from the JSON response string
-            JSONObject rootJsonObject = new JSONObject(movieJSON);
-
-            // Get the array of results (movies)
-            JSONArray resultsArray = rootJsonObject.getJSONArray("results");
-
-            // For each position in the movieArray (inside the JSONArray object)
-            // extract the JSON data from such position in the array and put the data into a new Movie class object.
-            for (int i = 0; i < resultsArray.length(); i++) {
-
-                // Get a single Movie object in the movieArray (in within the list of Movie)
-                JSONObject currentMovieResult = resultsArray.getJSONObject(i);
-
-                int movieId = currentMovieResult.optInt("id");
-                String movieTitle = currentMovieResult.optString("title");
-                String posterPath = currentMovieResult.optString("poster_path");
-                String fullPosterPathUrl = getMovieBaseImageUrl() + UrlParamKey.IMAGE_POSTER_W500 + posterPath;
-
-                // Instantiate a Movie class object and add the JSON data as inputs parameters.
-                Movie movieItem = new Movie(movieId, movieTitle, fullPosterPathUrl);
-                movieList.add(movieItem);
-            }
-
-        } catch (JSONException e) {
-            Log.e("QueryUtils", "Problem parsing the movie JSON results", e);
-        }
-        // Return the list of movie
-        return movieList;
+        return GetJsonData.extractMovieDetailsData(jsonResponseMovieList);
     }
 
 }
+

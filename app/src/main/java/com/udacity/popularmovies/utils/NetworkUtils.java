@@ -8,11 +8,12 @@ import java.util.Objects;
 
 public class NetworkUtils {
 
+    @SuppressWarnings("unused")
+    public static final String LOG_TAG = NetworkUtils.class.getSimpleName();
+
     // Private empty constructor
     private NetworkUtils() {
     }
-
-    public static final String LOG_TAG = NetworkUtils.class.getSimpleName();
 
     /**
      * This method when called it verify the connection status. If the device is connected return true, otherwise return false.

@@ -19,6 +19,7 @@ package com.udacity.popularmovies.config;
  * SAMPLE IMAGE URL: http://image.tmdb.org/t/p/w185/lmZFxXgJE3vgrciwuDib0N8CfQo.jpg
  *
  */
+@SuppressWarnings("ALL")
 public final class ApiConfig {
 
     // COMMON USED SIZES TO AVOID REPEATED STRINGS IMAGE SIZE URL PARAMETERS DECLARATION WITH THE SAME VALUE
@@ -37,6 +38,7 @@ public final class ApiConfig {
     private static final String BASE_URL_V3_DISCOVER    = "https://api.themoviedb.org/3/discover/movie";
     private static final String BASE_IMAGE_URL          = "http://image.tmdb.org/t/p/";
     private static final String SECURE_BASE_IMAGE_URL   = "https://image.tmdb.org/t/p/";
+    private static final String BASE_MOVIE_DETAILS_URL   = "https://api.themoviedb.org/3/movie/";
 
     public static String getBaseMovieApiUrlV3() {
         return BASE_URL_V3_DISCOVER;
@@ -50,7 +52,12 @@ public final class ApiConfig {
         return SECURE_BASE_IMAGE_URL;
     }
 
+    public static String getBaseMovieDetailsUrl() {
+        return BASE_MOVIE_DETAILS_URL;
+    }
+
     /* URL CONSTANT PARAMS KEYS */
+    @SuppressWarnings("unused")
     public static final class UrlParamKey {
 
         public static final String API_KEY = "api_key";
@@ -119,6 +126,7 @@ public final class ApiConfig {
 
     public static final class JsonKey {
 
+        public static final String RESULTS = "results";
         public static final String VOTE_COUNT = "vote_count";
         public static final String ID = "id";
         public static final String VIDEO = "video";
@@ -133,6 +141,11 @@ public final class ApiConfig {
         public static final String ADULT = "adult";
         public static final String OVERVIEW = "overview";
         public static final String RELEASE_DATE = "release_date";
+        public static final String TAGLINE = "release_date";
+        public static final String MDB_ID = "imdb_id";
+        public static final String BUGET = "buget";
+        public static final String REVENUE = "buget";
+        public static final String RUNTIME = "runtime";
 
     }
 
