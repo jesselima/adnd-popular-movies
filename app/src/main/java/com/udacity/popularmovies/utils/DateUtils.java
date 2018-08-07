@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
+@SuppressWarnings("unused")
 public final class DateUtils {
 
     /**

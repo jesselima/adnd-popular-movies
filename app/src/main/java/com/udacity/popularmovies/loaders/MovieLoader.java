@@ -15,6 +15,7 @@ public class MovieLoader extends AsyncTaskLoader<Movie> {
     /**
      * Tag for log messages
      */
+    @SuppressWarnings("unused")
     private static final String LOG_TAG = MovieLoader.class.getName();
 
     /**

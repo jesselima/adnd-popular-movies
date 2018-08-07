@@ -18,10 +18,11 @@ import java.util.ArrayList;
 
 public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.MovieViewHolder> {
 
-    private static final String TAG = MovieListAdapter.class.getSimpleName();
+    @SuppressWarnings("unused")
+    private static final String LOG_TAG = MovieListAdapter.class.getSimpleName();
 
-    private ArrayList<Movie> movieList;
-    private Context mContext;
+    private final ArrayList<Movie> movieList;
+    private final Context mContext;
 
     public MovieListAdapter(Context context, ArrayList<Movie> movieList) {
        this.movieList = movieList;
@@ -41,17 +42,16 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         final int adapterPosition = holder.getAdapterPosition();
 
         Picasso.get()
-                .load(movieList.get(position).getmPosterPath())
+                .load(movieList.get(position).getMoviePosterPath())
                 .placeholder(R.drawable.poster_image_place_holder)
                 .fit().centerInside()
                 .error(R.drawable.poster_image_place_holder)
                 .into(holder.mImageViewMoviePoster);
 
-
         holder.mImageViewMoviePoster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int id =  movieList.get(adapterPosition).getmId();
+                int id =  movieList.get(adapterPosition).getMovieId();
                 Intent intent = new Intent(mContext, MovieDetailsActivity.class);
                 intent.putExtra("movieId", id);
                 mContext.startActivity(intent);
@@ -67,7 +67,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
 
-        private ImageView mImageViewMoviePoster;
+        private final ImageView mImageViewMoviePoster;
 
         private MovieViewHolder(View itemView) {
             super(itemView);

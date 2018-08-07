@@ -5,214 +5,215 @@ import java.util.Arrays;
 
 public class Movie {
 
-    private int mId;
-    private String mPosterPath;
+    private int movieId;
+    private String moviePosterPath;
 
     // Rubric requirement
-    private String mOriginalTitle;
-    private String mOverview;
-    private String mReleaseDate;
-    private double mVoteAverage;
+    private String movieOriginalTitle;
+    private String movieOverview;
+    private String movieReleaseDate;
+    private double movieVoteAverage;
 
     // Additional info
-    private int mMdbId;
-    private String mTitle;
-    private String mOriginalLanguage;
-    private int mGenreIds[];
-    private int mVoteCount;
-    private String mBackdropPath;
-    private double mPopularity;
-    private String mTagline;
-    private int mBuget;
-    private int mRevenue;
-    private int mRunTime;
+    private int movieMdbId;
+    private String movieTitle;
+    private String movieOriginalLanguage;
+    private int movieGenreIds[];
+    private int movieVoteCount;
+    private String movieBackdropPath;
+    private double moviePopularity;
+    private String movieTagline;
+    private int movieBuget;
+    private int movieRevenue;
+    private int movieRunTime;
 
     // Empty constructor
     public Movie() {}
 
     // Constructor to use in posters movie list object
-    public Movie(int mId, String mPosterPath) {
-        this.mId = mId;
-        this.mPosterPath = mPosterPath;
+    public Movie(int movieId, String moviePosterPath) {
+        this.movieId = movieId;
+        this.moviePosterPath = moviePosterPath;
     }
 
     // Constructor for movie details object.
-    public Movie(int mId, String mPosterPath, String mOriginalTitle, String mOverview, String mReleaseDate, double mVoteAverage, int mMdbId, String mTitle, String mOriginalLanguage, int[] mGenreIds, int mVoteCount, String mBackdropPath, double mPopularity, String mTagline, int mBuget, int mRevenue, int mRunTime) {
-        this.mId = mId;
-        this.mPosterPath = mPosterPath;
-        this.mOriginalTitle = mOriginalTitle;
-        this.mOverview = mOverview;
-        this.mReleaseDate = mReleaseDate;
-        this.mVoteAverage = mVoteAverage;
-        this.mMdbId = mMdbId;
-        this.mTitle = mTitle;
-        this.mOriginalLanguage = mOriginalLanguage;
-        this.mGenreIds = mGenreIds;
-        this.mVoteCount = mVoteCount;
-        this.mBackdropPath = mBackdropPath;
-        this.mPopularity = mPopularity;
-        this.mTagline = mTagline;
-        this.mBuget = mBuget;
-        this.mRevenue = mRevenue;
-        this.mRunTime = mRunTime;
+
+    public Movie(int movieId, String moviePosterPath, String movieOriginalTitle, String movieOverview, String movieReleaseDate, double movieVoteAverage, int movieMdbId, String movieTitle, String movieOriginalLanguage, int[] movieGenreIds, int movieVoteCount, String movieBackdropPath, double moviePopularity, String movieTagline, int movieBuget, int movieRevenue, int movieRunTime) {
+        this.movieId = movieId;
+        this.moviePosterPath = moviePosterPath;
+        this.movieOriginalTitle = movieOriginalTitle;
+        this.movieOverview = movieOverview;
+        this.movieReleaseDate = movieReleaseDate;
+        this.movieVoteAverage = movieVoteAverage;
+        this.movieMdbId = movieMdbId;
+        this.movieTitle = movieTitle;
+        this.movieOriginalLanguage = movieOriginalLanguage;
+        this.movieGenreIds = movieGenreIds;
+        this.movieVoteCount = movieVoteCount;
+        this.movieBackdropPath = movieBackdropPath;
+        this.moviePopularity = moviePopularity;
+        this.movieTagline = movieTagline;
+        this.movieBuget = movieBuget;
+        this.movieRevenue = movieRevenue;
+        this.movieRunTime = movieRunTime;
     }
 
-    public int getmId() {
-        return mId;
+    public int getMovieId() {
+        return movieId;
     }
 
-    public void setmId(int mId) {
-        this.mId = mId;
+    public void setMovieId(int movieId) {
+        this.movieId = movieId;
     }
 
-    public String getmPosterPath() {
-        return mPosterPath;
+    public String getMoviePosterPath() {
+        return moviePosterPath;
     }
 
-    public void setmPosterPath(String mPosterPath) {
-        this.mPosterPath = mPosterPath;
+    public void setMoviePosterPath(String moviePosterPath) {
+        this.moviePosterPath = moviePosterPath;
     }
 
-    public String getmOriginalTitle() {
-        return mOriginalTitle;
+    public String getMovieOriginalTitle() {
+        return movieOriginalTitle;
     }
 
-    public void setmOriginalTitle(String mOriginalTitle) {
-        this.mOriginalTitle = mOriginalTitle;
+    public void setMovieOriginalTitle(String movieOriginalTitle) {
+        this.movieOriginalTitle = movieOriginalTitle;
     }
 
-    public String getmOverview() {
-        return mOverview;
+    public String getMovieOverview() {
+        return movieOverview;
     }
 
-    public void setmOverview(String mOverview) {
-        this.mOverview = mOverview;
+    public void setMovieOverview(String movieOverview) {
+        this.movieOverview = movieOverview;
     }
 
-    public String getmReleaseDate() {
-        return mReleaseDate;
+    public String getMovieReleaseDate() {
+        return movieReleaseDate;
     }
 
-    public void setmReleaseDate(String mReleaseDate) {
-        this.mReleaseDate = mReleaseDate;
+    public void setMovieReleaseDate(String movieReleaseDate) {
+        this.movieReleaseDate = movieReleaseDate;
     }
 
-    public double getmVoteAverage() {
-        return mVoteAverage;
+    public double getMovieVoteAverage() {
+        return movieVoteAverage;
     }
 
-    public void setmVoteAverage(double mVoteAverage) {
-        this.mVoteAverage = mVoteAverage;
+    public void setMovieVoteAverage(double movieVoteAverage) {
+        this.movieVoteAverage = movieVoteAverage;
     }
 
-    public int getmMdbId() {
-        return mMdbId;
+    public int getMovieMdbId() {
+        return movieMdbId;
     }
 
-    public void setmMdbId(int mMdbId) {
-        this.mMdbId = mMdbId;
+    public void setMovieMdbId(int movieMdbId) {
+        this.movieMdbId = movieMdbId;
     }
 
-    public String getmTitle() {
-        return mTitle;
+    public String getMovieTitle() {
+        return movieTitle;
     }
 
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
+    public void setMovieTitle(String movieTitle) {
+        this.movieTitle = movieTitle;
     }
 
-    public String getmOriginalLanguage() {
-        return mOriginalLanguage;
+    public String getMovieOriginalLanguage() {
+        return movieOriginalLanguage;
     }
 
-    public void setmOriginalLanguage(String mOriginalLanguage) {
-        this.mOriginalLanguage = mOriginalLanguage;
+    public void setMovieOriginalLanguage(String movieOriginalLanguage) {
+        this.movieOriginalLanguage = movieOriginalLanguage;
     }
 
-    public int[] getmGenreIds() {
-        return mGenreIds;
+    public int[] getMovieGenreIds() {
+        return movieGenreIds;
     }
 
-    public void setmGenreIds(int[] mGenreIds) {
-        this.mGenreIds = mGenreIds;
+    public void setMovieGenreIds(int[] movieGenreIds) {
+        this.movieGenreIds = movieGenreIds;
     }
 
-    public int getmVoteCount() {
-        return mVoteCount;
+    public int getMovieVoteCount() {
+        return movieVoteCount;
     }
 
-    public void setmVoteCount(int mVoteCount) {
-        this.mVoteCount = mVoteCount;
+    public void setMovieVoteCount(int movieVoteCount) {
+        this.movieVoteCount = movieVoteCount;
     }
 
-    public String getmBackdropPath() {
-        return mBackdropPath;
+    public String getMovieBackdropPath() {
+        return movieBackdropPath;
     }
 
-    public void setmBackdropPath(String mBackdropPath) {
-        this.mBackdropPath = mBackdropPath;
+    public void setMovieBackdropPath(String movieBackdropPath) {
+        this.movieBackdropPath = movieBackdropPath;
     }
 
-    public double getmPopularity() {
-        return mPopularity;
+    public double getMoviePopularity() {
+        return moviePopularity;
     }
 
-    public void setmPopularity(double mPopularity) {
-        this.mPopularity = mPopularity;
+    public void setMoviePopularity(double moviePopularity) {
+        this.moviePopularity = moviePopularity;
     }
 
-    public String getmTagline() {
-        return mTagline;
+    public String getMovieTagline() {
+        return movieTagline;
     }
 
-    public void setmTagline(String mTagline) {
-        this.mTagline = mTagline;
+    public void setMovieTagline(String movieTagline) {
+        this.movieTagline = movieTagline;
     }
 
-    public int getmBuget() {
-        return mBuget;
+    public int getMovieBuget() {
+        return movieBuget;
     }
 
-    public void setmBuget(int mBuget) {
-        this.mBuget = mBuget;
+    public void setMovieBuget(int movieBuget) {
+        this.movieBuget = movieBuget;
     }
 
-    public int getmRevenue() {
-        return mRevenue;
+    public int getMovieRevenue() {
+        return movieRevenue;
     }
 
-    public void setmRevenue(int mRevenue) {
-        this.mRevenue = mRevenue;
+    public void setMovieRevenue(int movieRevenue) {
+        this.movieRevenue = movieRevenue;
     }
 
-    public int getmRunTime() {
-        return mRunTime;
+    public int getMovieRunTime() {
+        return movieRunTime;
     }
 
-    public void setmRunTime(int mRunTime) {
-        this.mRunTime = mRunTime;
+    public void setMovieRunTime(int movieRunTime) {
+        this.movieRunTime = movieRunTime;
     }
 
     @Override
     public String toString() {
         return "Movie{" +
-                "mId =" + mId +
-                ", mPosterPath ='" + mPosterPath + '\'' +
-                ", mOriginalTitle ='" + mOriginalTitle + '\'' +
-                ", mOverview ='" + mOverview + '\'' +
-                ", mReleaseDate='" + mReleaseDate + '\'' +
-                ", mVoteAverage=" + mVoteAverage +
-                ", mMdbId=" + mMdbId +
-                ", mTitle='" + mTitle + '\'' +
-                ", mOriginalLanguage='" + mOriginalLanguage + '\'' +
-                ", mGenreIds=" + Arrays.toString(mGenreIds) +
-                ", mVoteCount=" + mVoteCount +
-                ", mBackdropPath='" + mBackdropPath + '\'' +
-                ", mPopularity=" + mPopularity +
-                ", mTagline='" + mTagline + '\'' +
-                ", mBuget=" + mBuget +
-                ", mRevenue=" + mRevenue +
-                ", mRunTime=" + mRunTime +
+                "mId=" + movieId +
+                ", moviePosterPath='" + moviePosterPath + '\'' +
+                ", movieOriginalTitle='" + movieOriginalTitle + '\'' +
+                ", movieOverview='" + movieOverview + '\'' +
+                ", movieReleaseDate='" + movieReleaseDate + '\'' +
+                ", movieVoteAverage=" + movieVoteAverage +
+                ", movieMdbId=" + movieMdbId +
+                ", movieTitle='" + movieTitle + '\'' +
+                ", movieOriginalLanguage='" + movieOriginalLanguage + '\'' +
+                ", movieGenreIds=" + Arrays.toString(movieGenreIds) +
+                ", movieVoteCount=" + movieVoteCount +
+                ", movieBackdropPath='" + movieBackdropPath + '\'' +
+                ", moviePopularity=" + moviePopularity +
+                ", movieTagline='" + movieTagline + '\'' +
+                ", movieBuget=" + movieBuget +
+                ", movieRevenue=" + movieRevenue +
+                ", movieRunTime=" + movieRunTime +
                 '}';
     }
 }

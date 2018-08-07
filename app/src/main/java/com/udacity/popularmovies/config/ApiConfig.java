@@ -19,6 +19,7 @@ package com.udacity.popularmovies.config;
  * SAMPLE IMAGE URL: http://image.tmdb.org/t/p/w185/lmZFxXgJE3vgrciwuDib0N8CfQo.jpg
  *
  */
+@SuppressWarnings("ALL")
 public final class ApiConfig {
 
     // COMMON USED SIZES TO AVOID REPEATED STRINGS IMAGE SIZE URL PARAMETERS DECLARATION WITH THE SAME VALUE
@@ -56,6 +57,7 @@ public final class ApiConfig {
     }
 
     /* URL CONSTANT PARAMS KEYS */
+    @SuppressWarnings("unused")
     public static final class UrlParamKey {
 
         public static final String API_KEY = "api_key";

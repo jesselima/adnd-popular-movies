@@ -20,13 +20,13 @@
             <TextView
                 android:id="@+id/tv_original_title"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="120dp"
                 android:layout_marginBottom="8dp"
                 android:background="@color/colorAccent"
-                android:elevation="8dp"
+                android:elevation="12dp"
                 android:gravity="center_vertical"
                 android:paddingEnd="0dp"
-                android:paddingStart="16dp"
+                android:paddingStart="@dimen/default_layout_margin"
                 android:textColor="@color/colorWhite"
                 android:textSize="24sp"
                 android:textStyle="bold"
@@ -35,9 +35,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginBottom="@dimen/default_layout_margin"
+                android:layout_marginLeft="@dimen/default_layout_margin"
+                android:layout_marginRight="@dimen/default_layout_margin"
                 android:orientation="horizontal"
                 android:baselineAligned="false">
 
@@ -131,21 +131,21 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:orientation="vertical">
                     <ImageView
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:layout_marginEnd="4dp"
-                        android:src="@drawable/powered_by_square_green"/>
+                        android:src="@drawable/powered_by_square_green"
+                        android:contentDescription="@string/tmdb_branding_reference" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:orientation="vertical">
-                    <TextView
-                        style="@style/FooterText"
-                        android:text="@string/tmdb_branding_reference"/>
                     <TextView
                         style="@style/FooterText"
                         android:text="@string/tmdb_notice"/>

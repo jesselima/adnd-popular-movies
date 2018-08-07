@@ -12,6 +12,7 @@ import java.util.List;
  * Created by jesse on 12/06/18.
  * This is a part of the project adnd-popular-movies.
  */
+@SuppressWarnings("unused")
 public class MovieListLoader extends AsyncTaskLoader<List<Movie>> {
 
     /**

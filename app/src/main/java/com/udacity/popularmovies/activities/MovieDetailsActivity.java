@@ -4,8 +4,8 @@ import android.app.LoaderManager;
 import android.content.Loader;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,7 +27,7 @@ import java.util.Arrays;
 public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Movie> {
 
     private int movieId;
-    public static final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
+    private static final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
     private static final int MOVIE_DETAILS_LOADER_ID = 2;
     private String loadApiLanguage = ApiConfig.UrlParamValue.LANGUAGE_DEFAULT;
 
@@ -55,32 +55,34 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
         getIncomingIntent();
 
-        if (!NetworkUtils.isDeviceConnected(this)){
+        if (!NetworkUtils.isDeviceConnected(this)) {
             doToast("You are not connected!");
             linearLayoutDetails.setVisibility(View.GONE);
             textViewNetworkStatus.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             // Shows loading indicator and Kick off the loader
-            Log.d("onCreate ===>","Starting loader...");
+            Log.d("onCreate ===>", "Starting loader...");
             android.app.LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
         }
 
         String[] apiLanguagesList = ApiConfig.LANGUAGES;
         // Verify is the api supports the system language. If not API data will be load in english as default
-        if (Arrays.asList(apiLanguagesList).contains(Resources.getSystem().getConfiguration().locale.getLanguage())){
+        if (Arrays.asList(apiLanguagesList).contains(Resources.getSystem().getConfiguration().locale.getLanguage())) {
             loadApiLanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
-        }else {
+        } else {
             doToast(getResources().getString(R.string.warning_language));
         }
 
     }
 
     private void getIncomingIntent() {
-        if(getIntent().hasExtra("movieId")){
-           Bundle bundle = getIntent().getExtras();
-           movieId = bundle.getInt("movieId");
-           Log.v("ID From Recycler:", String.valueOf(movieId));
+        if (getIntent().hasExtra("movieId")) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                movieId = bundle.getInt("movieId");
+            }
+            Log.v("ID From Recycler:", String.valueOf(movieId));
 
         }
     }
@@ -94,17 +96,19 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.API_KEY, ApiKey.getApiKey());
         uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.LANGUAGE, loadApiLanguage);
 
+        Log.v("REQUEST URL ==> ", uriBuilder.toString());
+
         return new MovieLoader(this, uriBuilder.toString());
     }
 
     @Override
     public void onLoadFinished(Loader<Movie> loader, Movie movie) {
         Log.d(LOG_TAG, "onLoadFinished Started. Outputting data..");
-        if (!isMovieValid(movie)){
+        if (!isMovieValid(movie)) {
             textViewNetworkStatus.setVisibility(View.GONE);
             linearLayoutDetails.setVisibility(View.VISIBLE);
             updateUI(movie);
-        }else {
+        } else {
             linearLayoutDetails.setVisibility(View.GONE);
             textViewNoMovieDetails.setVisibility(View.VISIBLE);
         }
@@ -115,7 +119,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     }
 
     @Override
-    public void onLoaderReset(Loader<Movie> loader) {}
+    public void onLoaderReset(Loader<Movie> loader) {
+    }
 
     /**
      * This method makes the reuse of toast object to avoid toasts queue
@@ -130,22 +135,21 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         toast.show();
     }
 
-    private void updateUI(Movie movie){
+    private void updateUI(Movie movie) {
 
-        textViewOriginalTitle.setText(movie.getmOriginalTitle());
-        textViewOverview.setText(movie.getmOverview());
-        textViewVoteAverage.setText(String.valueOf(movie.getmVoteAverage() + getString(R.string.slash_10)));
-        textViewRuntime.setText(String.valueOf(movie.getmRunTime() + getString(R.string.min)));
+        textViewOriginalTitle.setText(movie.getMovieOriginalTitle());
+        textViewOverview.setText(movie.getMovieOverview());
+        textViewVoteAverage.setText(String.valueOf(movie.getMovieVoteAverage() + getString(R.string.slash_10)));
+        textViewRuntime.setText(String.valueOf(movie.getMovieRunTime() + getString(R.string.min)));
 
-        String formatedDate = DateUtils.simpleDateFormat(movie.getmReleaseDate());
+        String formatedDate = DateUtils.simpleDateFormat(movie.getMovieReleaseDate());
         textViewReleaseDate.setText(formatedDate);
 
         Picasso.get()
-            .load(movie.getmPosterPath())
-            .placeholder(R.drawable.poster_image_place_holder)
-            .fit().centerInside()
-            .error(R.drawable.poster_image_place_holder)
-            .into(imageViewMoviePoster);
-
+                .load(movie.getMoviePosterPath())
+                .placeholder(R.drawable.poster_image_place_holder)
+                .fit().centerInside()
+                .error(R.drawable.poster_image_place_holder)
+                .into(imageViewMoviePoster);
     }
 }

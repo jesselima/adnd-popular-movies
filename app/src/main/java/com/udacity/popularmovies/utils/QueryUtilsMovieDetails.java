@@ -1,10 +1,5 @@
 package com.udacity.popularmovies.utils;
 
-/**
- * Created by jesse on 03/08/18.
- * This is a part of the project adnd-popular-movies.
- */
-
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -24,8 +19,10 @@ import java.nio.charset.Charset;
  */
 public final class QueryUtilsMovieDetails {
 
-    /** Tag for the log messages output */
-    private static final String LOG_TAG = QueryUtilsMovieList.class.getSimpleName();
+    /**
+     * Tag for the log messages output
+     */
+    private static final String LOG_TAG = QueryUtilsMovieDetails.class.getSimpleName();
 
     /**
      * Create a private constructor because no one should ever create a {@link QueryUtilsMovieList} object.
@@ -37,6 +34,7 @@ public final class QueryUtilsMovieDetails {
 
     /**
      * Query the API data from the server and return a list of {@link Movie} objects.
+     *
      * @param requestUrl is the URL request to the API.
      * @return a list of Movie.
      */
@@ -54,14 +52,13 @@ public final class QueryUtilsMovieDetails {
         }
 
         // Extract relevant fields from the JSON response and create a list of {@link Movie}
-        Movie movie = extractFeatureFromJson(jsonResponse);
-
         // Return the list of {@link Movie}
-        return movie;
+        return extractFeatureFromJson(jsonResponse);
     }
 
     /**
      * Returns new URL object from the given string URL.
+     *
      * @param stringUrl is the String URl for the request
      * @return a URL object
      */
@@ -77,6 +74,7 @@ public final class QueryUtilsMovieDetails {
 
     /**
      * Make an HTTP request to the given URL and return a String as the response.
+     *
      * @param url is the given URL object
      * @return a json in a String data type
      * @throws IOException if there is a problem during the request throw a error at the log.
@@ -125,9 +123,10 @@ public final class QueryUtilsMovieDetails {
 
     /**
      * Convert the {@link InputStream} into a String which contains the whole JSON response from the server.
-     * @param inputStream
+     *
+     * @param inputStream is the stream of data from the server.
      * @return a String with the JSON data inside it.
-     * @throws IOException
+     * @throws IOException gives a error info if inputStream does not work.
      */
     private static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();

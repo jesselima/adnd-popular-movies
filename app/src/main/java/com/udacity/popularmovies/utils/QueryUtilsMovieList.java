@@ -20,7 +20,9 @@ import java.util.List;
  */
 public final class QueryUtilsMovieList {
 
-    /** Tag for the log messages output */
+    /**
+     * Tag for the log messages output
+     */
     private static final String LOG_TAG = QueryUtilsMovieList.class.getSimpleName();
 
     /**
@@ -33,6 +35,7 @@ public final class QueryUtilsMovieList {
 
     /**
      * Query the API data from the server and return a list of {@link Movie} objects.
+     *
      * @param requestUrl is the URL request to the API.
      * @return a list of Movie.
      */
@@ -50,14 +53,13 @@ public final class QueryUtilsMovieList {
         }
 
         // Extract relevant fields from the JSON response and create a list of {@link Movie}
-        List<Movie> movieList = extractFeatureFromJson(jsonResponse);
-
         // Return the list of {@link Movie}
-        return movieList;
+        return extractFeatureFromJson(jsonResponse);
     }
 
     /**
      * Returns new URL object from the given string URL.
+     *
      * @param stringUrl is the String URl for the request
      * @return a URL object
      */
@@ -73,6 +75,7 @@ public final class QueryUtilsMovieList {
 
     /**
      * Make an HTTP request to the given URL and return a String as the response.
+     *
      * @param url is the given URL object
      * @return a json in a String data type
      * @throws IOException if there is a problem during the request throw a error at the log.
@@ -121,9 +124,10 @@ public final class QueryUtilsMovieList {
 
     /**
      * Convert the {@link InputStream} into a String which contains the whole JSON response from the server.
-     * @param inputStream
+     *
+     * @param inputStream is the stream of data from the server.
      * @return a String with the JSON data inside it.
-     * @throws IOException
+     * @throws IOException gives a error info if inputStream does not work.
      */
     private static String readFromStream(InputStream inputStream) throws IOException {
         StringBuilder output = new StringBuilder();
