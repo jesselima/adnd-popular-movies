@@ -28,6 +28,7 @@ import com.udacity.popularmovies.config.ApiKey;
 import com.udacity.popularmovies.loaders.MovieListLoader;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.NetworkUtils;
+import com.udacity.popularmovies.utils.AdaptiveGridLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -70,7 +71,8 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         movieListAdapter = new MovieListAdapter(this, movieList);
         recyclerView = findViewById(R.id.rv_movies);
         recyclerView.setAdapter(movieListAdapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        int numberOfColumns = AdaptiveGridLayout.calculateNoOfColumns(getApplicationContext());
+        recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         recyclerView.setHasFixedSize(true);
 
         /*

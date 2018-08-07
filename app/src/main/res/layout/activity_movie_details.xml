@@ -23,7 +23,7 @@
                 android:layout_height="120dp"
                 android:layout_marginBottom="8dp"
                 android:background="@color/colorAccent"
-                android:elevation="12dp"
+                android:elevation="8dp"
                 android:gravity="center_vertical"
                 android:paddingEnd="0dp"
                 android:paddingStart="@dimen/default_layout_margin"
