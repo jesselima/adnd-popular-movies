@@ -45,10 +45,11 @@ final class GetJsonData {
 
                 int movieId = currentMovieResult.optInt(JsonKey.ID);
                 String posterPathId = currentMovieResult.optString(JsonKey.POSTER_PATH);
-                String fullPosterPathUrl = getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W500 + posterPathId;
+                    String fullPosterPathUrl = getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W500 + posterPathId;
+                String originalTitle = currentMovieResult.optString(JsonKey.ORIGINAL_TITLE);
 
                 // Instantiate a Movie class object and add the JSON data as inputs parameters.
-                Movie movieItem = new Movie(movieId, fullPosterPathUrl);
+                Movie movieItem = new Movie(movieId, fullPosterPathUrl, originalTitle);
                 movieList.add(movieItem);
             }
 

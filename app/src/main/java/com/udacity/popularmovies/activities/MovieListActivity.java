@@ -27,8 +27,8 @@ import com.udacity.popularmovies.config.ApiConfig.UrlParamValue;
 import com.udacity.popularmovies.config.ApiKey;
 import com.udacity.popularmovies.loaders.MovieListLoader;
 import com.udacity.popularmovies.models.Movie;
-import com.udacity.popularmovies.utils.NetworkUtils;
 import com.udacity.popularmovies.utils.AdaptiveGridLayout;
+import com.udacity.popularmovies.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +61,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_movie_list);
 
         loadingIndicator = findViewById(R.id.loading_indicator);
         imageViewNoMovies = findViewById(R.id.iv_no_movies_placeholder);
