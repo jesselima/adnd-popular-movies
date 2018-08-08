@@ -23,4 +23,12 @@
         <item name="android:paddingBottom">24dp</item>
         <item name="android:orientation">vertical</item>
     </style>
+
+    <!-- Author Credit: https://stackoverflow.com/questions/31542878/android-collapsingtoolbarlayout-title-background/31838291?noredirect=1#comment54917873_31838291 -->
+    <style name="TextAppearance.Design.CollapsingToolbar.Expanded.Shadow">
+        <item name="android:shadowDy">0</item>
+        <item name="android:shadowDx">0</item>
+        <item name="android:shadowRadius">4</item>
+        <item name="android:shadowColor">@android:color/black</item>
+    </style>
 </resources>
