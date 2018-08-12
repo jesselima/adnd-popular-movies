@@ -141,9 +141,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     }
 
     @Override
-    public void onLoaderReset(Loader loader) {
-
-    }
+    public void onLoaderReset(Loader loader) {}
 
     /**
      * Check internet connection when activity is resumed.

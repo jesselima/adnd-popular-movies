@@ -23,28 +23,64 @@ import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.DateUtils;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Objects;
 
 public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Movie> {
 
-    private int movieId;
-    private String movieOriginalTitle = "";
-
     private static final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
     private static final int MOVIE_DETAILS_LOADER_ID = 2;
+    private int movieId;
+    private String movieOriginalTitle = "";
     private String loadApiLanguage = ApiConfig.UrlParamValue.LANGUAGE_DEFAULT;
 
     private Toast toast;
 
     private ImageView imageViewMoviePoster, imageViewMovieBackdrop;
-    private TextView textViewOverview, textViewReleaseDate, textViewVoteAverage, textViewRuntime;
+    private TextView textViewOverview, textViewReleaseDate, textViewRuntime, textViewTitle, textViewVoteAverage, textViewOriginalLanguage, textViewTagline, textViewPopularity, textViewVoteCount, textViewBuget, textViewRevenue;
     private TextView textViewNetworkStatus, textViewNoMovieDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+
+        // UI references
+        imageViewMoviePoster = findViewById(R.id.iv_movie_poster);
+        imageViewMovieBackdrop = findViewById(R.id.iv_movie_backdrop);
+
+        textViewOverview = findViewById(R.id.tv_overview);
+        textViewReleaseDate = findViewById(R.id.tv_release_date);
+        textViewRuntime = findViewById(R.id.tv_runtime);
+        textViewTitle = findViewById(R.id.tv_title);
+        textViewOriginalLanguage = findViewById(R.id.tv_original_language);
+        textViewTagline = findViewById(R.id.tv_tagline);
+        textViewPopularity = findViewById(R.id.tv_popularity);
+        textViewVoteCount = findViewById(R.id.tv_vote_count);
+        textViewBuget = findViewById(R.id.tv_buget);
+        textViewRevenue = findViewById(R.id.tv_revenue);
+        textViewVoteAverage = findViewById(R.id.tv_vote_average);
+
+        // Warnings UI View references.
+        textViewNetworkStatus = findViewById(R.id.tv_network_status);
+        textViewNoMovieDetails = findViewById(R.id.tv_no_movie_details);
+
+        String[] apiLanguagesList = ApiConfig.LANGUAGES;
+        // Verify is the api supports the system language. If not API data will be load in english as default
+        if (Arrays.asList(apiLanguagesList).contains(Resources.getSystem().getConfiguration().locale.getLanguage())) {
+            loadApiLanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
+        } else {
+            doToast(getResources().getString(R.string.warning_language));
+        }
+
+        // Hide the Tagline TextView due to API not provide tagline do english language only or the
+        // movie occasionally may have  a empty tagline value. Then the space will be shown.
+        if (loadApiLanguage.equals("")) {
+            textViewTagline.setVisibility(View.GONE);
+        } else {
+            textViewTagline.setVisibility(View.VISIBLE);
+        }
 
         getIncomingIntent();
 
@@ -55,37 +91,14 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(movieOriginalTitle);
 
-        // Images layout references
-        imageViewMoviePoster = findViewById(R.id.iv_movie_poster);
-        imageViewMovieBackdrop = findViewById(R.id.iv_movie_backdrop);
-
-        textViewOverview = findViewById(R.id.tv_overview);
-        textViewReleaseDate = findViewById(R.id.tv_release_date);
-        textViewVoteAverage = findViewById(R.id.tv_vote_average);
-        textViewRuntime = findViewById(R.id.tv_runtime);
-
-        // Warnings layout
-        textViewNetworkStatus = findViewById(R.id.tv_network_status);
-        textViewNoMovieDetails = findViewById(R.id.tv_no_movie_details);
-
-
         if (!NetworkUtils.isDeviceConnected(this)) {
-            doToast("You are not connected!");
-//            linearLayoutDetails.setVisibility(View.GONE);
+            doToast(getString(R.string.warning_you_are_not_connected));
             textViewNetworkStatus.setVisibility(View.VISIBLE);
         } else {
             // Shows loading indicator and Kick off the loader
             Log.d(LOG_TAG, "Loader Kick off...");
             android.app.LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
-        }
-
-        String[] apiLanguagesList = ApiConfig.LANGUAGES;
-        // Verify is the api supports the system language. If not API data will be load in english as default
-        if (Arrays.asList(apiLanguagesList).contains(Resources.getSystem().getConfiguration().locale.getLanguage())) {
-            loadApiLanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
-        } else {
-            doToast(getResources().getString(R.string.warning_language));
         }
 
     }
@@ -108,8 +121,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         Uri.Builder uriBuilder = baseUrl.buildUpon();
         uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.API_KEY, ApiKey.getApiKey());
         uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.LANGUAGE, loadApiLanguage);
-
-        Log.v("REQUEST URL ==> ", uriBuilder.toString());
 
         return new MovieLoader(this, uriBuilder.toString());
     }
@@ -147,25 +158,44 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     private void updateUI(Movie movie) {
 
+        Picasso.get()
+                .load(movie.getMoviePosterPath())
+                .placeholder(R.drawable.poster_image_place_holder)
+                .fit().centerInside()
+                .error(R.drawable.poster_image_place_holder)
+                .into(imageViewMoviePoster);
+
+        Picasso.get()
+                .load(movie.getMovieBackdropPath())
+                .placeholder(R.drawable.backdrop_image_place_holder)
+                .fit().centerInside()
+                .error(R.drawable.backdrop_image_place_holder)
+                .into(imageViewMovieBackdrop);
+
         textViewOverview.setText(movie.getMovieOverview());
-        textViewVoteAverage.setText(String.valueOf(movie.getMovieVoteAverage() + getString(R.string.slash_10)));
+        textViewVoteAverage.setText(String.valueOf(movie.getMovieVoteAverage()));
+
         textViewRuntime.setText(String.valueOf(movie.getMovieRunTime() + getString(R.string.min)));
 
         String formatedDate = DateUtils.simpleDateFormat(movie.getMovieReleaseDate());
         textViewReleaseDate.setText(formatedDate);
-//
-        Picasso.get()
-                .load(movie.getMoviePosterPath())
-//                .placeholder(R.drawable.poster_image_place_holder)
-                .fit().centerInside()
-//                .error(R.drawable.poster_image_place_holder)
-                .into(imageViewMoviePoster);
-//
-        Picasso.get()
-                .load(movie.getMovieBackdropPath())
-//                .placeholder(R.drawable.poster_image_place_holder)
-                .fit().centerInside()
-//                .error(R.drawable.poster_image_place_holder)
-                .into(imageViewMovieBackdrop);
+
+        textViewTitle.setText(movie.getMovieTitle());
+        textViewOriginalLanguage.setText(movie.getMovieOriginalLanguage());
+
+        String taglineWithQuotes = movie.getMovieTagline();
+        textViewTagline.setText(taglineWithQuotes);
+
+        textViewPopularity.setText(String.valueOf(movie.getMoviePopularity()));
+        textViewVoteCount.setText(String.valueOf(movie.getMovieVoteCount()));
+
+        textViewBuget.setText(formatNumber(movie.getMovieBuget()));
+        textViewRevenue.setText(formatNumber(movie.getMovieRevenue()));
+
+    }
+
+    private String formatNumber(int numberToBeFormated) {
+        DecimalFormat myFormatter = new DecimalFormat("$###,###,###.##");
+        return myFormatter.format(numberToBeFormated);
     }
 }
