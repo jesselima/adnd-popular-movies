@@ -18,7 +18,6 @@ public class Movie {
     private int movieMdbId;
     private String movieTitle;
     private String movieOriginalLanguage;
-    private int movieGenreIds[];
     private int movieVoteCount;
     private String movieBackdropPath;
     private double moviePopularity;
@@ -26,6 +25,7 @@ public class Movie {
     private int movieBuget;
     private int movieRevenue;
     private int movieRunTime;
+    private String movieGenres;
 
     // Empty constructor
     public Movie() {}
@@ -38,7 +38,7 @@ public class Movie {
     }
 
     // Constructor for movie details object.
-    public Movie(int movieId, String moviePosterPath, String movieOriginalTitle, String movieOverview, String movieReleaseDate, double movieVoteAverage, int movieMdbId, String movieTitle, String movieOriginalLanguage, int[] movieGenreIds, int movieVoteCount, String movieBackdropPath, double moviePopularity, String movieTagline, int movieBuget, int movieRevenue, int movieRunTime) {
+    public Movie(int movieId, String moviePosterPath, String movieOriginalTitle, String movieOverview, String movieReleaseDate, double movieVoteAverage, int movieMdbId, String movieTitle, String movieOriginalLanguage, int movieVoteCount, String movieBackdropPath, double moviePopularity, String movieTagline, int movieBuget, int movieRevenue, int movieRunTime, String movieGenres) {
         this.movieId = movieId;
         this.moviePosterPath = moviePosterPath;
         this.movieOriginalTitle = movieOriginalTitle;
@@ -48,7 +48,6 @@ public class Movie {
         this.movieMdbId = movieMdbId;
         this.movieTitle = movieTitle;
         this.movieOriginalLanguage = movieOriginalLanguage;
-        this.movieGenreIds = movieGenreIds;
         this.movieVoteCount = movieVoteCount;
         this.movieBackdropPath = movieBackdropPath;
         this.moviePopularity = moviePopularity;
@@ -56,6 +55,7 @@ public class Movie {
         this.movieBuget = movieBuget;
         this.movieRevenue = movieRevenue;
         this.movieRunTime = movieRunTime;
+        this.movieGenres = movieGenres;
     }
 
     public int getMovieId() {
@@ -130,14 +130,6 @@ public class Movie {
         this.movieOriginalLanguage = movieOriginalLanguage;
     }
 
-    public int[] getMovieGenreIds() {
-        return movieGenreIds;
-    }
-
-    public void setMovieGenreIds(int[] movieGenreIds) {
-        this.movieGenreIds = movieGenreIds;
-    }
-
     public int getMovieVoteCount() {
         return movieVoteCount;
     }
@@ -194,6 +186,14 @@ public class Movie {
         this.movieRunTime = movieRunTime;
     }
 
+    public String getMovieGenres() {
+        return movieGenres;
+    }
+
+    public void setMovieGenres(String movieGenres) {
+        this.movieGenres = movieGenres;
+    }
+
     @Override
     public String toString() {
         return "Movie{" +
@@ -206,7 +206,7 @@ public class Movie {
                 ", movieMdbId=" + movieMdbId +
                 ", movieTitle='" + movieTitle + '\'' +
                 ", movieOriginalLanguage='" + movieOriginalLanguage + '\'' +
-                ", movieGenreIds=" + Arrays.toString(movieGenreIds) +
+                ", movieGenres=" + movieGenres +
                 ", movieVoteCount=" + movieVoteCount +
                 ", movieBackdropPath='" + movieBackdropPath + '\'' +
                 ", moviePopularity=" + moviePopularity +

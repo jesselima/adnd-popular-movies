@@ -38,7 +38,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private Toast toast;
 
     private ImageView imageViewMoviePoster, imageViewMovieBackdrop;
-    private TextView textViewOverview, textViewReleaseDate, textViewRuntime, textViewTitle, textViewVoteAverage, textViewOriginalLanguage, textViewTagline, textViewPopularity, textViewVoteCount, textViewBuget, textViewRevenue;
+    private TextView textViewOverview, textViewReleaseDate, textViewRuntime, textViewTitle, textViewVoteAverage, textViewOriginalLanguage, textViewTagline, textViewPopularity, textViewVoteCount, textViewBuget, textViewRevenue, textViewGenres;
     private TextView textViewNetworkStatus, textViewNoMovieDetails;
 
     @Override
@@ -61,6 +61,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         textViewBuget = findViewById(R.id.tv_buget);
         textViewRevenue = findViewById(R.id.tv_revenue);
         textViewVoteAverage = findViewById(R.id.tv_vote_average);
+        textViewGenres = findViewById(R.id.tv_genres);
 
         // Warnings UI View references.
         textViewNetworkStatus = findViewById(R.id.tv_network_status);
@@ -191,6 +192,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
         textViewBuget.setText(formatNumber(movie.getMovieBuget()));
         textViewRevenue.setText(formatNumber(movie.getMovieRevenue()));
+
+        textViewGenres.setText(movie.getMovieGenres());
 
     }
 

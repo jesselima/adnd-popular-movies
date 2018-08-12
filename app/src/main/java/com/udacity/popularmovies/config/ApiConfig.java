@@ -137,6 +137,7 @@ public final class ApiConfig {
         public static final String ORIGINAL_LANGUAGE = "original_language";
         public static final String ORIGINAL_TITLE = "original_title";
         public static final String GENRE_IDS = "genre_ids"; // Array of int
+        public static final String GENRES = "genres"; // Array of int
         public static final String BACKDROP_PATH = "backdrop_path";
         public static final String ADULT = "adult";
         public static final String OVERVIEW = "overview";

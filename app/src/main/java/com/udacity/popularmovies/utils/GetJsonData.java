@@ -70,14 +70,33 @@ final class GetJsonData {
             // Create a JSONObject from the JSON response string
             JSONObject rootJsonObject = new JSONObject(jsonResponseMovieDetails);
             JSONArray spokenLanguagesArray = rootJsonObject.optJSONArray(JsonKey.SPOKEN_LANGUAGES);
+            JSONArray genresArray = rootJsonObject.optJSONArray(JsonKey.GENRES);
 
             StringBuilder spokenLanguage = new StringBuilder();
             if (rootJsonObject.has(JsonKey.SPOKEN_LANGUAGES)) {
                 for (int i = 0; i < spokenLanguagesArray.length(); i++){
+                    if (i > 0){
+                        spokenLanguage.append(", ");
+                    }
                     JSONObject spokenLanguageObject = spokenLanguagesArray.getJSONObject(i);
-                    spokenLanguage.append(spokenLanguageObject.optString(JsonKey.NAME)).append(" ");
+                    spokenLanguage.append(spokenLanguageObject.optString(JsonKey.NAME));
                 }
             }
+
+            StringBuilder genres = new StringBuilder();
+            if (rootJsonObject.has(JsonKey.GENRES)) {
+                for (int i = 0; i < genresArray.length(); i++) {
+                    if (i > 0){
+                        genres.append(" | ");
+                    }
+                    JSONObject genreObject = genresArray.getJSONObject(i);
+                    genres.append(genreObject.optString(JsonKey.NAME));
+                }
+
+            }
+
+
+
 
             movie.setMovieId(rootJsonObject.optInt(JsonKey.ID));
             movie.setMovieOriginalTitle(rootJsonObject.optString(JsonKey.ORIGINAL_TITLE));
@@ -94,6 +113,7 @@ final class GetJsonData {
             movie.setMovieBuget(rootJsonObject.optInt(JsonKey.BUDGET));
             movie.setMovieRevenue(rootJsonObject.optInt(JsonKey.REVENUE));
             movie.setMovieRunTime(rootJsonObject.optInt(JsonKey.RUNTIME));
+            movie.setMovieGenres(genres.toString());
             movie.setMoviePosterPath(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W500 + rootJsonObject.optString(JsonKey.POSTER_PATH));
             movie.setMovieBackdropPath(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W780 + rootJsonObject.optString(JsonKey.BACKDROP_PATH));
 
