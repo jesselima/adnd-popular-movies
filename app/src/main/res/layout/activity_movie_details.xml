@@ -11,40 +11,43 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/detail_backdrop_height"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <!-- CollapsingToolbarLayout TEXT SHADOW==> app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow" -->
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
             app:expandedTitleMarginStart="48dp"
-            app:expandedTitleMarginEnd="64dp">
+            app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Title"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
             <ImageView
                 android:id="@+id/iv_movie_backdrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
-                app:layout_collapseMode="parallax" />
+                android:src="@drawable/backdrop_image_place_holder"
+                android:scaleType="centerCrop"
+                app:layout_collapseMode="parallax"
+                android:contentDescription="@string/movie_backdrop_image" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
-                android:background="@drawable/gradient_black_background2"
-                android:layout_gravity="center_horizontal|bottom"/>
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal|bottom"
+                android:background="@drawable/backdrop_image_overlay"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_collapseMode="pin" />
+                android:layout_height="?android:attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
 
@@ -66,19 +69,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/default_layout_margin"
                 android:layout_marginRight="@dimen/default_layout_margin"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="6"
+                    android:layout_marginTop="4dp"
                     android:orientation="vertical">
                     <ImageView
                         android:id="@+id/iv_movie_poster"
                         android:layout_width="154dp"
                         android:layout_height="231dp"
                         android:layout_gravity="center"
+                        android:layout_marginTop="4dp"
                         android:background="@android:drawable/dialog_holo_light_frame"
                         android:contentDescription="@string/movie_poster"
                         android:elevation="2dp"
@@ -92,14 +97,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_weight="1"
+                    android:layout_weight="7"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_release_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
                         android:textSize="28sp"
                         tools:text="2018"/>
 
@@ -107,31 +111,128 @@
                         android:id="@+id/tv_runtime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:textStyle="bold|italic"
                         tools:text="147"/>
 
-                    <TextView
-                        android:id="@+id/tv_vote_average"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:textSize="16sp"
-                        tools:text="6.9"/>
+                    <LinearLayout
+                        style="@style/DetailsItemLayout">
+                        <RatingBar
+                            android:id="@+id/rating_bar_vote_average"
+                            style="?android:attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:numStars="1"
+                            android:rating="1"
+                            android:stepSize="1"/>
+                        <TextView
+                            android:id="@+id/tv_vote_average"
+                            style="@style/DetailItemValueStyle"
+                            tools:text="0"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/DetailsItemLayoutVertical">
+                        <TextView
+                            style="@style/DetailItemLabelStyle"
+                            android:text="@string/original_title_label"/>
+                        <TextView
+                            android:id="@+id/tv_title"
+                            style="@style/DetailItemValueStyle"
+                            tools:text="Black Panther"/>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        style="@style/DetailsItemLayout">
+                        <TextView
+                            style="@style/DetailItemLabelStyle"
+                            android:text="@string/spoken_languages_label"/>
+                        <TextView
+                            android:id="@+id/tv_original_language"
+                            style="@style/DetailItemValueStyle"
+                            tools:text="English"/>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        style="@style/DetailsItemLayout">
+                        <TextView
+                            style="@style/DetailItemLabelStyle"
+                            android:text="@string/votes_label"/>
+                        <TextView
+                            android:id="@+id/tv_vote_count"
+                            style="@style/DetailItemValueStyle"
+                            tools:text="692"/>
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        style="@style/DetailsItemLayout">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <TextView
+                                style="@style/DetailItemLabelStyle"
+                                android:text="@string/popularity_label"/>
+                            <TextView
+                                android:id="@+id/tv_popularity"
+                                style="@style/DetailItemValueStyle"
+                                tools:text="198.543"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/DetailsItemLayout">
+                        <TextView
+                            style="@style/DetailItemLabelStyle"
+                            android:text="@string/budget_label"/>
+                        <TextView
+                            android:id="@+id/tv_buget"
+                            style="@style/DetailItemValueStyle"
+                            tools:text="$1.780,000.00"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        style="@style/DetailsItemLayout">
+                        <TextView
+                            style="@style/DetailItemLabelStyle"
+                            android:text="@string/revenue_label"/>
+                        <TextView
+                            android:id="@+id/tv_revenue"
+                            style="@style/DetailItemValueStyle"
+                            tools:text="$3,298,111.86"/>
+                    </LinearLayout>
                 </LinearLayout>
+
+
             </LinearLayout>
+
+            <!-- TODO add genres -->
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/card_margin">
+                android:layout_marginLeft="@dimen/card_margin"
+                android:layout_marginRight="@dimen/card_margin"
+                android:layout_marginTop="@dimen/card_margin"
+                app:cardCornerRadius="3dp"
+                app:cardElevation="4dp">
 
                 <LinearLayout
                     style="@style/Widget.CardContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-
+                    <TextView
+                        android:id="@+id/tv_tagline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="4dp"
+                        android:gravity="center"
+                        android:textSize="20sp"
+                        android:textStyle="italic|bold"
+                        tools:text="Some Missions Are Not A Choice"/>
                     <TextView
                         android:id="@+id/tv_overview"
                         android:layout_width="wrap_content"
@@ -146,9 +247,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginTop="4dp"
                 android:layout_marginLeft="@dimen/default_layout_margin"
                 android:layout_marginRight="@dimen/default_layout_margin"
+                android:layout_marginTop="24dp"
                 android:background="@color/colorLightGrey"/>
 
             <TextView
@@ -159,6 +260,7 @@
                 android:text="@string/no_internet_connection"
                 android:textColor="@color/colorWarning"
                 android:visibility="gone"/>
+
             <TextView
                 android:id="@+id/tv_no_movie_details"
                 android:layout_width="match_parent"
@@ -168,18 +270,19 @@
                 android:textColor="@color/colorWarning"
                 android:visibility="gone"/>
 
-        </LinearLayout>
+            <include layout="@layout/tmdb_branding"/>
 
+        </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        app:layout_anchor="@id/appbar"
-        app:layout_anchorGravity="bottom|right|end"
-        android:src="@drawable/ic_action_share"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
-        android:focusable="true" />
+        android:focusable="true"
+        android:src="@drawable/ic_action_share"
+        app:layout_anchor="@id/appbar"
+        app:layout_anchorGravity="bottom|right|end" />
 
 </android.support.design.widget.CoordinatorLayout>
