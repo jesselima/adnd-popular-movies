@@ -141,11 +141,13 @@ public final class ApiConfig {
         public static final String ADULT = "adult";
         public static final String OVERVIEW = "overview";
         public static final String RELEASE_DATE = "release_date";
-        public static final String TAGLINE = "release_date";
+        public static final String TAGLINE = "tagline";
         public static final String MDB_ID = "imdb_id";
-        public static final String BUGET = "buget";
-        public static final String REVENUE = "buget";
+        public static final String BUDGET = "budget";
+        public static final String REVENUE = "revenue";
         public static final String RUNTIME = "runtime";
+        public static final String SPOKEN_LANGUAGES = "spoken_languages";
+        public static final String NAME = "name";
 
     }
 
