@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.config.ApiConfig.JsonKey;
+import com.udacity.popularmovies.models.Company;
 import com.udacity.popularmovies.models.Movie;
 
 import org.json.JSONArray;
@@ -69,6 +70,7 @@ final class GetJsonData {
         try {
             // Create a JSONObject from the JSON response string
             JSONObject rootJsonObject = new JSONObject(jsonResponseMovieDetails);
+
             JSONArray spokenLanguagesArray = rootJsonObject.optJSONArray(JsonKey.SPOKEN_LANGUAGES);
             JSONArray genresArray = rootJsonObject.optJSONArray(JsonKey.GENRES);
 
@@ -95,9 +97,6 @@ final class GetJsonData {
 
             }
 
-
-
-
             movie.setMovieId(rootJsonObject.optInt(JsonKey.ID));
             movie.setMovieOriginalTitle(rootJsonObject.optString(JsonKey.ORIGINAL_TITLE));
             movie.setMovieOverview(rootJsonObject.optString(JsonKey.OVERVIEW));
@@ -116,6 +115,31 @@ final class GetJsonData {
             movie.setMovieGenres(genres.toString());
             movie.setMoviePosterPath(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W500 + rootJsonObject.optString(JsonKey.POSTER_PATH));
             movie.setMovieBackdropPath(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W780 + rootJsonObject.optString(JsonKey.BACKDROP_PATH));
+
+            ArrayList<Company> companies = new ArrayList<>();
+            Company company = new Company();
+
+            if (rootJsonObject.has(JsonKey.PRODUCTION_COMPANIES)){
+
+                JSONArray companiesJsonArray = rootJsonObject.getJSONArray(JsonKey.PRODUCTION_COMPANIES);
+
+                for (int i = 0; companiesJsonArray.length() > i; i++){
+
+                    JSONObject companyItem = companiesJsonArray.getJSONObject(i);
+                        company.setCompanyId(companyItem.optInt(JsonKey.ID));
+                        company.setCompanyLogoPath(companyItem.optString(JsonKey.LOGO_PATH));
+                        company.setCompanyName(companyItem.optString(JsonKey.NAME));
+                        company.setCompanyCountry(companyItem.optString(JsonKey.ORIGIN_COUNTRY));
+                    companies.add(company);
+
+                    Log.v("Company Item: ", company.toString());
+                }
+            }
+
+            Log.v("MOVIE ID: ==>", String.valueOf(rootJsonObject.optInt(JsonKey.ID)));
+
+            movie.setCompaniesArrayList(companies);
+            movie.setMovieHomepage(rootJsonObject.optString(JsonKey.HOMEPAGE));
 
         } catch (JSONException e) {
             Log.e("QueryUtilsMovieList", "Problem parsing the movie JSON results", e);

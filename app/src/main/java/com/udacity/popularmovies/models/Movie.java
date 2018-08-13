@@ -1,6 +1,7 @@
 package com.udacity.popularmovies.models;
 
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Movie {
@@ -26,6 +27,8 @@ public class Movie {
     private int movieRevenue;
     private int movieRunTime;
     private String movieGenres;
+    private ArrayList<Company> companiesArrayList;
+    private String movieHomepage;
 
     // Empty constructor
     public Movie() {}
@@ -38,7 +41,7 @@ public class Movie {
     }
 
     // Constructor for movie details object.
-    public Movie(int movieId, String moviePosterPath, String movieOriginalTitle, String movieOverview, String movieReleaseDate, double movieVoteAverage, int movieMdbId, String movieTitle, String movieOriginalLanguage, int movieVoteCount, String movieBackdropPath, double moviePopularity, String movieTagline, int movieBuget, int movieRevenue, int movieRunTime, String movieGenres) {
+    public Movie(int movieId, String moviePosterPath, String movieOriginalTitle, String movieOverview, String movieReleaseDate, double movieVoteAverage, int movieMdbId, String movieTitle, String movieOriginalLanguage, int movieVoteCount, String movieBackdropPath, double moviePopularity, String movieTagline, int movieBuget, int movieRevenue, int movieRunTime, String movieGenres, ArrayList<Company> companiesArrayList, String movieHomepage) {
         this.movieId = movieId;
         this.moviePosterPath = moviePosterPath;
         this.movieOriginalTitle = movieOriginalTitle;
@@ -56,6 +59,8 @@ public class Movie {
         this.movieRevenue = movieRevenue;
         this.movieRunTime = movieRunTime;
         this.movieGenres = movieGenres;
+        this.companiesArrayList = companiesArrayList;
+        this.movieHomepage = movieHomepage;
     }
 
     public int getMovieId() {
@@ -194,10 +199,26 @@ public class Movie {
         this.movieGenres = movieGenres;
     }
 
+    public ArrayList<Company> getCompaniesArrayList() {
+        return companiesArrayList;
+    }
+
+    public void setCompaniesArrayList(ArrayList<Company> companiesArrayList) {
+        this.companiesArrayList = companiesArrayList;
+    }
+
+    public String getMovieHomepage() {
+        return movieHomepage;
+    }
+
+    public void setMovieHomepage(String movieHomepage) {
+        this.movieHomepage = movieHomepage;
+    }
+
     @Override
     public String toString() {
         return "Movie{" +
-                "mId=" + movieId +
+                "movieId=" + movieId +
                 ", moviePosterPath='" + moviePosterPath + '\'' +
                 ", movieOriginalTitle='" + movieOriginalTitle + '\'' +
                 ", movieOverview='" + movieOverview + '\'' +
@@ -206,7 +227,6 @@ public class Movie {
                 ", movieMdbId=" + movieMdbId +
                 ", movieTitle='" + movieTitle + '\'' +
                 ", movieOriginalLanguage='" + movieOriginalLanguage + '\'' +
-                ", movieGenres=" + movieGenres +
                 ", movieVoteCount=" + movieVoteCount +
                 ", movieBackdropPath='" + movieBackdropPath + '\'' +
                 ", moviePopularity=" + moviePopularity +
@@ -214,6 +234,9 @@ public class Movie {
                 ", movieBuget=" + movieBuget +
                 ", movieRevenue=" + movieRevenue +
                 ", movieRunTime=" + movieRunTime +
+                ", movieGenres='" + movieGenres + '\'' +
+                ", companiesArrayList=" + companiesArrayList +
+                ", movieHomepage='" + movieHomepage + '\'' +
                 '}';
     }
 }

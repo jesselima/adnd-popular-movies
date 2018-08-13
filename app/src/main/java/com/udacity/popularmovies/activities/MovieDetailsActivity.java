@@ -1,6 +1,7 @@
 package com.udacity.popularmovies.activities;
 
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,11 +21,13 @@ import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.config.ApiKey;
 import com.udacity.popularmovies.loaders.MovieLoader;
+import com.udacity.popularmovies.models.Company;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.DateUtils;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -41,12 +45,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private TextView textViewOverview, textViewReleaseDate, textViewRuntime, textViewTitle, textViewVoteAverage, textViewOriginalLanguage, textViewTagline, textViewPopularity, textViewVoteCount, textViewBuget, textViewRevenue, textViewGenres;
     private TextView textViewNetworkStatus, textViewNoMovieDetails;
 
+    private TextView textViewCompanyName, textViewCompanyCountry;
+    private ImageView imageViewCompanyLogo;
+
+    private Button btnButtonHomepage;
+    private String movieHomepageUrl;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
-        // UI references
+        // UI REFERENCES
         imageViewMoviePoster = findViewById(R.id.iv_movie_poster);
         imageViewMovieBackdrop = findViewById(R.id.iv_movie_backdrop);
 
@@ -63,9 +73,21 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         textViewVoteAverage = findViewById(R.id.tv_vote_average);
         textViewGenres = findViewById(R.id.tv_genres);
 
+        textViewCompanyName = findViewById(R.id.tv_production_company_name);
+        textViewCompanyCountry = findViewById(R.id.tv_production_company_country);
+        imageViewCompanyLogo = findViewById(R.id.iv_production_company);
+
         // Warnings UI View references.
         textViewNetworkStatus = findViewById(R.id.tv_network_status);
         textViewNoMovieDetails = findViewById(R.id.tv_no_movie_details);
+
+        btnButtonHomepage = findViewById(R.id.bt_home_page);
+        btnButtonHomepage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openWebPage(movieHomepageUrl);
+            }
+        });
 
         String[] apiLanguagesList = ApiConfig.LANGUAGES;
         // Verify is the api supports the system language. If not API data will be load in english as default
@@ -132,6 +154,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         if (!isMovieValid(movie)) {
             textViewNetworkStatus.setVisibility(View.GONE);
             updateUI(movie);
+            movieHomepageUrl = movie.getMovieHomepage();
         } else {
             textViewNoMovieDetails.setVisibility(View.VISIBLE);
         }
@@ -195,10 +218,33 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
         textViewGenres.setText(movie.getMovieGenres());
 
+        ArrayList<Company> companies = movie.getCompaniesArrayList();
+//        for (int i = 0; companies.size() > i; i++){
+            Company company = companies.get(0);
+
+            textViewCompanyName.setText(company.getCompanyName());
+            textViewCompanyCountry.setText(company.getCompanyCountry());
+
+            String fullLogoPathUrl = ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W154 + company.getCompanyLogoPath();
+            Log.v("fullLogoPathUrl ==>> ", fullLogoPathUrl);
+            Picasso.get()
+                    .load(fullLogoPathUrl)
+                    .fit().centerInside()
+                    .into(imageViewCompanyLogo);
+//        }
+
     }
 
     private String formatNumber(int numberToBeFormated) {
         DecimalFormat myFormatter = new DecimalFormat("$###,###,###.##");
         return myFormatter.format(numberToBeFormated);
+    }
+
+    private void openWebPage(String url) {
+        Uri uriWebPage = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uriWebPage);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }

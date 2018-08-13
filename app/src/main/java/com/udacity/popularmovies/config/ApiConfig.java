@@ -149,6 +149,10 @@ public final class ApiConfig {
         public static final String RUNTIME = "runtime";
         public static final String SPOKEN_LANGUAGES = "spoken_languages";
         public static final String NAME = "name";
+        public static final String HOMEPAGE = "homepage";
+        public static final String PRODUCTION_COMPANIES = "production_companies";
+        public static final String LOGO_PATH = "logo_path";
+        public static final String ORIGIN_COUNTRY = "origin_country";
 
     }
 
