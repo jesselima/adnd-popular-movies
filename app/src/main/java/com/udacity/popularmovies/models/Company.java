@@ -54,11 +54,11 @@ public class Company {
 
     @Override
     public String toString() {
-        return "Company{" +
-                "companyId=" + companyId +
-                ", companyLogoPath='" + companyLogoPath + '\'' +
-                ", companyName='" + companyName + '\'' +
-                ", companyCountry='" + companyCountry + '\'' +
-                '}';
+        return "\n\n" + "Company {" + "\n" +
+                "companyId: " + companyId + ",\n" +
+                "companyLogoPath: '" + companyLogoPath + '\'' + ",\n" +
+                "companyName: '" + companyName + '\'' + ",\n" +
+                "companyCountry: '" + companyCountry + '\'' + "\n" +
+                '}' + ",\n";
     }
 }

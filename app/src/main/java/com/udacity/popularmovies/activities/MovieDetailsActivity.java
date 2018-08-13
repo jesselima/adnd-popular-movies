@@ -8,11 +8,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,10 +47,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private TextView textViewOverview, textViewReleaseDate, textViewRuntime, textViewTitle, textViewVoteAverage, textViewOriginalLanguage, textViewTagline, textViewPopularity, textViewVoteCount, textViewBuget, textViewRevenue, textViewGenres;
     private TextView textViewNetworkStatus, textViewNoMovieDetails;
 
-    private TextView textViewCompanyName, textViewCompanyCountry;
-    private ImageView imageViewCompanyLogo;
+    private TextView textViewProductionCompanies;
+    private ImageView imageViewProductionCompanies;
 
-    private Button btnButtonHomepage;
     private String movieHomepageUrl;
 
     @Override
@@ -73,15 +74,14 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         textViewVoteAverage = findViewById(R.id.tv_vote_average);
         textViewGenres = findViewById(R.id.tv_genres);
 
-        textViewCompanyName = findViewById(R.id.tv_production_company_name);
-        textViewCompanyCountry = findViewById(R.id.tv_production_company_country);
-        imageViewCompanyLogo = findViewById(R.id.iv_production_company);
-
         // Warnings UI View references.
         textViewNetworkStatus = findViewById(R.id.tv_network_status);
         textViewNoMovieDetails = findViewById(R.id.tv_no_movie_details);
 
-        btnButtonHomepage = findViewById(R.id.bt_home_page);
+        textViewProductionCompanies = findViewById(R.id.tv_production_company);
+        imageViewProductionCompanies = findViewById(R.id.iv_production_company);
+
+        Button btnButtonHomepage = findViewById(R.id.bt_home_page);
         btnButtonHomepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -145,6 +145,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.API_KEY, ApiKey.getApiKey());
         uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.LANGUAGE, loadApiLanguage);
 
+        Log.d("Request URL ===>>>", uriBuilder.toString()); // TODO: REMOVE
         return new MovieLoader(this, uriBuilder.toString());
     }
 
@@ -196,6 +197,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
                 .error(R.drawable.backdrop_image_place_holder)
                 .into(imageViewMovieBackdrop);
 
+        // TODO: REMOVE
+        Log.v("\nPOSTER URL: ", movie.getMoviePosterPath());
+        Log.v("\nBACKDROP URL: ", movie.getMovieBackdropPath());
+
         textViewOverview.setText(movie.getMovieOverview());
         textViewVoteAverage.setText(String.valueOf(movie.getMovieVoteAverage()));
 
@@ -219,19 +224,27 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         textViewGenres.setText(movie.getMovieGenres());
 
         ArrayList<Company> companies = movie.getCompaniesArrayList();
-//        for (int i = 0; companies.size() > i; i++){
-            Company company = companies.get(0);
+        if (companies.size() > 0){
+            textViewProductionCompanies.setVisibility(View.VISIBLE);
+            imageViewProductionCompanies.setVisibility(View.VISIBLE);
+        }else {
+            textViewProductionCompanies.setVisibility(View.GONE);
+            imageViewProductionCompanies.setVisibility(View.GONE);
+        }
 
-            textViewCompanyName.setText(company.getCompanyName());
-            textViewCompanyCountry.setText(company.getCompanyCountry());
+        for (int i = 0; companies.size() > i; i++){
 
-            String fullLogoPathUrl = ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W154 + company.getCompanyLogoPath();
-            Log.v("fullLogoPathUrl ==>> ", fullLogoPathUrl);
+            Company company = companies.get(i);
+
+            ImageView imageView = new ImageView(this); // TODO: SOLVE IT!!!
+
+            String fullLogoPathUrl = ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W185 + company.getCompanyLogoPath();
+            Log.v("\nCOMPANY LOGO: ", fullLogoPathUrl); // TODO:
             Picasso.get()
                     .load(fullLogoPathUrl)
                     .fit().centerInside()
-                    .into(imageViewCompanyLogo);
-//        }
+                    .into(imageViewProductionCompanies);
+        }
 
     }
 

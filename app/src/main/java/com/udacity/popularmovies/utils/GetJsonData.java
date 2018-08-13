@@ -132,7 +132,7 @@ final class GetJsonData {
                         company.setCompanyCountry(companyItem.optString(JsonKey.ORIGIN_COUNTRY));
                     companies.add(company);
 
-                    Log.v("Company Item: ", company.toString());
+                    Log.v("COMPANIES ===>>>: ", company.toString()); // TODO: REMOVE IT!
                 }
             }
 
