@@ -43,14 +43,18 @@ final class GetJsonData {
 
                 // Get a single Movie object in the movieArray (in within the list of Movie)
                 JSONObject currentMovieResult = resultsArray.getJSONObject(i);
+                Log.v("FULL OBJECT LIST", currentMovieResult.toString()); // TODO REMOVE!!!!
 
                 int movieId = currentMovieResult.optInt(JsonKey.ID);
                 String posterPathId = currentMovieResult.optString(JsonKey.POSTER_PATH);
-                    String fullPosterPathUrl = getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W500 + posterPathId;
+                    String fullPosterPathUrl = getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W185 + posterPathId;
                 String originalTitle = currentMovieResult.optString(JsonKey.ORIGINAL_TITLE);
 
+                String releaseDate = DateUtils.simpleDateFormat(currentMovieResult.optString(JsonKey.RELEASE_DATE));
+                double voteAverage = currentMovieResult.optDouble(JsonKey.VOTE_AVERAGE);
+
                 // Instantiate a Movie class object and add the JSON data as inputs parameters.
-                Movie movieItem = new Movie(movieId, fullPosterPathUrl, originalTitle);
+                Movie movieItem = new Movie(movieId, fullPosterPathUrl, originalTitle, releaseDate, voteAverage);
                 movieList.add(movieItem);
             }
 

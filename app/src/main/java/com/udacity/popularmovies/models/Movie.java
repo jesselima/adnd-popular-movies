@@ -34,10 +34,12 @@ public class Movie {
     public Movie() {}
 
     // Constructor to use in posters movie list object
-    public Movie(int movieId, String moviePosterPath, String movieOriginalTitle) {
+    public Movie(int movieId, String moviePosterPath, String movieOriginalTitle, String movieReleaseDate, double movieVoteAverage) {
         this.movieId = movieId;
         this.moviePosterPath = moviePosterPath;
         this.movieOriginalTitle = movieOriginalTitle;
+        this.movieReleaseDate = movieReleaseDate;
+        this.movieVoteAverage = movieVoteAverage;
     }
 
     // Constructor for movie details object.

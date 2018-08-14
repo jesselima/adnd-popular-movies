@@ -7,6 +7,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
@@ -49,6 +50,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     private TextView textViewProductionCompanies;
     private ImageView imageViewProductionCompanies;
+    private Movie movieData = new Movie();
 
     private String movieHomepageUrl;
 
@@ -81,13 +83,37 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         textViewProductionCompanies = findViewById(R.id.tv_production_company);
         imageViewProductionCompanies = findViewById(R.id.iv_production_company);
 
-        Button btnButtonHomepage = findViewById(R.id.bt_home_page);
-        btnButtonHomepage.setOnClickListener(new View.OnClickListener() {
+        Button buttonHomepage = findViewById(R.id.bt_home_page);
+        buttonHomepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openWebPage(movieHomepageUrl);
+                if (movieData.getMovieHomepage().equals("null")){
+                    doToast(getString(R.string.warning_homepage_not_available));
+                }else {
+                    openWebPage(movieHomepageUrl);
+                }
+
             }
         });
+
+        FloatingActionButton floatingShareButton = findViewById(R.id.float_share_button);
+        floatingShareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (movieData.getMovieHomepage().equals("null")){
+                    doToast(getString(R.string.warning_homepage_not_available));
+                }else {
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, movieData.getMovieHomepage());
+                    intent.setType("text/plain");
+                    startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_to)));
+                }
+
+            }
+        });
+
+
 
         String[] apiLanguagesList = ApiConfig.LANGUAGES;
         // Verify is the api supports the system language. If not API data will be load in english as default
@@ -152,10 +178,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     @Override
     public void onLoadFinished(Loader<Movie> loader, Movie movie) {
         Log.d(LOG_TAG, "onLoadFinished Started. Outputting data...");
-        if (!isMovieValid(movie)) {
+
+        movieData = movie;
+
+        if (!isMovieValid(movieData)) {
             textViewNetworkStatus.setVisibility(View.GONE);
-            updateUI(movie);
-            movieHomepageUrl = movie.getMovieHomepage();
+            updateUI(movieData);
+            movieHomepageUrl = movieData.getMovieHomepage();
         } else {
             textViewNoMovieDetails.setVisibility(View.VISIBLE);
         }

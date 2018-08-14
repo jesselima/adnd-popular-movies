@@ -44,6 +44,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
         final int adapterPosition = holder.getAdapterPosition();
 
         holder.textViewOriginalTitle.setText(movieList.get(adapterPosition).getMovieOriginalTitle());
+        holder.textViewReleaseDate.setText(movieList.get(adapterPosition).getMovieReleaseDate());
+        holder.textViewVoteAverage.setText(String.valueOf(movieList.get(adapterPosition).getMovieVoteAverage()));
 
         Picasso.get()
             .load(movieList.get(position).getMoviePosterPath())
@@ -75,11 +77,15 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
         private final ImageView imageViewMoviePoster;
         private final TextView textViewOriginalTitle;
+        private final TextView textViewReleaseDate;
+        private final TextView textViewVoteAverage;
 
         private MovieViewHolder(View itemView) {
             super(itemView);
             imageViewMoviePoster = itemView.findViewById(R.id.iv_movie_poster);
             textViewOriginalTitle = itemView.findViewById(R.id.tv_movie_original_title);
+            textViewReleaseDate = itemView.findViewById(R.id.tv_release_date);
+            textViewVoteAverage = itemView.findViewById(R.id.tv_vote_average);
         }
     }
 }
