@@ -63,10 +63,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
+        getIncomingIntent();
+
         // UI REFERENCES
         imageViewMoviePoster = findViewById(R.id.iv_movie_poster);
         imageViewMovieBackdrop = findViewById(R.id.iv_movie_backdrop);
-
         textViewOverview = findViewById(R.id.tv_overview);
         textViewReleaseDate = findViewById(R.id.tv_release_date);
         textViewRuntime = findViewById(R.id.tv_runtime);
@@ -79,19 +80,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         textViewRevenue = findViewById(R.id.tv_revenue);
         textViewVoteAverage = findViewById(R.id.tv_vote_average);
         textViewGenres = findViewById(R.id.tv_genres);
-
         // Warnings UI View references.
         textViewNetworkStatus = findViewById(R.id.tv_network_status);
         textViewNoMovieDetails = findViewById(R.id.tv_no_movie_details);
 
-        imageViewProductionCompanies = findViewById(R.id.iv_production_company);
+        // RecyclerView of companies
         recyclerViewCompanies = findViewById(R.id.rv_companies);
-
         companyListAdapter = new CompanyListAdapter(this, companies);
         recyclerViewCompanies.setAdapter(companyListAdapter);
         recyclerViewCompanies.setLayoutManager(new LinearLayoutManager(this));
         recyclerViewCompanies.setHasFixedSize(true);
 
+        // Button inside Overview card that send user to the movie homepage in the browser if URL is not null
         Button buttonHomepage = findViewById(R.id.bt_home_page);
         buttonHomepage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +105,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             }
         });
 
+        // FloatButton to share movie homepage to other app available on device.
         FloatingActionButton floatingShareButton = findViewById(R.id.float_share_button);
         floatingShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,15 +139,15 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             textViewTagline.setVisibility(View.VISIBLE);
         }
 
-        getIncomingIntent();
-
+        // Setup ToolBar
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-
+        // Setup CollapsingToolbar with movie name
         CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(movieOriginalTitle);
 
+        // Check for internet connection before start the loader
         if (!NetworkUtils.isDeviceConnected(this)) {
             doToast(getString(R.string.warning_you_are_not_connected));
             textViewNetworkStatus.setVisibility(View.VISIBLE);
@@ -156,7 +157,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             android.app.LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
         }
-
     }
 
     private void getIncomingIntent() {
@@ -192,12 +192,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             textViewNetworkStatus.setVisibility(View.GONE);
 
             updateUI(movieData);
+            movieHomepageUrl = movieData.getMovieHomepage();
 
             companies.clear();
             companies.addAll(movieData.getCompaniesArrayList());
             companyListAdapter.notifyDataSetChanged();
-
-            movieHomepageUrl = movieData.getMovieHomepage();
         } else {
             textViewNoMovieDetails.setVisibility(View.VISIBLE);
         }

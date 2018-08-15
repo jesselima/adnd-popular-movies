@@ -8,16 +8,13 @@
     <string name="warning_language">Movie data not available in your language. \nEnglish will be used.</string>
     <string name="warning_no_movies_found">Ooops! We did not find any movie.</string>
     <string name="no_movies_found_image">No movies found image</string>
-    <string name="action_menu_sort_by_most_popular">Sort By Most Popular</string>
-    <string name="action_menu_sort_by_highest_rated">Sort By Highest Rated</string>
-    <string name="sorting_by_most_popular">Sorting by most popular</string>
-    <string name="sorting_by_highest_rated">Sorting by highest rated</string>
+    <string name="most_popular">Most Popular</string>
+    <string name="highest_rated">Highest Rated</string>
     <string name="min">min</string>
     <string name="slash_10">/10</string>
     <string name="slash_votes">\u0020/\u0020 Votes:\u0020</string>
     <string name="slash">\u0020/\u0020</string>
     <string name="movie_details_could_not_be_loaded">Movie details could not be loaded.</string>
-    <string name="quotes">\"</string>
     <string name="warning_you_are_not_connected">You are not connected!</string>
     <string name="movie_backdrop_image">Movie Backdrop Image</string>
     <string name="original_title_label">Original Title:\u0020</string>
@@ -29,5 +26,9 @@
     <string name="homepage">HOMEPAGE</string>
     <string name="production_companies">Production Companies</string>
     <string name="share_to">Share to…</string>
-    <string name="warning_homepage_not_available">Ooops! Homepage not available for this movie. Sorry!...</string>
+    <string name="warning_homepage_not_available">Ooops! Homepage not available for this movie. Sorry!…</string>
+    <string name="previous">Previous</string>
+    <string name="next">Next</string>
+    <string name="warning_check_internet_connection">Please, check internet connection!</string>
+    <string name="you_are_at_page_1">You are at page 1</string>
 </resources>

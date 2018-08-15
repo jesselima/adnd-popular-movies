@@ -6,6 +6,8 @@ import android.content.Loader;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -38,36 +40,83 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
     private static final String LOG_TAG = MovieListActivity.class.getSimpleName();
 
+    // Movie List Loader ID
     private static final int MOVIE_LOADER_ID = 1;
-
     // Global variable to be used with system language abbreviation in two letters
     private String loadApiLanguage = UrlParamValue.LANGUAGE_DEFAULT;
-
-    @SuppressWarnings("FieldCanBeLocal")
-    private final int page = 1;
+    // Page value for pagination control
+    private int page = 1;
+    // Sort by default value
+    private String sortBy = UrlParamValue.POPULARITY_DESC;
     // Global toast object to avoid toast objects queue
     private Toast toast;
-
+    // Vie objects to control UI warnings
     private TextView tvNetworkStatus;
     private ImageView imageViewNoMovies;
     private TextView textViewNoImageWarning;
-
-    private RecyclerView recyclerView;
     private ProgressBar loadingIndicator;
+    // Objects ro set and control RecyclerView and the list of movie data
+    private RecyclerView recyclerView;
     private MovieListAdapter movieListAdapter;
-    private final ArrayList<Movie> movieList = new ArrayList<>(); // Creates a empty movieList
-    private String sortBy = UrlParamValue.POPULARITY_DESC;
+    private final ArrayList<Movie> movieList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
 
+        // Set and handle actions on BottonNavigation
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch (item.getItemId()) {
+                    case R.id.button_nav_most_popular:
+                        if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
+                            doToast(getResources().getString(R.string.warning_check_internet_connection));
+                        }else {
+                            page = 1;
+                            sortBy = UrlParamValue.POPULARITY_DESC;
+                            restartLoader();
+                        }
+                        break;
+                    case R.id.button_nav_most_rated:
+                        if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
+                            doToast(getResources().getString(R.string.warning_check_internet_connection));
+                        }else {
+                            page = 1;
+                            sortBy = UrlParamValue.VOTE_COUNT_DESC;
+                            restartLoader();
+                        }
+                        break;
+                    case R.id.button_pagination_backward:
+                        if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
+                            doToast(getResources().getString(R.string.warning_check_internet_connection));
+                        }else {
+                            paginationBackward();
+                        }
+                        break;
+                    case R.id.button_pagination_forward:
+                        if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
+                            doToast(getResources().getString(R.string.warning_check_internet_connection));
+                        }else {
+                            paginationForward();
+                        }
+                        break;
+                }
+                return true;
+            }
+        });
+
+
         loadingIndicator = findViewById(R.id.loading_indicator);
         imageViewNoMovies = findViewById(R.id.iv_no_movies_placeholder);
         textViewNoImageWarning = findViewById(R.id.tv_warning_no_movies);
         tvNetworkStatus = findViewById(R.id.tv_network_status);
 
+        // Setup the adapter adapter and RecyclerView to receive data.
         movieListAdapter = new MovieListAdapter(this, movieList);
         recyclerView = findViewById(R.id.rv_movies);
         recyclerView.setAdapter(movieListAdapter);
@@ -87,6 +136,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             doToast(getResources().getString(R.string.warning_language));
         }
 
+        // Check internet connection before start the loader
         if (!NetworkUtils.isDeviceConnected(this)) {
             hideLoadingIndicator();
             hideNoResultsWarning();
@@ -99,11 +149,33 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         }
     } // Closes onCreate
 
-
-    private void restartLoaderFromMenu(String sortByFromMenu) {
-        sortBy = sortByFromMenu;
+    /*** Methods for BottonNavigation control ***/
+    private void restartLoader() {
+        showLoadingIndicator();
         getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
-        Log.d(LOG_TAG, "Loader restarted from action menu. Sorting by " + sortBy);
+    }
+
+    private void paginationBackward() {
+        movieList.clear();
+        hideNoResultsWarning();
+        hideConnectionWarning();
+        if (page == 1){
+            doToast(getResources().getString(R.string.you_are_at_page_1));
+        }else {
+            page--;
+            restartLoader();
+            doToast(String.valueOf("Page " + page));
+            Log.d("paginationForward", "PAGE: " + String.valueOf(page));
+        }
+    }
+    private void paginationForward() {
+
+        movieList.clear();
+        hideNoResultsWarning();
+        hideConnectionWarning();
+        page++;
+        restartLoader();
+        Log.d("paginationForward", "PAGE: " + String.valueOf(page));
     }
 
     // Implementation of loader call backs
@@ -127,13 +199,13 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movies) {
         Log.d(LOG_TAG, "onLoadFinished Started. Outputting data...");
 
-        hideLoadingIndicator();
-        hideConnectionWarning();
-
         // When the onCreateLoader finish its job, it will pass the data do this method.
         if (movies == null || movies.isEmpty()) {
             showNoResultsWarning();
         } else {
+            hideLoadingIndicator();
+            hideConnectionWarning();
+            hideNoResultsWarning();
             movieList.clear();
             movieList.addAll(movies);
             movieListAdapter.notifyDataSetChanged();
@@ -224,30 +296,4 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         toast.show();
     }
 
-    /* Action menu Sort menu implementation for sort by popularity and sort by most rated */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.sort_by, menu);
-        // return the menu layout inflated with the item objects
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_sort_by_most_popular:
-                restartLoaderFromMenu(UrlParamValue.POPULARITY_DESC);
-                doToast(getString(R.string.sorting_by_most_popular));
-                return true;
-            case R.id.action_sort_by_highest_rated:
-                restartLoaderFromMenu(UrlParamValue.VOTE_COUNT_DESC);
-                doToast(getString(R.string.sorting_by_highest_rated));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
-    }
 }
