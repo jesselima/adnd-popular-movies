@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.activities.MovieDetailsActivity;
+import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.models.Movie;
 
 import java.util.ArrayList;
@@ -41,23 +43,29 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
         final int adapterPosition = holder.getAdapterPosition();
 
-        Picasso.get()
-                .load(movieList.get(position).getMoviePosterPath())
-                .placeholder(R.drawable.poster_image_place_holder)
-                .fit().centerInside()
-                .error(R.drawable.poster_image_place_holder)
-                .into(holder.mImageViewMoviePoster);
+        holder.textViewOriginalTitle.setText(movieList.get(adapterPosition).getMovieOriginalTitle());
+        holder.textViewReleaseDate.setText(movieList.get(adapterPosition).getMovieReleaseDate());
+        holder.textViewVoteAverage.setText(String.valueOf(movieList.get(adapterPosition).getMovieVoteAverage()));
 
-        holder.mImageViewMoviePoster.setOnClickListener(new View.OnClickListener() {
+        Picasso.get()
+            .load(movieList.get(position).getMoviePosterPath())
+            .placeholder(R.drawable.poster_image_place_holder)
+            .fit().centerInside()
+            .error(R.drawable.poster_image_place_holder)
+            .into(holder.imageViewMoviePoster);
+
+        holder.imageViewMoviePoster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int id =  movieList.get(adapterPosition).getMovieId();
-                Intent intent = new Intent(mContext, MovieDetailsActivity.class);
-                intent.putExtra("movieId", id);
-                mContext.startActivity(intent);
+            int    id      =  movieList.get(adapterPosition).getMovieId();
+            String title   =  movieList.get(adapterPosition).getMovieOriginalTitle();
+
+            Intent intent = new Intent(mContext, MovieDetailsActivity.class);
+                intent.putExtra(ApiConfig.JsonKey.ID, id);
+                intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, title);
+            mContext.startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -67,13 +75,17 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
 
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView mImageViewMoviePoster;
+        private final ImageView imageViewMoviePoster;
+        private final TextView textViewOriginalTitle;
+        private final TextView textViewReleaseDate;
+        private final TextView textViewVoteAverage;
 
         private MovieViewHolder(View itemView) {
             super(itemView);
-            mImageViewMoviePoster = itemView.findViewById(R.id.iv_movie_poster);
+            imageViewMoviePoster = itemView.findViewById(R.id.iv_movie_poster);
+            textViewOriginalTitle = itemView.findViewById(R.id.tv_movie_original_title);
+            textViewReleaseDate = itemView.findViewById(R.id.tv_release_date);
+            textViewVoteAverage = itemView.findViewById(R.id.tv_vote_average);
         }
-
     }
-
 }

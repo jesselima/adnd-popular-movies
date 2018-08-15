@@ -14,5 +14,20 @@
     <string name="sorting_by_highest_rated">Sorting by highest rated</string>
     <string name="min">min</string>
     <string name="slash_10">/10</string>
+    <string name="slash_votes">\u0020/\u0020 Votes:\u0020</string>
+    <string name="slash">\u0020/\u0020</string>
     <string name="movie_details_could_not_be_loaded">Movie details could not be loaded.</string>
+    <string name="quotes">\"</string>
+    <string name="warning_you_are_not_connected">You are not connected!</string>
+    <string name="movie_backdrop_image">Movie Backdrop Image</string>
+    <string name="original_title_label">Original Title:\u0020</string>
+    <string name="spoken_languages_label">Spoken Languages:\u0020</string>
+    <string name="votes_label">Votes:\u0020</string>
+    <string name="popularity_label">Popularity:\u0020</string>
+    <string name="budget_label">Budget:\u0020</string>
+    <string name="revenue_label">Revenue:\u0020</string>
+    <string name="homepage">HOMEPAGE</string>
+    <string name="production_companies">Production Companies</string>
+    <string name="share_to">Share to…</string>
+    <string name="warning_homepage_not_available">Ooops! Homepage not available for this movie. Sorry!...</string>
 </resources>

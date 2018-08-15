@@ -27,6 +27,7 @@ import com.udacity.popularmovies.config.ApiConfig.UrlParamValue;
 import com.udacity.popularmovies.config.ApiKey;
 import com.udacity.popularmovies.loaders.MovieListLoader;
 import com.udacity.popularmovies.models.Movie;
+import com.udacity.popularmovies.utils.AdaptiveGridLayout;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_movie_list);
 
         loadingIndicator = findViewById(R.id.loading_indicator);
         imageViewNoMovies = findViewById(R.id.iv_no_movies_placeholder);
@@ -70,7 +71,8 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         movieListAdapter = new MovieListAdapter(this, movieList);
         recyclerView = findViewById(R.id.rv_movies);
         recyclerView.setAdapter(movieListAdapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        int numberOfColumns = AdaptiveGridLayout.calculateNoOfColumns(getApplicationContext());
+        recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         recyclerView.setHasFixedSize(true);
 
         /*
@@ -139,9 +141,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     }
 
     @Override
-    public void onLoaderReset(Loader loader) {
-
-    }
+    public void onLoaderReset(Loader loader) {}
 
     /**
      * Check internet connection when activity is resumed.

@@ -50,7 +50,6 @@ public class MovieLoader extends AsyncTaskLoader<Movie> {
         }
 
         // Perform the network request, parse the response, and extract the Movie details.
-        // fetchNewsData() is a method from QueryUtilsMovieList class.
         return QueryUtilsMovieDetails.fetchMovieData(mUrl);
     }
 
