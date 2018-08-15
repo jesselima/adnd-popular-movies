@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -11,8 +12,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:contentDescription="@string/production_companies"
-            android:src="@drawable/production_company_sample"
-            android:visibility="visible"/>
+            android:src="@drawable/production_company_sample"/>
 
         <TextView
             android:id="@+id/tv_company_name"
@@ -22,7 +22,7 @@
             android:layout_marginBottom="@dimen/default_layout_margin"
             android:gravity="center"
             android:textSize="16sp"
-            android:text="Company Name"/>
+            tools:text="Company Name"/>
 
     <include layout="@layout/divider"/>
 

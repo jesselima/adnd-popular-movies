@@ -46,7 +46,7 @@ final class GetJsonData {
 
                 int movieId = currentMovieResult.optInt(JsonKey.ID);
                 String posterPathId = currentMovieResult.optString(JsonKey.POSTER_PATH);
-                    String fullPosterPathUrl = getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W185 + posterPathId;
+                    String fullPosterPathUrl = getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W342 + posterPathId;
                 String originalTitle = currentMovieResult.optString(JsonKey.ORIGINAL_TITLE);
 
                 String releaseDate = DateUtils.simpleDateFormat(currentMovieResult.optString(JsonKey.RELEASE_DATE));
@@ -104,7 +104,6 @@ final class GetJsonData {
             movie.setMovieOverview(rootJsonObject.optString(JsonKey.OVERVIEW));
             movie.setMovieReleaseDate(rootJsonObject.optString(JsonKey.RELEASE_DATE));
             movie.setMovieVoteAverage(rootJsonObject.optDouble(JsonKey.VOTE_AVERAGE));
-            // Additional Info
             movie.setMovieTitle(rootJsonObject.optString(JsonKey.TITLE));
             movie.setMovieOriginalLanguage(spokenLanguage.toString());
             movie.setMovieTagline(rootJsonObject.optString(JsonKey.TAGLINE));

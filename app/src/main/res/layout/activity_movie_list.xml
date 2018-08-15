@@ -7,7 +7,8 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_movies"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginBottom="56dp"/>
 
     <TextView
         android:id="@+id/tv_network_status"
@@ -43,5 +44,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
+
+    <!-- Includes the Bottom Navigation View  in the activity layout -->
+    <include layout="@layout/botton_nav"/>
 
 </merge>

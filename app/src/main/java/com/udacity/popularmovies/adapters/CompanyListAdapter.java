@@ -55,7 +55,8 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
             @Override
             public void onClick(View view) {
                 String companyName = companies.get(adapterPosition).getCompanyName();
-                Toast.makeText(context, companyName, Toast.LENGTH_SHORT).show();
+                String companyCountry = companies.get(adapterPosition).getCompanyCountry();
+                Toast.makeText(context, companyName + ", " +companyCountry, Toast.LENGTH_SHORT).show();
             }
         });
     }

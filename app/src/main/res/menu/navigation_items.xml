@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/button_nav_most_popular"
+        android:title="@string/most_popular"
+        android:icon="@drawable/ic_hot" />
+
+    <item android:id="@+id/button_nav_most_rated"
+        android:title="@string/highest_rated"
+        android:icon="@drawable/ic_stars"/>
+
+    <item android:id="@+id/button_pagination_backward"
+        android:title="@string/previous"
+        android:icon="@drawable/ic_pagination_backward" />
+
+    <item android:id="@+id/button_pagination_forward"
+        android:title="@string/next"
+        android:icon="@drawable/ic_pagination_forward" />
+
+</menu>
