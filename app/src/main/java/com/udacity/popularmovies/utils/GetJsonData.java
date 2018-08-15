@@ -43,7 +43,6 @@ final class GetJsonData {
 
                 // Get a single Movie object in the movieArray (in within the list of Movie)
                 JSONObject currentMovieResult = resultsArray.getJSONObject(i);
-                Log.v("FULL OBJECT LIST", currentMovieResult.toString()); // TODO REMOVE!!!!
 
                 int movieId = currentMovieResult.optInt(JsonKey.ID);
                 String posterPathId = currentMovieResult.optString(JsonKey.POSTER_PATH);
@@ -98,7 +97,6 @@ final class GetJsonData {
                     JSONObject genreObject = genresArray.getJSONObject(i);
                     genres.append(genreObject.optString(JsonKey.NAME));
                 }
-
             }
 
             movie.setMovieId(rootJsonObject.optInt(JsonKey.ID));
@@ -119,31 +117,23 @@ final class GetJsonData {
             movie.setMovieGenres(genres.toString());
             movie.setMoviePosterPath(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W500 + rootJsonObject.optString(JsonKey.POSTER_PATH));
             movie.setMovieBackdropPath(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W780 + rootJsonObject.optString(JsonKey.BACKDROP_PATH));
+            movie.setMovieHomepage(rootJsonObject.optString(JsonKey.HOMEPAGE));
 
-            ArrayList<Company> companies = new ArrayList<>();
-            Company company = new Company();
+            List<Company> companies = new ArrayList<>();
 
             if (rootJsonObject.has(JsonKey.PRODUCTION_COMPANIES)){
-
                 JSONArray companiesJsonArray = rootJsonObject.getJSONArray(JsonKey.PRODUCTION_COMPANIES);
-
                 for (int i = 0; companiesJsonArray.length() > i; i++){
-
                     JSONObject companyItem = companiesJsonArray.getJSONObject(i);
-                        company.setCompanyId(companyItem.optInt(JsonKey.ID));
-                        company.setCompanyLogoPath(companyItem.optString(JsonKey.LOGO_PATH));
-                        company.setCompanyName(companyItem.optString(JsonKey.NAME));
-                        company.setCompanyCountry(companyItem.optString(JsonKey.ORIGIN_COUNTRY));
+                    Company company = new Company();
+                    company.setCompanyId(companyItem.optInt(JsonKey.ID));
+                    company.setCompanyLogoPath(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W342 + companyItem.optString(JsonKey.LOGO_PATH));
+                    company.setCompanyName(companyItem.optString(JsonKey.NAME));
+                    company.setCompanyCountry(companyItem.optString(JsonKey.ORIGIN_COUNTRY));
                     companies.add(company);
-
-                    Log.v("COMPANIES ===>>>: ", company.toString()); // TODO: REMOVE IT!
                 }
+                movie.setCompaniesArrayList(companies);
             }
-
-            Log.v("MOVIE ID: ==>", String.valueOf(rootJsonObject.optInt(JsonKey.ID)));
-
-            movie.setCompaniesArrayList(companies);
-            movie.setMovieHomepage(rootJsonObject.optString(JsonKey.HOMEPAGE));
 
         } catch (JSONException e) {
             Log.e("QueryUtilsMovieList", "Problem parsing the movie JSON results", e);

@@ -3,6 +3,7 @@ package com.udacity.popularmovies.models;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Movie {
 
@@ -27,7 +28,7 @@ public class Movie {
     private int movieRevenue;
     private int movieRunTime;
     private String movieGenres;
-    private ArrayList<Company> companiesArrayList;
+    private List<Company> companiesArrayList;
     private String movieHomepage;
 
     // Empty constructor
@@ -201,11 +202,11 @@ public class Movie {
         this.movieGenres = movieGenres;
     }
 
-    public ArrayList<Company> getCompaniesArrayList() {
+    public List<Company> getCompaniesArrayList() {
         return companiesArrayList;
     }
 
-    public void setCompaniesArrayList(ArrayList<Company> companiesArrayList) {
+    public void setCompaniesArrayList(List<Company> companiesArrayList) {
         this.companiesArrayList = companiesArrayList;
     }
 

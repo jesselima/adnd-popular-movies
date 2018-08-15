@@ -9,18 +9,19 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.R;
+import com.udacity.popularmovies.adapters.CompanyListAdapter;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.config.ApiKey;
 import com.udacity.popularmovies.loaders.MovieLoader;
@@ -48,9 +49,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private TextView textViewOverview, textViewReleaseDate, textViewRuntime, textViewTitle, textViewVoteAverage, textViewOriginalLanguage, textViewTagline, textViewPopularity, textViewVoteCount, textViewBuget, textViewRevenue, textViewGenres;
     private TextView textViewNetworkStatus, textViewNoMovieDetails;
 
-    private TextView textViewProductionCompanies;
     private ImageView imageViewProductionCompanies;
     private Movie movieData = new Movie();
+
+    private RecyclerView recyclerViewCompanies;
+    private CompanyListAdapter companyListAdapter;
+    private ArrayList<Company> companies = new ArrayList<>();
 
     private String movieHomepageUrl;
 
@@ -80,8 +84,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         textViewNetworkStatus = findViewById(R.id.tv_network_status);
         textViewNoMovieDetails = findViewById(R.id.tv_no_movie_details);
 
-        textViewProductionCompanies = findViewById(R.id.tv_production_company);
         imageViewProductionCompanies = findViewById(R.id.iv_production_company);
+        recyclerViewCompanies = findViewById(R.id.rv_companies);
+
+        companyListAdapter = new CompanyListAdapter(this, companies);
+        recyclerViewCompanies.setAdapter(companyListAdapter);
+        recyclerViewCompanies.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewCompanies.setHasFixedSize(true);
 
         Button buttonHomepage = findViewById(R.id.bt_home_page);
         buttonHomepage.setOnClickListener(new View.OnClickListener() {
@@ -112,8 +121,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
             }
         });
-
-
 
         String[] apiLanguagesList = ApiConfig.LANGUAGES;
         // Verify is the api supports the system language. If not API data will be load in english as default
@@ -183,7 +190,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
         if (!isMovieValid(movieData)) {
             textViewNetworkStatus.setVisibility(View.GONE);
+
             updateUI(movieData);
+
+            companies.clear();
+            companies.addAll(movieData.getCompaniesArrayList());
+            companyListAdapter.notifyDataSetChanged();
+
             movieHomepageUrl = movieData.getMovieHomepage();
         } else {
             textViewNoMovieDetails.setVisibility(View.VISIBLE);
@@ -226,10 +239,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
                 .error(R.drawable.backdrop_image_place_holder)
                 .into(imageViewMovieBackdrop);
 
-        // TODO: REMOVE
-        Log.v("\nPOSTER URL: ", movie.getMoviePosterPath());
-        Log.v("\nBACKDROP URL: ", movie.getMovieBackdropPath());
-
         textViewOverview.setText(movie.getMovieOverview());
         textViewVoteAverage.setText(String.valueOf(movie.getMovieVoteAverage()));
 
@@ -252,30 +261,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
         textViewGenres.setText(movie.getMovieGenres());
 
-        ArrayList<Company> companies = movie.getCompaniesArrayList();
-        if (companies.size() > 0){
-            textViewProductionCompanies.setVisibility(View.VISIBLE);
-            imageViewProductionCompanies.setVisibility(View.VISIBLE);
-        }else {
-            textViewProductionCompanies.setVisibility(View.GONE);
-            imageViewProductionCompanies.setVisibility(View.GONE);
-        }
-
-        for (int i = 0; companies.size() > i; i++){
-
-            Company company = companies.get(i);
-
-            ImageView imageView = new ImageView(this); // TODO: SOLVE IT!!!
-
-            String fullLogoPathUrl = ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W185 + company.getCompanyLogoPath();
-            Log.v("\nCOMPANY LOGO: ", fullLogoPathUrl); // TODO:
-            Picasso.get()
-                    .load(fullLogoPathUrl)
-                    .fit().centerInside()
-                    .into(imageViewProductionCompanies);
-        }
-
-    }
+    }// Closes updateUI method
 
     private String formatNumber(int numberToBeFormated) {
         DecimalFormat myFormatter = new DecimalFormat("$###,###,###.##");
