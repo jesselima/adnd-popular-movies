@@ -21,7 +21,7 @@
             android:layout_marginTop="@dimen/medium_layout_margin"
             android:layout_marginBottom="@dimen/default_layout_margin"
             android:gravity="center"
-            android:textSize="16sp"
+            android:textSize="14sp"
             tools:text="Company Name"/>
 
     <include layout="@layout/divider"/>
