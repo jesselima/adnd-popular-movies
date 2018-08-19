@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +31,7 @@ import com.udacity.popularmovies.config.ApiKey;
 import com.udacity.popularmovies.loaders.MovieListLoader;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.AdaptiveGridLayout;
+import com.udacity.popularmovies.utils.BottomNavigationBehavior;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
 import java.util.ArrayList;
@@ -110,6 +112,11 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             }
         });
 
+        // attaching bottom sheet behaviour - hide / show on scroll
+        // Author: Android Hive, Source: https://www.androidhive.info/2017/12/android-working-with-bottom-navigation/
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
+        layoutParams.setBehavior(new BottomNavigationBehavior());
+
 
         loadingIndicator = findViewById(R.id.loading_indicator);
         imageViewNoMovies = findViewById(R.id.iv_no_movies_placeholder);
@@ -163,19 +170,18 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             doToast(getResources().getString(R.string.you_are_at_page_1));
         }else {
             page--;
+            movieList.clear();
             restartLoader();
-            doToast(String.valueOf("Page " + page));
-            Log.d("paginationForward", "PAGE: " + String.valueOf(page));
+            doToast(getResources().getString(R.string.page) + String.valueOf(page));
         }
     }
     private void paginationForward() {
-
         movieList.clear();
         hideNoResultsWarning();
         hideConnectionWarning();
         page++;
         restartLoader();
-        Log.d("paginationForward", "PAGE: " + String.valueOf(page));
+        doToast(String.valueOf("Page " + page));
     }
 
     // Implementation of loader call backs
@@ -208,7 +214,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             hideNoResultsWarning();
             movieList.clear();
             movieList.addAll(movies);
-            movieListAdapter.notifyDataSetChanged();
+            movieListAdapter.notifyDataSetChanged(); //TODO: CHECK IT!!!!
         }
     }
 

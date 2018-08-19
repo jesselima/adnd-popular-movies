@@ -49,7 +49,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private TextView textViewOverview, textViewReleaseDate, textViewRuntime, textViewTitle, textViewVoteAverage, textViewOriginalLanguage, textViewTagline, textViewPopularity, textViewVoteCount, textViewBuget, textViewRevenue, textViewGenres;
     private TextView textViewNetworkStatus, textViewNoMovieDetails;
 
-    private ImageView imageViewProductionCompanies;
     private Movie movieData = new Movie();
 
     private RecyclerView recyclerViewCompanies;
@@ -96,9 +95,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         buttonHomepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (movieData.getMovieHomepage().equals("null")){
+                if (movieData.getMovieHomepage().equals("null")) {
                     doToast(getString(R.string.warning_homepage_not_available));
-                }else {
+                } else {
                     openWebPage(movieHomepageUrl);
                 }
 
@@ -110,9 +109,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         floatingShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (movieData.getMovieHomepage().equals("null")){
+                if (movieData.getMovieHomepage().equals("null")) {
                     doToast(getString(R.string.warning_homepage_not_available));
-                }else {
+                } else {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_SEND);
                     intent.putExtra(Intent.EXTRA_TEXT, movieData.getMovieHomepage());
@@ -178,7 +177,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.API_KEY, ApiKey.getApiKey());
         uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.LANGUAGE, loadApiLanguage);
 
-        Log.d("Request URL ===>>>", uriBuilder.toString()); // TODO: REMOVE
         return new MovieLoader(this, uriBuilder.toString());
     }
 
