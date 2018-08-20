@@ -47,7 +47,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     // Page value for pagination control
     private int page = 1;
     // Sort by default value
-    private String sortBy = UrlParamValue.POPULARITY_DESC;
+    private String sortBy = UrlParamValue.POPULAR;
     // Global toast object to avoid toast objects queue
     private Toast toast;
     // Vie objects to control UI warnings
@@ -71,14 +71,13 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
                 switch (item.getItemId()) {
                     case R.id.button_nav_most_popular:
                         if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
                             doToast(getResources().getString(R.string.warning_check_internet_connection));
                         }else {
                             page = 1;
-                            sortBy = UrlParamValue.POPULARITY_DESC;
+                            sortBy = UrlParamValue.POPULAR;
                             restartLoader();
                         }
                         break;
@@ -87,7 +86,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
                             doToast(getResources().getString(R.string.warning_check_internet_connection));
                         }else {
                             page = 1;
-                            sortBy = UrlParamValue.VOTE_COUNT_DESC;
+                            sortBy = UrlParamValue.TOP_RATED;
                             restartLoader();
                         }
                         break;
@@ -187,12 +186,11 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     public Loader<List<Movie>> onCreateLoader(int id, Bundle bundle) {
         Log.d(LOG_TAG, "onCreateLoader Started...");
 
-        Uri getBaseMovieListUrl = Uri.parse(ApiConfig.getBaseMovieApiUrlV3());
+        Uri getBaseMovieListUrl = Uri.parse(ApiConfig.getBaseUrlV3Default() + sortBy);
         Uri.Builder uriBuilder = getBaseMovieListUrl.buildUpon();
 
         uriBuilder.appendQueryParameter(UrlParamKey.API_KEY, ApiKey.getApiKey());
         uriBuilder.appendQueryParameter(UrlParamKey.LANGUAGE, loadApiLanguage);
-        uriBuilder.appendQueryParameter(UrlParamKey.SORT_BY, sortBy);
         uriBuilder.appendQueryParameter(UrlParamKey.INCLUDE_ADULT, UrlParamValue.INCLUDE_ADULT_FALSE);
         uriBuilder.appendQueryParameter(UrlParamKey.PAGE, String.valueOf(page));
 
@@ -212,7 +210,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             hideNoResultsWarning();
             movieList.clear();
             movieList.addAll(movies);
-            movieListAdapter.notifyDataSetChanged(); //TODO: CHECK IT!!!!
+            movieListAdapter.notifyDataSetChanged();
         }
     }
 
