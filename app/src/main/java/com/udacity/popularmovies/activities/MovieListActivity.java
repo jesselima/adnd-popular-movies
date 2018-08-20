@@ -6,6 +6,7 @@ import android.content.Loader;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
@@ -61,6 +62,10 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     private MovieListAdapter movieListAdapter;
     private final ArrayList<Movie> movieList = new ArrayList<>();
 
+
+    // Implementation for save state
+    private final String KEY_RECYCLER_STATE = "recycler_state";
+    private static Bundle bundleRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,16 +274,28 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         }
     }
 
-    /**
-     * Check internet connection when activity is resumed.
-     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        bundleRecyclerView = new Bundle();
+        Parcelable parcelable = recyclerView.getLayoutManager().onSaveInstanceState();
+        bundleRecyclerView.putParcelable(KEY_RECYCLER_STATE, parcelable);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        // Check internet connection when activity is resumed.
         if (NetworkUtils.isDeviceConnected(this)) {
             hideConnectionWarning();
         } else {
             showConnectionWarning();
+        }
+        // Check is there is a saved state.
+        if (bundleRecyclerView != null) {
+            Parcelable parcelable = bundleRecyclerView.getParcelable(KEY_RECYCLER_STATE);
+            recyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
         }
     }
 
@@ -288,8 +305,10 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     @Override
     protected void onRestart() {
         super.onRestart();
+        // Check internet connection when activity is resumed.
         if (NetworkUtils.isDeviceConnected(this)) {
             hideConnectionWarning();
+            hideNoResultsWarning();
         } else {
             showConnectionWarning();
         }

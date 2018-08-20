@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -80,8 +81,8 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
                 .load(companies.get(position).getCompanyLogoPath())
                 .into(holder.imageViewCompanyLogo);
 
-        // Handling clicks on each companies image
-        holder.imageViewCompanyLogo.setOnClickListener(new View.OnClickListener() {
+        // Handling clicks on each companies item list
+        holder.companyItemList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int companyId = companies.get(adapterPosition).getCompanyId();
@@ -104,11 +105,13 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
 
         private final ImageView imageViewCompanyLogo;
         private final TextView textViewCompanyName;
+        private final LinearLayout companyItemList;
 
         CompanyViewHolder(View itemView) {
             super(itemView);
             imageViewCompanyLogo = itemView.findViewById(R.id.iv_production_company);
             textViewCompanyName = itemView.findViewById(R.id.tv_company_name);
+            companyItemList = itemView.findViewById(R.id.company_item_list);
         }
     }
 
