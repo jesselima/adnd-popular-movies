@@ -20,13 +20,13 @@ import static com.udacity.popularmovies.config.ApiConfig.getMovieBaseImageUrl;
  * Created by jesse on 03/08/18.
  * This is a part of the project adnd-popular-movies.
  */
-final class GetJsonData {
+final class ReadJsonData {
 
-    private GetJsonData() {
+    private ReadJsonData() {
     }
 
     public static List<Movie> extractMovieListData(String jsonResponseMovieList) {
-        Log.d("Running ", "extractMovieListData()");
+        Log.d("==>> Running ", "extractMovieListData()");
 
         List<Movie> movieList = new ArrayList<>();
 
@@ -66,7 +66,7 @@ final class GetJsonData {
 
 
     public static Movie extractMovieDetailsData(String jsonResponseMovieDetails) {
-        Log.d("Running ", "extractMovieListData()");
+        Log.d("==>> Running", " extractMovieDetailsData method...");
 
         Movie movie = new Movie();
 
