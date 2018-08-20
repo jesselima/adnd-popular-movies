@@ -15,7 +15,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 /**
- * This class offers Helper methods related to requesting and receiving a list of movies data from The TMDB.
+ * This class offers Helper methods related to requesting and receiving movie details data from The TMDB.
  */
 public final class QueryUtilsMovieDetails {
 
@@ -25,18 +25,18 @@ public final class QueryUtilsMovieDetails {
     private static final String LOG_TAG = QueryUtilsMovieDetails.class.getSimpleName();
 
     /**
-     * Create a private constructor because no one should ever create a {@link QueryUtilsMovieList} object.
+     * Create a private constructor because no one should ever create a {@link QueryUtilsMovieDetails} object.
      * This class is only meant to hold static variables and methods, which can be accessed
-     * directly from the class name QueryUtilsMovieList (and an object instance of QueryUtilsMovieList is not needed).
+     * directly from the class name QueryUtilsMovieDetails (and an object instance of QueryUtilsMovieList is not needed).
      */
     private QueryUtilsMovieDetails() {
     }
 
     /**
-     * Query the API data from the server and return a list of {@link Movie} objects.
+     * Query the API data from the server and return details of a movie {@link Movie} object.
      *
-     * @param requestUrl is the URL request to the API.
-     * @return a list of Movie.
+     * @param requestUrl is the URL request to the API. This requestUrl (in this case) will come from inside of onCreateLoader method in {@link com.udacity.popularmovies.activities.MovieDetailsActivity}
+     * @return Movie details data.
      */
     public static Movie fetchMovieData(String requestUrl) {
 
@@ -51,8 +51,8 @@ public final class QueryUtilsMovieDetails {
             Log.e(LOG_TAG, "Ops! Problem making the HTTP request.", e);
         }
 
-        // Extract relevant fields from the JSON response and create a list of {@link Movie}
-        // Return the list of {@link Movie}
+        // Extract relevant fields from the JSON response and create a movie object {@link Movie}
+        // Return a Movie {@link Movie}
         return extractFeatureFromJson(jsonResponse);
     }
 
@@ -146,13 +146,13 @@ public final class QueryUtilsMovieDetails {
      * Return a list of {@link Movie} objects that has been built up from
      * parsing the given JSON response.
      */
-    private static Movie extractFeatureFromJson(String jsonResponseMovieList) {
+    private static Movie extractFeatureFromJson(String movieDetails) {
         // If the JSON string is empty or null, then return early.
-        if (TextUtils.isEmpty(jsonResponseMovieList)) {
+        if (TextUtils.isEmpty(movieDetails)) {
             return null;
         }
 
-        return GetJsonData.extractMovieDetailsData(jsonResponseMovieList);
+        return ReadJsonData.extractMovieDetailsData(movieDetails);
     }
 
 }

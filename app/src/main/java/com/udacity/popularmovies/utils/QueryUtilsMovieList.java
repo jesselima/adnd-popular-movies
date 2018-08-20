@@ -36,7 +36,7 @@ public final class QueryUtilsMovieList {
     /**
      * Query the API data from the server and return a list of {@link Movie} objects.
      *
-     * @param requestUrl is the URL request to the API.
+     * @param requestUrl is the URL request to the API. This requestUrl (in this case) will come from inside of onCreateLoader method in {@link com.udacity.popularmovies.activities.MovieListActivity}
      * @return a list of Movie.
      */
     public static List<Movie> fetchMovieData(String requestUrl) {
@@ -153,7 +153,7 @@ public final class QueryUtilsMovieList {
             return null;
         }
 
-        return GetJsonData.extractMovieListData(jsonResponseMovieList);
+        return ReadJsonData.extractMovieListData(jsonResponseMovieList);
     }
 
 }

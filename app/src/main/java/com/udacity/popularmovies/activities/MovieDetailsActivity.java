@@ -12,7 +12,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -38,22 +37,23 @@ import java.util.Objects;
 public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Movie> {
 
     private static final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
+    // The Loader ID to be used by the LoaderManager
     private static final int MOVIE_DETAILS_LOADER_ID = 2;
+
     private int movieId;
     private String movieOriginalTitle = "";
     private String loadApiLanguage = ApiConfig.UrlParamValue.LANGUAGE_DEFAULT;
 
     private Toast toast;
 
+    // Object for UI references
     private ImageView imageViewMoviePoster, imageViewMovieBackdrop;
     private TextView textViewOverview, textViewReleaseDate, textViewRuntime, textViewTitle, textViewVoteAverage, textViewOriginalLanguage, textViewTagline, textViewPopularity, textViewVoteCount, textViewBuget, textViewRevenue, textViewGenres;
     private TextView textViewNetworkStatus, textViewNoMovieDetails;
 
     private Movie movieData = new Movie();
-
     private CompanyListAdapter companyListAdapter;
     private final ArrayList<Company> companies = new ArrayList<>();
-
     private String movieHomepageUrl;
 
     @Override
@@ -61,6 +61,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
+        // Get the movie ID and Title from the clicked item on the RecyclerView item.
         getIncomingIntent();
 
         // UI REFERENCES
@@ -82,7 +83,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         textViewNetworkStatus = findViewById(R.id.tv_network_status);
         textViewNoMovieDetails = findViewById(R.id.tv_no_movie_details);
 
-        // RecyclerView of companies
+        // RecyclerView for the list of companies
         RecyclerView recyclerViewCompanies = findViewById(R.id.rv_companies);
         companyListAdapter = new CompanyListAdapter(this, companies);
         recyclerViewCompanies.setAdapter(companyListAdapter);
@@ -121,16 +122,15 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             }
         });
 
+        // Get the available languages from ApiConfig class
         String[] apiLanguagesList = ApiConfig.LANGUAGES;
         // Verify is the api supports the system language. If not API data will be load in english as default
         if (Arrays.asList(apiLanguagesList).contains(Resources.getSystem().getConfiguration().locale.getLanguage())) {
             loadApiLanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
-        } else {
-            doToast(getResources().getString(R.string.warning_language));
         }
 
-        // Hide the Tagline TextView due to API not provide tagline do english language only or the
-        // movie occasionally may have  a empty tagline value. Then the space will be shown.
+        // Hide the Tagline TextView due to API to provide tagline to english language only or the
+        // movie occasionally may have a empty tagline value. Then the space will be shown.
         if (loadApiLanguage.equals("")) {
             textViewTagline.setVisibility(View.GONE);
         } else {
@@ -151,12 +151,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             textViewNetworkStatus.setVisibility(View.VISIBLE);
         } else {
             // Shows loading indicator and Kick off the loader
-            Log.d(LOG_TAG, "Loader Kick off...");
             android.app.LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
         }
     }
 
+    // It's called inside onCreate method and get the movie ID and Title sent from MovieListActivity.
     private void getIncomingIntent() {
         if (getIntent().hasExtra(ApiConfig.JsonKey.ID) && getIntent().hasExtra(ApiConfig.JsonKey.ORIGINAL_TITLE)) {
             Bundle bundle = getIntent().getExtras();
@@ -167,9 +167,15 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         }
     }
 
+    /**
+     *  Instantiate and return a new Loader for the given ID.
+     * @param id is the loader id.
+     * @param args A mapping from String keys to various Parcelable values.
+     * @return a new MovieListLoader object. This loader will receive the request URL and
+     * make this request to the server in a background thread.
+     */
     @Override
     public Loader<Movie> onCreateLoader(int id, Bundle args) {
-        Log.d(LOG_TAG, "onCreateLoader Started...");
 
         Uri baseUrl = Uri.parse(ApiConfig.getBaseMovieDetailsUrl() + String.valueOf(movieId));
         Uri.Builder uriBuilder = baseUrl.buildUpon();
@@ -179,19 +185,26 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         return new MovieLoader(this, uriBuilder.toString());
     }
 
+    /**
+     * Called when a previously created loader has finished its work.
+     *
+     * @param loader The Loader that has finished.
+     * @param movie The data generated by the Loader. In this case, details of a movie.
+     */
     @Override
     public void onLoadFinished(Loader<Movie> loader, Movie movie) {
-        Log.d(LOG_TAG, "onLoadFinished Started. Outputting data...");
-
+        // Get the movie returned from the loader and add to a global movie instance.
+        // So it can be accessed from another methods.
         movieData = movie;
 
         if (!isMovieValid(movieData)) {
             textViewNetworkStatus.setVisibility(View.GONE);
-
+            // Updates the UI with details of the movie
             updateUI(movieData);
             movieHomepageUrl = movieData.getMovieHomepage();
-
+            // Clear the companies list before add new data. It's avoid memory leaks.
             companies.clear();
+            // Add new data to the list.
             companies.addAll(movieData.getCompaniesArrayList());
             companyListAdapter.notifyDataSetChanged();
         } else {
@@ -199,10 +212,20 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         }
     }
 
+    /**
+     *  Check uf the movie returned from the Loader is valid
+     * @param movie is the {@link Movie} object with details.
+     * @return return true is the movie is
+     */
     private boolean isMovieValid(Movie movie) {
         return movie == null;
     }
 
+    /**
+     * Called when a previously created loader is being reset, and thus making its data unavailable.
+     * The application should at this point remove any references it has to the Loader's data.
+     * @param loader The Loader that is being reset.
+     */
     @Override
     public void onLoaderReset(Loader<Movie> loader) {}
 
@@ -219,6 +242,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         toast.show();
     }
 
+    /**
+     *  When called receives the movie object with movie details and updates the UI.
+     * @param movie is the {@link Movie} object with movie details.
+     */
     private void updateUI(Movie movie) {
 
         Picasso.get()
@@ -259,11 +286,21 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     }// Closes updateUI method
 
+    /**
+     * When called must receive a number that will be converted to a String with the pattern $###,###,###.##
+     * @param numberToBeFormated is the number (Buget or Revenue) to be formated.
+     * @return a the number as String properly formated.
+     */
     private String formatNumber(int numberToBeFormated) {
         DecimalFormat myFormatter = new DecimalFormat("$###,###,###.##");
         return myFormatter.format(numberToBeFormated);
     }
 
+    /**
+     * When called must receive a String url and will open default browser on device or ask to the
+     * user about what application he wants to uses to open the URL.
+     * @param url is the url to be open in the browser.
+     */
     private void openWebPage(String url) {
         Uri uriWebPage = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, uriWebPage);

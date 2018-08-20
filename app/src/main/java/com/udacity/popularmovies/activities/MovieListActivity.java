@@ -38,6 +38,7 @@ import java.util.List;
 
 public class MovieListActivity extends AppCompatActivity implements LoaderCallbacks<List<Movie>> {
 
+    // String to identify the activity when using logging messages
     private static final String LOG_TAG = MovieListActivity.class.getSimpleName();
 
     // Movie List Loader ID
@@ -124,8 +125,16 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         movieListAdapter = new MovieListAdapter(this, movieList);
         recyclerView = findViewById(R.id.rv_movies);
         recyclerView.setAdapter(movieListAdapter);
+        // Calculates the number of columns in the Grip according to screen width size.
         int numberOfColumns = AdaptiveGridLayout.calculateNoOfColumns(getApplicationContext());
+
+        // Sets the adapter that provides the data and the views to represent the data in this widget.
         recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+        // RecyclerView can perform several optimizations if it can know in advance that RecyclerView's
+        // size is not affected by the adapter contents. If is set true. It will allow RecyclerView
+        // to avoid invalidating the whole layout when its adapter contents change.
+        // In others words, set true if adapter changes cannot affect the size of the RecyclerView.
+        // Official documentation: https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html#setHasFixedSize(boolean)
         recyclerView.setHasFixedSize(true);
 
         /*
@@ -133,7 +142,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
          */
         String[] apiLanguagesList = ApiConfig.LANGUAGES;
 
-        // Verify is the api supports the system language. If not API data will be load in english as default
+        // Verify the system language is available in the API languages. If it does not, API data will be load in english by default.
         if (Arrays.asList(apiLanguagesList).contains(Resources.getSystem().getConfiguration().locale.getLanguage())) {
             loadApiLanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
         } else {
@@ -142,11 +151,12 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
         // Check internet connection before start the loader
         if (!NetworkUtils.isDeviceConnected(this)) {
+            // If device is not connected show connections warnings on the screen.
             hideLoadingIndicator();
             hideNoResultsWarning();
             showConnectionWarning();
         } else {
-            // Shows loading indicator and Kick off the loader
+            // Is device is connected Shows loading indicator and Kick off the loader
             showLoadingIndicator();
             android.app.LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_LOADER_ID, null, this);
@@ -159,6 +169,8 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
     }
 
+    // When clicked, restart the loader with the current page - 1. So the loader will make another
+    // request to load the previous 20 movies. If the current page is == 1 toast a warning to the user
     private void paginationBackward() {
         movieList.clear();
         hideNoResultsWarning();
@@ -172,6 +184,8 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             doToast(getResources().getString(R.string.page) + String.valueOf(page));
         }
     }
+    // When clicked, restart the loader with the current page + 1. So the loader will make another
+    // request to load the next 20 movies. If the current.
     private void paginationForward() {
         movieList.clear();
         hideNoResultsWarning();
@@ -181,7 +195,15 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         doToast(String.valueOf("Page " + page));
     }
 
-    // Implementation of loader call backs
+    /* IMPLEMENTATION FOR LoaderCallbacks */
+
+    /**
+     *  Instantiate and return a new Loader for the given ID.
+     * @param id is the loader id.
+     * @param bundle A mapping from String keys to various Parcelable values.
+     * @return a new MovieListLoader object. This loader will receive the request URL and
+     * make this request to the server in a background thread.
+     */
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, Bundle bundle) {
         Log.d(LOG_TAG, "onCreateLoader Started...");
@@ -197,28 +219,45 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         return new MovieListLoader(this, uriBuilder.toString());
     }
 
+    /**
+     * Called when a previously created loader has finished its load
+     *
+     * @param loader The Loader that has finished.
+     * @param movies The data generated by the Loader. In this case, a list of movies.
+     */
     @Override
     public void onLoadFinished(Loader<List<Movie>> loader, List<Movie> movies) {
         Log.d(LOG_TAG, "onLoadFinished Started. Outputting data...");
 
         // When the onCreateLoader finish its job, it will pass the data do this method.
         if (movies == null || movies.isEmpty()) {
+            // If there is no movie to show give a warning to the user in the UI.
             showNoResultsWarning();
         } else {
+            // If the movie list has data, hide the loading indicator, hide connection warnings (if needed)
+            // and hide no results UI warnings.
             hideLoadingIndicator();
             hideConnectionWarning();
             hideNoResultsWarning();
+            // Clear the previous list of movies to avoid memory leaks.
             movieList.clear();
+            // Add the movies returned from the loader to the movie list
             movieList.addAll(movies);
+            // Notifies the attached observers that the underlying data has been changed and any View reflecting the data set should refresh itself.
             movieListAdapter.notifyDataSetChanged();
         }
     }
 
+    /**
+     * Called when a previously created loader is being reset, and thus making its data unavailable.
+     * The application should at this point remove any references it has to the Loader's data.
+     * @param loader The Loader that is being reset.
+     */
     @Override
     public void onLoaderReset(Loader loader) {}
 
     /**
-     * Check internet connection when activity is resumed.
+     * Check internet connection when activity is started.
      */
     @Override
     protected void onStart() {
@@ -255,6 +294,11 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             showConnectionWarning();
         }
     }
+
+    /**
+     * HELPER METHODS FOR UI WARNINGS - SHOW/HIDE WARNINGS FOR LOADING, INTERNET CONNECTION AND
+     * NO RESULTS RETURNED FROM THE SERVER.
+     */
 
     private void showLoadingIndicator() {
         loadingIndicator.setVisibility(View.VISIBLE);

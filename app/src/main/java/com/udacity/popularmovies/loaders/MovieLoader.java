@@ -7,8 +7,8 @@ import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.QueryUtilsMovieDetails;
 
 /**
- * Created by jesse on 12/06/18.
- * This is a part of the project adnd-popular-movies.
+ * When this class is instantiated it receives a url as input and will start a background thread in
+ * the loadInBackground method. When this thread finishes it returns a movie
  */
 public class MovieLoader extends AsyncTaskLoader<Movie> {
 
