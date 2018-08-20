@@ -2,8 +2,8 @@
 package com.udacity.popularmovies.config;
 
 /**
- * Created by jesse on 10/06/18.
- * This is a part of the project adnd-popular-movies.
+ * This class is used to keep the API Key in just one place in the project.
+ * Making it centralized and and reusable.
  */
 
 public class ApiKey {

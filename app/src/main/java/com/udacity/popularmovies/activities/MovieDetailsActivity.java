@@ -97,7 +97,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             public void onClick(View view) {
                 if (movieData.getMovieHomepage().equals("null")) {
                     doToast(getString(R.string.warning_homepage_not_available));
-                } else {
+                } else if (!NetworkUtils.isDeviceConnected(getApplicationContext())){
+                    doToast(getString(R.string.warning_you_are_not_connected));
+                }else {
                     openWebPage(movieHomepageUrl);
                 }
 
