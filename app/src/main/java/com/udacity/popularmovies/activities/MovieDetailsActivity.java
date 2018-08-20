@@ -51,9 +51,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     private Movie movieData = new Movie();
 
-    private RecyclerView recyclerViewCompanies;
     private CompanyListAdapter companyListAdapter;
-    private ArrayList<Company> companies = new ArrayList<>();
+    private final ArrayList<Company> companies = new ArrayList<>();
 
     private String movieHomepageUrl;
 
@@ -84,7 +83,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         textViewNoMovieDetails = findViewById(R.id.tv_no_movie_details);
 
         // RecyclerView of companies
-        recyclerViewCompanies = findViewById(R.id.rv_companies);
+        RecyclerView recyclerViewCompanies = findViewById(R.id.rv_companies);
         companyListAdapter = new CompanyListAdapter(this, companies);
         recyclerViewCompanies.setAdapter(companyListAdapter);
         recyclerViewCompanies.setLayoutManager(new LinearLayoutManager(this));

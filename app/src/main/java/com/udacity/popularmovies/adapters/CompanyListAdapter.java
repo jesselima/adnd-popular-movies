@@ -22,6 +22,7 @@ import java.util.ArrayList;
  */
 public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.CompanyViewHolder>{
 
+    @SuppressWarnings("unused")
     private static final String LOG_TAG = CompanyListAdapter.class.getSimpleName();
 
     private final ArrayList<Company> companies;
@@ -71,7 +72,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
         private final ImageView imageViewCompanyLogo;
         private final TextView textViewCompanyName;
 
-        public CompanyViewHolder(View itemView) {
+        CompanyViewHolder(View itemView) {
             super(itemView);
             imageViewCompanyLogo = itemView.findViewById(R.id.iv_production_company);
             textViewCompanyName = itemView.findViewById(R.id.tv_company_name);

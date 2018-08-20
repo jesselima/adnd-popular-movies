@@ -11,15 +11,12 @@
     <string name="most_popular">Most Popular</string>
     <string name="highest_rated">Highest Rated</string>
     <string name="min">min</string>
-    <string name="slash_10">/10</string>
-    <string name="slash_votes">\u0020/\u0020 Votes:\u0020</string>
     <string name="slash">\u0020/\u0020</string>
     <string name="movie_details_could_not_be_loaded">Movie details could not be loaded.</string>
     <string name="warning_you_are_not_connected">You are not connected!</string>
     <string name="movie_backdrop_image">Movie Backdrop Image</string>
     <string name="original_title_label">Original Title:\u0020</string>
     <string name="spoken_languages_label">Spoken Languages:\u0020</string>
-    <string name="votes_label">Votes:\u0020</string>
     <string name="popularity_label">Popularity:\u0020</string>
     <string name="budget_label">Budget:\u0020</string>
     <string name="revenue_label">Revenue:\u0020</string>

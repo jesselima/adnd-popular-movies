@@ -2,7 +2,6 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -118,7 +117,6 @@
                     <LinearLayout
                         style="@style/DetailsItemLayout">
                         <RatingBar
-                            android:id="@+id/rating_bar_vote_average"
                             style="?android:attr/ratingBarStyleSmall"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -254,7 +252,6 @@
             </android.support.v7.widget.CardView>
 
             <LinearLayout
-                android:id="@+id/layout_production_companies"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -262,23 +259,23 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/default_layout_margin"
+                    android:layout_marginLeft="@dimen/default_layout_margin"
+                    android:layout_marginRight="@dimen/default_layout_margin"
+                    android:layout_marginTop="@dimen/default_layout_margin"
+                    android:gravity="center"
+                    android:text="@string/production_companies"
                     android:textAllCaps="true"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:layout_marginLeft="@dimen/default_layout_margin"
-                    android:layout_marginTop="@dimen/default_layout_margin"
-                    android:layout_marginRight="@dimen/default_layout_margin"
-                    android:layout_marginBottom="@dimen/default_layout_margin"
-                    android:text="@string/production_companies"/>
+                    android:textStyle="bold"/>
 
                 <include layout="@layout/divider"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_companies"
                     android:layout_width="200dp"
-                    android:layout_gravity="center"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
             </LinearLayout>
 
             <TextView

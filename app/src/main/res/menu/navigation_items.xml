@@ -10,10 +10,10 @@
 
     <item android:id="@+id/button_pagination_backward"
         android:title="@string/previous"
-        android:icon="@drawable/ic_pagination_backward" />
+        android:icon="@drawable/ic_backward" />
 
     <item android:id="@+id/button_pagination_forward"
         android:title="@string/next"
-        android:icon="@drawable/ic_pagination_forward" />
+        android:icon="@drawable/ic_forward" />
 
 </menu>
