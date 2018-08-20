@@ -277,7 +277,6 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     @Override
     protected void onPause() {
         super.onPause();
-
         bundleRecyclerView = new Bundle();
         Parcelable parcelable = recyclerView.getLayoutManager().onSaveInstanceState();
         bundleRecyclerView.putParcelable(KEY_RECYCLER_STATE, parcelable);
@@ -299,9 +298,6 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         }
     }
 
-    /**
-     * Check internet connection when activity is restarted.
-     */
     @Override
     protected void onRestart() {
         super.onRestart();
