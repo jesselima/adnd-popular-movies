@@ -19,10 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.udacity.popularmovies.BuildConfig;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.adapters.CompanyListAdapter;
 import com.udacity.popularmovies.config.ApiConfig;
-import com.udacity.popularmovies.config.ApiKey;
 import com.udacity.popularmovies.loaders.MovieLoader;
 import com.udacity.popularmovies.models.Company;
 import com.udacity.popularmovies.models.Movie;
@@ -35,6 +35,8 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Movie> {
+
+    private static final String API_KEY = BuildConfig.API_KEY;
 
     private static final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
     // The Loader ID to be used by the LoaderManager
@@ -181,7 +183,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
         Uri baseUrl = Uri.parse(ApiConfig.getBaseMovieDetailsUrl() + String.valueOf(movieId));
         Uri.Builder uriBuilder = baseUrl.buildUpon();
-        uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.API_KEY, ApiKey.getApiKey());
+        uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.API_KEY, API_KEY);
         uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.LANGUAGE, loadApiLanguage);
 
         return new MovieLoader(this, uriBuilder.toString());

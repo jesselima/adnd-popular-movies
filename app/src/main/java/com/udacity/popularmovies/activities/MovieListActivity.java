@@ -21,12 +21,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.udacity.popularmovies.BuildConfig;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.adapters.MovieListAdapter;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamKey;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamValue;
-import com.udacity.popularmovies.config.ApiKey;
 import com.udacity.popularmovies.loaders.MovieListLoader;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.AdaptiveGridLayout;
@@ -38,6 +38,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MovieListActivity extends AppCompatActivity implements LoaderCallbacks<List<Movie>> {
+
+    private static final String API_KEY = BuildConfig.API_KEY;
 
     // String to identify the activity when using logging messages
     private static final String LOG_TAG = MovieListActivity.class.getSimpleName();
@@ -216,7 +218,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         Uri getBaseMovieListUrl = Uri.parse(ApiConfig.getBaseUrlV3Default() + sortBy);
         Uri.Builder uriBuilder = getBaseMovieListUrl.buildUpon();
 
-        uriBuilder.appendQueryParameter(UrlParamKey.API_KEY, ApiKey.getApiKey());
+        uriBuilder.appendQueryParameter(UrlParamKey.API_KEY, API_KEY);
         uriBuilder.appendQueryParameter(UrlParamKey.LANGUAGE, loadApiLanguage);
         uriBuilder.appendQueryParameter(UrlParamKey.INCLUDE_ADULT, UrlParamValue.INCLUDE_ADULT_FALSE);
         uriBuilder.appendQueryParameter(UrlParamKey.PAGE, String.valueOf(page));
