@@ -58,7 +58,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
     @NonNull
     @Override
     public CompanyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.company_item_list, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_company, parent, false);
         return new CompanyViewHolder(view);
     }
 
