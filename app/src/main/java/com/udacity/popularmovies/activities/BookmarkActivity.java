@@ -27,6 +27,8 @@ public class BookmarkActivity extends AppCompatActivity {
     private TextView textViewNoBookmarks;
     private ImageView imageViewNoBookmarks;
 
+    private RecyclerView recyclerViewBookmark = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +37,7 @@ public class BookmarkActivity extends AppCompatActivity {
         textViewNoBookmarks = findViewById(R.id.text_view_no_bookmarks);
         imageViewNoBookmarks = findViewById(R.id.image_view_no_bookmarks);
 
-        final RecyclerView recyclerViewBookmark = findViewById(R.id.recycler_view_bookmark);
+        recyclerViewBookmark = findViewById(R.id.recycler_view_bookmark);
         recyclerViewBookmark.setLayoutManager(new LinearLayoutManager(this));
 
         bookmarkDbHelper = new BookmarkDbHelper(this);
@@ -43,8 +45,11 @@ public class BookmarkActivity extends AppCompatActivity {
 
         final Cursor cursor = updateBookmarkList();
         bookmarkAdapter = new BookmarkAdapter(this, cursor);
-
         recyclerViewBookmark.setAdapter(bookmarkAdapter);
+
+        if (bookmarkAdapter.getItemCount() == 0) {
+            showNoBookmarkWarning();
+        }
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
@@ -56,17 +61,14 @@ public class BookmarkActivity extends AppCompatActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 long id = (long) viewHolder.itemView.getTag();
+
                 deleteBookmark(id);
                 bookmarkAdapter.swapCursor(getBookmarks());
 
                 if (bookmarkAdapter.getItemCount() == 0) {
-                    recyclerViewBookmark.setVisibility(View.GONE);
-                    textViewNoBookmarks.setVisibility(View.VISIBLE);
-                    imageViewNoBookmarks.setVisibility(View.VISIBLE);
+                    showNoBookmarkWarning();
                 } else {
-                    recyclerViewBookmark.setVisibility(View.VISIBLE);
-                    textViewNoBookmarks.setVisibility(View.GONE);
-                    imageViewNoBookmarks.setVisibility(View.GONE);
+                    hideNoBookmarkWarning();
                     bookmarkAdapter.swapCursor(getBookmarks());
                 }
             }
@@ -79,6 +81,12 @@ public class BookmarkActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getBookmarks();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
         getBookmarks();
     }
 
@@ -99,7 +107,7 @@ public class BookmarkActivity extends AppCompatActivity {
                 null,
                 null,
                 null,
-                BookmarkContract.BookmarkEntry.COLUMN_TIMESTAMP
+                BookmarkContract.BookmarkEntry.COLUMN_TIMESTAMP + " DESC"
         );
     }
 
@@ -108,4 +116,15 @@ public class BookmarkActivity extends AppCompatActivity {
                 BookmarkContract.BookmarkEntry._ID + "=" + id, null) > 0;
     }
 
+    private void showNoBookmarkWarning() {
+        recyclerViewBookmark.setVisibility(View.GONE);
+        textViewNoBookmarks.setVisibility(View.VISIBLE);
+        imageViewNoBookmarks.setVisibility(View.VISIBLE);
+    }
+
+    private void hideNoBookmarkWarning() {
+        recyclerViewBookmark.setVisibility(View.VISIBLE);
+        textViewNoBookmarks.setVisibility(View.GONE);
+        imageViewNoBookmarks.setVisibility(View.GONE);
+    }
 }
