@@ -11,7 +11,10 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/colorLightGrey"
+        android:layout_marginTop="@dimen/small_layout_margin"
+        android:layout_marginBottom="@dimen/small_layout_margin"
+        android:layout_marginLeft="@dimen/small_layout_margin"
+        android:layout_marginRight="@dimen/small_layout_margin"
         app:cardCornerRadius="3dp"
         app:cardElevation="4dp">
 
@@ -29,31 +32,31 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:text="Mission Impossible - Fallout"/>
-                <LinearLayout
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/tv_release_date"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:id="@+id/tv_release_date"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginEnd="@dimen/default_layout_margin"
-                        android:layout_weight="1"
-                        android:gravity="end"
-                        android:textSize="16sp"
-                        tools:text="2018"/>
-                    <TextView
-                        android:id="@+id/tv_runtime"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:layout_marginStart="@dimen/default_layout_margin"
-                        android:layout_weight="1"
-                        android:gravity="start"
-                        android:textSize="16sp"
-                        tools:text="147min"/>
-                </LinearLayout>
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginEnd="@dimen/default_layout_margin"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:textSize="16sp"
+                    tools:text="2018"/>
+                <TextView
+                    android:id="@+id/tv_runtime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginStart="@dimen/default_layout_margin"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:textSize="16sp"
+                    tools:text="147min"/>
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/tv_genres"
@@ -61,8 +64,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/colorAccent"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 tools:text="Adventure | Action | Thriller"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
