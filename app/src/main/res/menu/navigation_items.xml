@@ -16,4 +16,8 @@
         android:title="@string/next"
         android:icon="@drawable/ic_forward" />
 
+    <item android:id="@+id/button_bookmarks"
+        android:title="@string/bookmarks"
+        android:icon="@drawable/ic_collections_bookmark" />
+
 </menu>

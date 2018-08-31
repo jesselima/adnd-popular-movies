@@ -1,9 +1,11 @@
 package com.udacity.popularmovies.activities;
 
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -12,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,14 +27,17 @@ import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.adapters.CompanyListAdapter;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.loaders.MovieLoader;
+import com.udacity.popularmovies.localdatabase.BookmarkContract;
+import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
+import com.udacity.popularmovies.localdatabase.BookmarkDbHelper;
 import com.udacity.popularmovies.models.Company;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.DateUtils;
+import com.udacity.popularmovies.utils.LanguageUtils;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Movie> {
@@ -58,32 +64,39 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private final ArrayList<Company> companies = new ArrayList<>();
     private String movieHomepageUrl;
 
+    private SQLiteDatabase sqLiteDatabase;
+    private BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
+
+    private FloatingActionButton floatingBookmarkButton = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
 
+        bookmarkDbHelper = new BookmarkDbHelper(this);
+        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
         // Get the movie ID and Title from the clicked item on the RecyclerView item.
         getIncomingIntent();
 
         // UI REFERENCES
-        imageViewMoviePoster = findViewById(R.id.iv_movie_poster);
-        imageViewMovieBackdrop = findViewById(R.id.iv_movie_backdrop);
-        textViewOverview = findViewById(R.id.tv_overview);
-        textViewReleaseDate = findViewById(R.id.tv_release_date);
-        textViewRuntime = findViewById(R.id.tv_runtime);
-        textViewTitle = findViewById(R.id.tv_title);
+        imageViewMoviePoster     = findViewById(R.id.iv_movie_poster);
+        imageViewMovieBackdrop   = findViewById(R.id.iv_movie_backdrop);
+        textViewOverview         = findViewById(R.id.tv_overview);
+        textViewReleaseDate      = findViewById(R.id.tv_release_date);
+        textViewRuntime          = findViewById(R.id.tv_runtime);
+        textViewTitle            = findViewById(R.id.tv_title);
         textViewOriginalLanguage = findViewById(R.id.tv_original_language);
-        textViewTagline = findViewById(R.id.tv_tagline);
-        textViewPopularity = findViewById(R.id.tv_popularity);
-        textViewVoteCount = findViewById(R.id.tv_vote_count);
-        textViewBuget = findViewById(R.id.tv_buget);
-        textViewRevenue = findViewById(R.id.tv_revenue);
-        textViewVoteAverage = findViewById(R.id.tv_vote_average);
-        textViewGenres = findViewById(R.id.tv_genres);
+        textViewTagline          = findViewById(R.id.tv_tagline);
+        textViewPopularity       = findViewById(R.id.tv_popularity);
+        textViewVoteCount        = findViewById(R.id.tv_vote_count);
+        textViewBuget            = findViewById(R.id.tv_buget);
+        textViewRevenue          = findViewById(R.id.tv_revenue);
+        textViewVoteAverage      = findViewById(R.id.tv_vote_average);
+        textViewGenres           = findViewById(R.id.tv_genres);
         // Warnings UI View references.
-        textViewNetworkStatus = findViewById(R.id.tv_network_status);
-        textViewNoMovieDetails = findViewById(R.id.tv_no_movie_details);
+        textViewNetworkStatus    = findViewById(R.id.tv_network_status);
+        textViewNoMovieDetails   = findViewById(R.id.tv_no_movie_details);
 
         // RecyclerView for the list of companies
         RecyclerView recyclerViewCompanies = findViewById(R.id.rv_companies);
@@ -104,7 +117,23 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
                 }else {
                     openWebPage(movieHomepageUrl);
                 }
+            }
+        });
 
+        floatingBookmarkButton = findViewById(R.id.float_save_bookmark);
+        floatingBookmarkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkBookmarkOnDatabase()) {
+                    // if the Movie is already bookmarked, remove it from the database and update icon status to unsaved icon
+                    deleteBookmark(movieData.getMovieId());
+                    floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
+                    doToast(getResources().getString(R.string.movie_removed));
+                }else {
+                    saveBookmark();
+                    floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
+                    doToast(getResources().getString(R.string.movie_saved));
+                }
             }
         });
 
@@ -113,26 +142,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         floatingShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (movieData.getMovieHomepage().equals("null")) {
-                    doToast(getString(R.string.warning_homepage_not_available));
-                } else {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_SEND);
-                    intent.putExtra(Intent.EXTRA_TEXT, movieData.getMovieHomepage());
-                    intent.setType("text/plain");
-                    startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_to)));
-                }
-
+                shareWebUrl(movieData.getMovieHomepage(), getString(R.string.warning_homepage_not_available));
             }
         });
 
-        // Get the available languages from ApiConfig class
-        String[] apiLanguagesList = ApiConfig.LANGUAGES;
-        // Verify is the api supports the system language. If not API data will be load in english as default
-        if (Arrays.asList(apiLanguagesList).contains(Resources.getSystem().getConfiguration().locale.getLanguage())) {
-            loadApiLanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
-        }
-
+        LanguageUtils.checkSystemLanguage(loadApiLanguage);
         // Hide the Tagline TextView due to API to provide tagline to english language only or the
         // movie occasionally may have a empty tagline value. Then the space will be shown.
         if (loadApiLanguage.equals("")) {
@@ -158,7 +172,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             android.app.LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
         }
-    }
+
+    } // Close onCreate
 
     // It's called inside onCreate method and get the movie ID and Title sent from MovieListActivity.
     private void getIncomingIntent() {
@@ -205,6 +220,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             textViewNetworkStatus.setVisibility(View.GONE);
             // Updates the UI with details of the movie
             updateUI(movieData);
+
+            if (checkBookmarkOnDatabase()) {
+                floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
+            }else {
+                floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
+            }
+
             movieHomepageUrl = movieData.getMovieHomepage();
             // Clear the companies list before add new data. It's avoid memory leaks.
             companies.clear();
@@ -310,6 +332,51 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         Intent intent = new Intent(Intent.ACTION_VIEW, uriWebPage);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
+        }
+    }
+
+    private long saveBookmark() {
+        ContentValues contentValues = new ContentValues();
+            contentValues.put(BookmarkEntry.COLUMN_API_ID,         movieData.getMovieId());
+            contentValues.put(BookmarkEntry.COLUMN_ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
+            contentValues.put(BookmarkEntry.COLUMN_RELEASE_DATE,   movieData.getMovieReleaseDate());
+            contentValues.put(BookmarkEntry.COLUMN_RUNTIME,        movieData.getMovieRunTime());
+            contentValues.put(BookmarkEntry.COLUMN_GENRES,         movieData.getMovieGenres());
+            contentValues.put(BookmarkEntry.COLUMN_HOMEPAGE,       movieData.getMovieHomepage());
+        return sqLiteDatabase.insert(BookmarkEntry.TABLE_NAME, null, contentValues);
+    }
+
+    private boolean deleteBookmark(long id) {
+        return sqLiteDatabase.delete(BookmarkContract.BookmarkEntry.TABLE_NAME,
+                BookmarkEntry.COLUMN_API_ID + "=" + id, null) > 0;
+    }
+
+    private boolean checkBookmarkOnDatabase() {
+
+        Cursor cursor = sqLiteDatabase.query(
+            BookmarkEntry.TABLE_NAME,   // table
+            new String[] { BookmarkEntry.COLUMN_API_ID, BookmarkEntry.COLUMN_ORIGINAL_TITLE },  // columns
+            BookmarkEntry.COLUMN_API_ID + "=?",   // selection
+            new String[] { String.valueOf(movieData.getMovieId()) },   // selectionArgs
+            null,      // groupBy
+            null,       // having
+            null);     // orderBy
+
+        boolean isOnDatabase = cursor.getCount() > 0;
+        cursor.close();
+
+        return isOnDatabase;
+    }
+
+    private void shareWebUrl(String webUrl, String warningString) {
+        if (webUrl.equals("null")) {
+            doToast(warningString);
+        } else {
+            Intent intent = new Intent();
+            intent.setAction(Intent.ACTION_SEND);
+            intent.putExtra(Intent.EXTRA_TEXT, webUrl);
+            intent.setType("text/plain");
+            startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_to)));
         }
     }
 }

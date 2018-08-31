@@ -8,13 +8,13 @@
 
     <application
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
-        android:fullBackupContent="@xml/backup_descriptor">
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
             android:name=".activities.MovieListActivity"
             android:label="Popular Movies">
@@ -24,9 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.MovieDetailsActivity"
+        <activity
+            android:name=".activities.MovieDetailsActivity"
             android:label="Movie Details"
-            android:parentActivityName=".activities.MovieListActivity"/>
+            android:parentActivityName=".activities.MovieListActivity" />
+        <activity android:name=".activities.BookmarkActivity"></activity>
     </application>
 
 </manifest>

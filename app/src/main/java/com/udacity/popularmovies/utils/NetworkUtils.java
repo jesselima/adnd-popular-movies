@@ -1,12 +1,16 @@
 package com.udacity.popularmovies.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 
 import java.util.Objects;
 
 public class NetworkUtils {
+
+    Context context;
 
     @SuppressWarnings("unused")
     public static final String LOG_TAG = NetworkUtils.class.getSimpleName();
