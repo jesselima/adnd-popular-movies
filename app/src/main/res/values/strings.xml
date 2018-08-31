@@ -29,4 +29,9 @@
     <string name="warning_check_internet_connection">Please, check internet connection!</string>
     <string name="you_are_at_page_1">You are at page 1</string>
     <string name="page">Page\u0020</string>
+    <string name="details">DETAILS</string>
+    <string name="bookmarks">Bookmarks</string>
+    <string name="you_do_not_have_any_bookmarks">You don\'t have any bookmarks…</string>
+    <string name="movie_removed">Movie removed from bookmarks</string>
+    <string name="movie_saved">Movie saved to bookmarks</string>
 </resources>

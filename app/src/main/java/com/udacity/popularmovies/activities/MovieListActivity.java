@@ -2,8 +2,10 @@ package com.udacity.popularmovies.activities;
 
 
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Intent;
 import android.content.Loader;
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -28,9 +30,11 @@ import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamKey;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamValue;
 import com.udacity.popularmovies.loaders.MovieListLoader;
+import com.udacity.popularmovies.localdatabase.BookmarkDbHelper;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.AdaptiveGridLayout;
 import com.udacity.popularmovies.utils.BottomNavigationBehavior;
+import com.udacity.popularmovies.utils.LanguageUtils;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
 import java.util.ArrayList;
@@ -69,10 +73,15 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     private final String KEY_RECYCLER_STATE = "recycler_state";
     private static Bundle bundleRecyclerView;
 
+    private SQLiteDatabase sqLiteDatabase;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
+
+        BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
+        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
 
         // Set and handle actions on BottonNavigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
@@ -112,6 +121,13 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
                             paginationForward();
                         }
                         break;
+                    case R.id.button_bookmarks:
+                        if (!NetworkUtils.isDeviceConnected(getApplicationContext())){
+                            doToast(getResources().getString(R.string.warning_check_internet_connection));
+                        } else {
+                            Intent intent = new Intent(getApplicationContext(), BookmarkActivity.class);
+                            startActivity(intent);
+                        }
                 }
                 return true;
             }
@@ -147,27 +163,10 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         /*
          * Load the list of available api languages from {@link ApiConfig} according to api documentation.
          */
-        String[] apiLanguagesList = ApiConfig.LANGUAGES;
+        LanguageUtils.checkSystemLanguage(loadApiLanguage);
 
-        // Verify the system language is available in the API languages. If it does not, API data will be load in english by default.
-        if (Arrays.asList(apiLanguagesList).contains(Resources.getSystem().getConfiguration().locale.getLanguage())) {
-            loadApiLanguage = Resources.getSystem().getConfiguration().locale.getLanguage();
-        } else {
-            doToast(getResources().getString(R.string.warning_language));
-        }
-
-        // Check internet connection before start the loader
-        if (!NetworkUtils.isDeviceConnected(this)) {
-            // If device is not connected show connections warnings on the screen.
-            hideLoadingIndicator();
-            hideNoResultsWarning();
-            showConnectionWarning();
-        } else {
-            // Is device is connected Shows loading indicator and Kick off the loader
-            showLoadingIndicator();
-            android.app.LoaderManager loaderManager = getLoaderManager();
-            loaderManager.initLoader(MOVIE_LOADER_ID, null, this);
-        }
+        // Check if the device is connected ot internet and if so start the Loader.
+        checkConnectionAndStartLoader();
     } // Closes onCreate
 
     /*** Methods for BottonNavigation control ***/
@@ -357,6 +356,21 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         }
         toast = Toast.makeText(this, toastThisText, Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    private void checkConnectionAndStartLoader() {
+        // Check internet connection before start the loader
+        if (!NetworkUtils.isDeviceConnected(this)) {
+            // If device is not connected show connections warnings on the screen.
+            hideLoadingIndicator();
+            hideNoResultsWarning();
+            showConnectionWarning();
+        } else {
+            // Is device is connected Shows loading indicator and Kick off the loader
+            showLoadingIndicator();
+            android.app.LoaderManager loaderManager = getLoaderManager();
+            loaderManager.initLoader(MOVIE_LOADER_ID, null, this);
+        }
     }
 
 }
