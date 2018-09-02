@@ -14,10 +14,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +30,8 @@ import com.udacity.popularmovies.loaders.MovieLoader;
 import com.udacity.popularmovies.localdatabase.BookmarkContract;
 import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
 import com.udacity.popularmovies.localdatabase.BookmarkDbHelper;
-import com.udacity.popularmovies.models.Company;
 import com.udacity.popularmovies.models.Movie;
+import com.udacity.popularmovies.models.MovieProductionCompany;
 import com.udacity.popularmovies.utils.DateUtils;
 import com.udacity.popularmovies.utils.LanguageUtils;
 import com.udacity.popularmovies.utils.NetworkUtils;
@@ -58,16 +58,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private ImageView imageViewMoviePoster, imageViewMovieBackdrop;
     private TextView textViewOverview, textViewReleaseDate, textViewRuntime, textViewTitle, textViewVoteAverage, textViewOriginalLanguage, textViewTagline, textViewPopularity, textViewVoteCount, textViewBuget, textViewRevenue, textViewGenres;
     private TextView textViewNetworkStatus, textViewNoMovieDetails;
+    private LinearLayout linearLayoutContainerDetails, linearLayoutAdditionalInfo;
 
     private Movie movieData = new Movie();
     private CompanyListAdapter companyListAdapter;
-    private final ArrayList<Company> companies = new ArrayList<>();
+    private final ArrayList<MovieProductionCompany> companies = new ArrayList<>();
     private String movieHomepageUrl;
 
     private SQLiteDatabase sqLiteDatabase;
     private BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
 
     private FloatingActionButton floatingBookmarkButton = null;
+    private FloatingActionButton floatingShareButton = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +99,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         // Warnings UI View references.
         textViewNetworkStatus    = findViewById(R.id.tv_network_status);
         textViewNoMovieDetails   = findViewById(R.id.tv_no_movie_details);
+        linearLayoutContainerDetails = findViewById(R.id.container_details);
+        linearLayoutAdditionalInfo = findViewById(R.id.container_additional_content);
 
         // RecyclerView for the list of companies
         RecyclerView recyclerViewCompanies = findViewById(R.id.rv_companies);
@@ -120,6 +124,26 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             }
         });
 
+        Button buttonReviews = findViewById(R.id.bt_reviews);
+        buttonReviews.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), MovieReviewsActivity.class);
+                doToast(String.valueOf(movieData.getMovieId()));
+                startActivity(intent);
+            }
+        });
+
+        Button buttonVideos = findViewById(R.id.bt_videos);
+        buttonVideos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), MovieVideosActivity.class);
+                doToast(String.valueOf(movieData.getMovieId()));
+                startActivity(intent);
+            }
+        });
+
         floatingBookmarkButton = findViewById(R.id.float_save_bookmark);
         floatingBookmarkButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +162,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         });
 
         // FloatButton to share movie homepage to other app available on device.
-        FloatingActionButton floatingShareButton = findViewById(R.id.float_share_button);
+        floatingShareButton = findViewById(R.id.float_share_button);
         floatingShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,15 +187,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(movieOriginalTitle);
 
-        // Check for internet connection before start the loader
-        if (!NetworkUtils.isDeviceConnected(this)) {
-            doToast(getString(R.string.warning_you_are_not_connected));
-            textViewNetworkStatus.setVisibility(View.VISIBLE);
-        } else {
-            // Shows loading indicator and Kick off the loader
-            android.app.LoaderManager loaderManager = getLoaderManager();
-            loaderManager.initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
-        }
+        checkConnectionAndStartLoader();
 
     } // Close onCreate
 
@@ -377,6 +393,82 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             intent.putExtra(Intent.EXTRA_TEXT, webUrl);
             intent.setType("text/plain");
             startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_to)));
+        }
+    }
+
+    private void showConnectionWarning() {
+        textViewNetworkStatus.setVisibility(View.VISIBLE);
+        textViewNoMovieDetails.setVisibility(View.VISIBLE);
+        linearLayoutContainerDetails.setVisibility(View.GONE);
+        linearLayoutAdditionalInfo.setVisibility(View.GONE);
+        floatingBookmarkButton.setVisibility(View.GONE);
+        floatingShareButton.setVisibility(View.GONE);
+        imageViewMoviePoster.setVisibility(View.GONE);
+    }
+
+    private void hideConnectionWarning() {
+        textViewNetworkStatus.setVisibility(View.GONE);
+        textViewNoMovieDetails.setVisibility(View.GONE);
+        linearLayoutContainerDetails.setVisibility(View.VISIBLE);
+        linearLayoutAdditionalInfo.setVisibility(View.VISIBLE);
+        floatingBookmarkButton.setVisibility(View.VISIBLE);
+        floatingShareButton.setVisibility(View.VISIBLE);
+        imageViewMoviePoster.setVisibility(View.VISIBLE);
+    }
+
+    private void checkConnectionAndStartLoader(){
+        // Check for internet connection before start the loader
+        if (!NetworkUtils.isDeviceConnected(this)) {
+            doToast(getString(R.string.warning_you_are_not_connected));
+            showConnectionWarning();
+        } else {
+            hideConnectionWarning();
+            // Shows loading indicator and Kick off the loader
+            android.app.LoaderManager loaderManager = getLoaderManager();
+            loaderManager.initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (NetworkUtils.isDeviceConnected(this)) {
+            hideConnectionWarning();
+        } else {
+            showConnectionWarning();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (NetworkUtils.isDeviceConnected(this)) {
+            hideConnectionWarning();
+        } else {
+            showConnectionWarning();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Check internet connection when activity is resumed.
+        if (NetworkUtils.isDeviceConnected(this)) {
+            hideConnectionWarning();
+        } else {
+            showConnectionWarning();
+        }
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        // Check internet connection when activity is resumed.
+        if (NetworkUtils.isDeviceConnected(this)) {
+            hideConnectionWarning();
+        } else {
+            showConnectionWarning();
         }
     }
 }

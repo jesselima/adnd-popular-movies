@@ -8,6 +8,13 @@
     android:padding="@dimen/default_layout_margin"
     tools:context=".activities.BookmarkActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_bookmarks"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        app:layout_collapseMode="pin"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_bookmark"
         android:layout_width="match_parent"
@@ -21,8 +28,9 @@
         android:layout_height="50dp"
         android:layout_gravity="center"
         android:layout_marginBottom="50dp"
+        android:contentDescription="@string/no_bookmarks_in_the_database"
         android:src="@drawable/ic_bookmark_unsaved"
-        android:visibility="gone"/>
+        android:visibility="gone" />
     <TextView
         android:id="@+id/text_view_no_bookmarks"
         android:layout_width="wrap_content"
@@ -30,7 +38,30 @@
         android:layout_gravity="center"
         android:text="@string/you_do_not_have_any_bookmarks"
         android:textColor="@color/colorMediumGrey"
-        android:textSize="20sp"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/text_view_navigate_to_bookmarks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:text="@string/navigate_to_bookmarks"
+        android:textColor="@color/colorMediumGrey"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/bt_navigate_to_movies"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="70dp"
+        android:text="@string/see_movies"
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp"
         android:visibility="gone"/>
 
 </FrameLayout>

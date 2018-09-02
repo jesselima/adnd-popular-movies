@@ -4,16 +4,16 @@ package com.udacity.popularmovies.models;
  * Created by jesse on 12/08/18.
  * This is a part of the project adnd-popular-movies.
  */
-public class Company {
+public class MovieProductionCompany {
     private int companyId;
     private String companyLogoPath;
     private String companyName;
     private String companyCountry;
 
-    public Company() {
+    public MovieProductionCompany() {
     }
 
-    public Company(int companyId, String companyLogoPath, String companyName, String companyCountry) {
+    public MovieProductionCompany(int companyId, String companyLogoPath, String companyName, String companyCountry) {
         this.companyId = companyId;
         this.companyLogoPath = companyLogoPath;
         this.companyName = companyName;
@@ -54,7 +54,7 @@ public class Company {
 
     @Override
     public String toString() {
-        return "\n" + "Company {" + "\n" +
+        return "\n" + "MovieProductionCompany {" + "\n" +
                 "companyId: " + companyId + ",\n" +
                 "companyLogoPath: '" + companyLogoPath + '\'' + ",\n" +
                 "companyName: '" + companyName + '\'' + ",\n" +

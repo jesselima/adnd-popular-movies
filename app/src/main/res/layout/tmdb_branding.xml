@@ -18,7 +18,7 @@
                 android:layout_height="80dp"
                 android:layout_marginEnd="4dp"
                 android:contentDescription="@string/tmdb_branding_reference"
-                android:src="@drawable/powered_by_square_green" />
+                android:src="@drawable/powered_by_square_black" />
         </LinearLayout>
 
         <LinearLayout

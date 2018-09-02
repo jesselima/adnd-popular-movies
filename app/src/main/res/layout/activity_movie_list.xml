@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/no_internet_connection"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorWarning"
         android:visibility="gone"/>
 
     <ImageView
@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:background="@color/colorAccent"
+        android:background="@color/colorLightGrey"
         android:fitsSystemWindows="true"
         app:menu="@menu/navigation_items" />
 

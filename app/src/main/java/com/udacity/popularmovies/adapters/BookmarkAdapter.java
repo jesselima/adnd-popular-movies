@@ -3,11 +3,9 @@ package com.udacity.popularmovies.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +18,10 @@ import com.udacity.popularmovies.activities.MovieDetailsActivity;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.localdatabase.BookmarkContract;
 import com.udacity.popularmovies.utils.DateUtils;
+import com.udacity.popularmovies.utils.NetworkUtils;
 
 /**
- * This is the adapter for the RecyclerView of Bookmark objects.
+ * This is the adapter for the RecyclerView of MovieBookmark objects.
  * This is a part of the project adnd-popular-movies.
  */
 public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.BookmarkViewHolder>{
@@ -70,10 +69,14 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
         holder.buttonMovieDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context.getApplicationContext(), MovieDetailsActivity.class);
-                intent.putExtra(ApiConfig.JsonKey.ID, movieApiId);
-                intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, originalTitle);
-                context.startActivity(intent);
+                if (NetworkUtils.isDeviceConnected(context)) {
+                    Intent intent = new Intent(context.getApplicationContext(), MovieDetailsActivity.class);
+                    intent.putExtra(ApiConfig.JsonKey.ID, movieApiId);
+                    intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, originalTitle);
+                    context.startActivity(intent);
+                } else {
+                    Toast.makeText(context, R.string.warning_check_internet_connection, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -81,19 +84,23 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
         holder.buttonMovieHomepage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri uriWebPage = Uri.parse(homepage);
-                Intent intent = new Intent(Intent.ACTION_VIEW, uriWebPage);
-                if (intent.resolveActivity(context.getPackageManager()) != null) {
-                    context.startActivity(intent);
+                if (NetworkUtils.isDeviceConnected(context)) {
+                    Uri uriWebPage = Uri.parse(homepage);
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uriWebPage);
+                    if (intent.resolveActivity(context.getPackageManager()) != null) {
+                        context.startActivity(intent);
+                    }
+                } else {
+                    Toast.makeText(context, R.string.warning_check_internet_connection, Toast.LENGTH_SHORT).show();
                 }
+
+
             }
         });
-
     }
 
     @Override
     public int getItemCount() {
-        Log.v("BookmarkAdapter ", String.valueOf(cursor.getCount()));
         return cursor.getCount();
     }
 
@@ -108,7 +115,6 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
     class BookmarkViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewOriginalTitle, textViewReleaseDate, textViewRuntime, textViewGenres;
-
         Button buttonMovieHomepage, buttonMovieDetails;
 
         public BookmarkViewHolder(View itemView) {
@@ -118,11 +124,8 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
             textViewReleaseDate = itemView.findViewById(R.id.tv_release_date);
             textViewRuntime = itemView.findViewById(R.id.tv_runtime);
             textViewGenres = itemView.findViewById(R.id.tv_genres);
-
             buttonMovieDetails = itemView.findViewById(R.id.bt_item_list_details);
             buttonMovieHomepage = itemView.findViewById(R.id.bt_item_list_homepage);
-
-
         }
     }
 }

@@ -4,8 +4,6 @@ package com.udacity.popularmovies.activities;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.res.Resources;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -30,7 +28,6 @@ import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamKey;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamValue;
 import com.udacity.popularmovies.loaders.MovieListLoader;
-import com.udacity.popularmovies.localdatabase.BookmarkDbHelper;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.AdaptiveGridLayout;
 import com.udacity.popularmovies.utils.BottomNavigationBehavior;
@@ -38,7 +35,6 @@ import com.udacity.popularmovies.utils.LanguageUtils;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MovieListActivity extends AppCompatActivity implements LoaderCallbacks<List<Movie>> {
@@ -73,15 +69,10 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     private final String KEY_RECYCLER_STATE = "recycler_state";
     private static Bundle bundleRecyclerView;
 
-    private SQLiteDatabase sqLiteDatabase;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
-
-        BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
-        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
 
         // Set and handle actions on BottonNavigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
@@ -122,12 +113,8 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
                         }
                         break;
                     case R.id.button_bookmarks:
-                        if (!NetworkUtils.isDeviceConnected(getApplicationContext())){
-                            doToast(getResources().getString(R.string.warning_check_internet_connection));
-                        } else {
-                            Intent intent = new Intent(getApplicationContext(), BookmarkActivity.class);
-                            startActivity(intent);
-                        }
+                        Intent intent = new Intent(getApplicationContext(), BookmarkActivity.class);
+                        startActivity(intent);
                 }
                 return true;
             }
@@ -137,7 +124,6 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         // Author: Android Hive, Source: https://www.androidhive.info/2017/12/android-working-with-bottom-navigation/
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
         layoutParams.setBehavior(new BottomNavigationBehavior());
-
 
         loadingIndicator = findViewById(R.id.loading_indicator);
         imageViewNoMovies = findViewById(R.id.iv_no_movies_placeholder);

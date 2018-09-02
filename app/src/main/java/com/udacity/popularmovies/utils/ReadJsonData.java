@@ -4,8 +4,10 @@ import android.util.Log;
 
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.config.ApiConfig.JsonKey;
-import com.udacity.popularmovies.models.Company;
+import com.udacity.popularmovies.models.MovieProductionCompany;
 import com.udacity.popularmovies.models.Movie;
+import com.udacity.popularmovies.models.MovieReview;
+import com.udacity.popularmovies.models.MovieVideo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -123,18 +125,18 @@ final class ReadJsonData {
             movie.setMovieBackdropPath(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W780 + rootJsonObject.optString(JsonKey.BACKDROP_PATH));
             movie.setMovieHomepage(rootJsonObject.optString(JsonKey.HOMEPAGE));
 
-            List<Company> companies = new ArrayList<>();
+            List<MovieProductionCompany> companies = new ArrayList<>();
 
             if (rootJsonObject.has(JsonKey.PRODUCTION_COMPANIES)){
                 JSONArray companiesJsonArray = rootJsonObject.getJSONArray(JsonKey.PRODUCTION_COMPANIES);
                 for (int i = 0; companiesJsonArray.length() > i; i++){
                     JSONObject companyItem = companiesJsonArray.getJSONObject(i);
-                    Company company = new Company();
-                    company.setCompanyId(companyItem.optInt(JsonKey.ID));
-                    company.setCompanyLogoPath(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W342 + companyItem.optString(JsonKey.LOGO_PATH));
-                    company.setCompanyName(companyItem.optString(JsonKey.NAME));
-                    company.setCompanyCountry(companyItem.optString(JsonKey.ORIGIN_COUNTRY));
-                    companies.add(company);
+                    MovieProductionCompany movieProductionCompany = new MovieProductionCompany();
+                    movieProductionCompany.setCompanyId(companyItem.optInt(JsonKey.ID));
+                    movieProductionCompany.setCompanyLogoPath(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W342 + companyItem.optString(JsonKey.LOGO_PATH));
+                    movieProductionCompany.setCompanyName(companyItem.optString(JsonKey.NAME));
+                    movieProductionCompany.setCompanyCountry(companyItem.optString(JsonKey.ORIGIN_COUNTRY));
+                    companies.add(movieProductionCompany);
                 }
                 movie.setCompaniesArrayList(companies);
             }
@@ -146,4 +148,84 @@ final class ReadJsonData {
         return movie;
     }
 
+
+    /**
+     * @param jsonResponseMovieVideoList is the JSON input in a String format.
+     * @return a list of {@link MovieVideo} objects.
+     */
+    public static List<MovieVideo> extractMovieVideoList(String jsonResponseMovieVideoList) {
+
+        List<MovieVideo> movieVideoList = new ArrayList<>();
+
+        try {
+            // Create a JSONObject from the JSON response string
+            JSONObject rootJsonObject = new JSONObject(jsonResponseMovieVideoList);
+
+            // Get the array of results (movies videos data)
+            JSONArray resultsArray = rootJsonObject.getJSONArray(JsonKey.RESULTS);
+
+            // For each position in the movieArray (inside the JSONArray object)
+            // extract the JSON data from such position in the array and put the data into a new MovieVideo class object.
+            for (int i = 0; i < resultsArray.length(); i++) {
+
+                // Get a single Movie object in the movieArray (in within the list of MovieVideo)
+                JSONObject currentMovieVideoItemData = resultsArray.getJSONObject(i);
+
+                String videoUrl = currentMovieVideoItemData.optString(ApiConfig.getBaseVideoUrlYoutube() + currentMovieVideoItemData.optString("key"));
+                String videoName = currentMovieVideoItemData.optString("name");
+                String videoType = currentMovieVideoItemData.optString("type");
+                String videoSite = currentMovieVideoItemData.optString("site");
+                int videoSize = currentMovieVideoItemData.optInt("size");
+
+                // Instantiate a Movie class object and add the JSON data as inputs parameters.
+                MovieVideo movieVideoItem = new MovieVideo(videoUrl, videoName, videoType, videoSite, videoSize);
+                movieVideoList.add(movieVideoItem);
+            }
+
+        } catch (JSONException e) {
+            Log.e("QueryUtilsMovieList", "Problem parsing the movie JSON results", e);
+        }
+        // Return the list of movie videos
+        return movieVideoList;
+    }
+
+
+    /**
+     * @param jsonResponseMovieReviewList is the JSON input in a String format.
+     * @return a list of {@link MovieVideo} objects.
+     */
+    public static List<MovieReview> extractMovieReviewList(String jsonResponseMovieReviewList) {
+
+        List<MovieReview> movieReviewsList = new ArrayList<>();
+
+        try {
+            // Create a JSONObject from the JSON response string
+            JSONObject rootJsonObject = new JSONObject(jsonResponseMovieReviewList);
+
+            // Get the array of results (movies videos data)
+            JSONArray resultsArray = rootJsonObject.getJSONArray(JsonKey.RESULTS);
+
+            // For each position in the movieArray (inside the JSONArray object)
+            // extract the JSON data from such position in the array and put the data into a new Movie class object.
+            for (int i = 0; i < resultsArray.length(); i++) {
+
+                // Get a single Movie object in the movieArray (in within the list of Movie)
+                JSONObject currentMovieReviewItemData = resultsArray.getJSONObject(i);
+
+                String reviewId = currentMovieReviewItemData.optString("id");
+                String reviewAuthor = currentMovieReviewItemData.optString("author");
+                String reviewContent = currentMovieReviewItemData.optString("content");
+                String reviewUrl = currentMovieReviewItemData.optString("url");
+
+                // Instantiate a Movie class object and add the JSON data as inputs parameters.
+                MovieReview movieVideoItem = new MovieReview(reviewId, reviewAuthor, reviewContent, reviewUrl);
+                movieReviewsList.add(movieVideoItem);
+            }
+
+        } catch (JSONException e) {
+            Log.e("QueryUtilsMovieList", "Problem parsing the movie JSON results", e);
+        }
+        // Return the list of movie videos
+        return movieReviewsList;
+    }
 }
