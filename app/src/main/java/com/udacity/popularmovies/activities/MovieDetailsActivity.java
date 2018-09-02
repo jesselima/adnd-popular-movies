@@ -344,8 +344,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
      * @param url is the url to be open in the browser.
      */
     private void openWebPage(String url) {
-        Uri uriWebPage = Uri.parse(url);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uriWebPage);
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }

@@ -37,11 +37,11 @@
                     android:layout_marginEnd="4dp"
                     android:gravity="start"
                     android:maxLines="1"
-                    android:text="Author:"
+                    android:text="@string/author"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
                 <TextView
-                    android:id="@+id/tv_original_title"
+                    android:id="@+id/tv_review_author"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="start"
@@ -51,7 +51,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_genres"
+                android:id="@+id/tv_review_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -65,13 +65,13 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/bt_item_list_homepage"
+                    android:id="@+id/bt_see_review_on_web"
                     style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginBottom="4dp"
-                    android:text="@string/homepage"
+                    android:text="Web"
                     android:textColor="@color/colorAccent"
                     android:textSize="14sp"/>
             </LinearLayout>

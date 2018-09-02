@@ -39,4 +39,7 @@
     <string name="no_bookmarks_in_the_database">No bookmarks in the database</string>
     <string name="see_movies">SEE MOVIES</string>
     <string name="preferences">Preferences</string>
+    <string name="author">Author:</string>
+    <string name="comment_url_not_available">Comment url not available!</string>
+    <string name="see_on_youtube">See on YouTube</string>
 </resources>
