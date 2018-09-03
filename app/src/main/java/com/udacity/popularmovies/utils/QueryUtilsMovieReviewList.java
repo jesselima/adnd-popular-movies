@@ -1,6 +1,5 @@
 package com.udacity.popularmovies.utils;
 
-
 import android.text.TextUtils;
 import android.util.Log;
 

@@ -171,14 +171,14 @@ final class ReadJsonData {
                 // Get a single Movie object in the movieArray (in within the list of MovieVideo)
                 JSONObject currentMovieVideoItemData = resultsArray.getJSONObject(i);
 
-                String videoUrl = currentMovieVideoItemData.optString(ApiConfig.getBaseVideoUrlYoutube() + currentMovieVideoItemData.optString("key"));
+                String videoKey = currentMovieVideoItemData.optString("key");
                 String videoName = currentMovieVideoItemData.optString("name");
                 String videoType = currentMovieVideoItemData.optString("type");
                 String videoSite = currentMovieVideoItemData.optString("site");
                 int videoSize = currentMovieVideoItemData.optInt("size");
 
                 // Instantiate a Movie class object and add the JSON data as inputs parameters.
-                MovieVideo movieVideoItem = new MovieVideo(videoUrl, videoName, videoType, videoSite, videoSize);
+                MovieVideo movieVideoItem = new MovieVideo(videoKey, videoName, videoType, videoSite, videoSize);
                 movieVideoList.add(movieVideoItem);
             }
 
@@ -218,8 +218,8 @@ final class ReadJsonData {
                 String reviewUrl = currentMovieReviewItemData.optString("url");
 
                 // Instantiate a Movie class object and add the JSON data as inputs parameters.
-                MovieReview movieVideoItem = new MovieReview(reviewId, reviewAuthor, reviewContent, reviewUrl);
-                movieReviewsList.add(movieVideoItem);
+                MovieReview movieReviewItem = new MovieReview(reviewId, reviewAuthor, reviewContent, reviewUrl);
+                movieReviewsList.add(movieReviewItem);
             }
 
         } catch (JSONException e) {

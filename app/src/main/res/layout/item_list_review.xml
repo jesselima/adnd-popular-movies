@@ -54,14 +54,13 @@
                 android:id="@+id/tv_review_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:textSize="14sp"
                 tools:text="Mission Impossible - Fallout is a continuation of Mission Impossible - Rogue Nation. It is directed by Christopher McQuarrie who also directed Rogue Nation and also has the return of the psycho villain Solomon Lane (Sean Harris) who the bad guys want to set free.\n\nEthan Hunt (Tom Cruise) is after the mysterious John Lark and a terrorist group called the Apostles who have stolen three plutonium grade devices and plan to set them off.\n\nHunt has to reluctantly accept a new team member. CIA operative August Walker (Henry Cavill) because the IMF team were responsible for losing the plutonium in Berlin.\n\nAs a spy thriller there is enough tension, thrills and a serpentine story with several twists.\n\nHowever the film is overlong and I felt that some of the action scenes consisted of myriad chase scenes that were stylishly done but nothing really memorable liked the Burj Khalifa climbing scene."/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="end"
                 android:orientation="horizontal">
 
                 <Button
@@ -71,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
                     android:layout_marginBottom="4dp"
-                    android:text="Web"
+                    android:text="See on the Web"
                     android:textColor="@color/colorAccent"
                     android:textSize="14sp"/>
             </LinearLayout>

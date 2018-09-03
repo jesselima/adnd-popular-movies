@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -129,7 +130,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MovieReviewsActivity.class);
-                doToast(String.valueOf(movieData.getMovieId()));
+                    intent.putExtra(ApiConfig.JsonKey.ID, movieData.getMovieId());
+                    intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
                 startActivity(intent);
             }
         });
@@ -139,7 +141,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MovieVideosActivity.class);
-                doToast(String.valueOf(movieData.getMovieId()));
+                    intent.putExtra(ApiConfig.JsonKey.ID, movieData.getMovieId());
+                    intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
                 startActivity(intent);
             }
         });
@@ -431,6 +434,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     @Override
     protected void onStart() {
         super.onStart();
+        Log.v("===>>> onStart", " called");
         if (NetworkUtils.isDeviceConnected(this)) {
             hideConnectionWarning();
         } else {
@@ -441,6 +445,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     @Override
     protected void onPause() {
         super.onPause();
+        Log.v("===>>> onPause", " called");
         if (NetworkUtils.isDeviceConnected(this)) {
             hideConnectionWarning();
         } else {
@@ -451,9 +456,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     @Override
     protected void onResume() {
         super.onResume();
+        Log.v("===>>> onResume", " called");
         // Check internet connection when activity is resumed.
         if (NetworkUtils.isDeviceConnected(this)) {
             hideConnectionWarning();
+            getLoaderManager().restartLoader(MOVIE_DETAILS_LOADER_ID, null, this);
         } else {
             showConnectionWarning();
         }
@@ -463,9 +470,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     @Override
     protected void onRestart() {
         super.onRestart();
+
+        Log.v("===>>> onRestart", " called");
         // Check internet connection when activity is resumed.
         if (NetworkUtils.isDeviceConnected(this)) {
             hideConnectionWarning();
+            getLoaderManager().restartLoader(MOVIE_DETAILS_LOADER_ID, null, this);
         } else {
             showConnectionWarning();
         }

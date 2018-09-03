@@ -29,7 +29,7 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
     private final ArrayList<MovieVideo> movieVideoList;
     private final Context mContext;
 
-    public MovieVideosAdapter(ArrayList<MovieVideo> movieList, Context mContext) {
+    public MovieVideosAdapter(Context mContext, ArrayList<MovieVideo> movieList) {
         this.movieVideoList = movieList;
         this.mContext = mContext;
     }
@@ -44,16 +44,26 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
     @Override
     public void onBindViewHolder(@NonNull MovieVideoViewHolder holder, int position) {
         int adapterPosition = holder.getAdapterPosition();
+
         holder.videoTitle.setText(movieVideoList.get(adapterPosition).getVideoName());
         holder.videoType.setText(movieVideoList.get(adapterPosition).getVideoType());
         holder.videoSite.setText(movieVideoList.get(adapterPosition).getVideoSite());
-        holder.videoSize.setText(movieVideoList.get(adapterPosition).getVideoSize());
+        holder.videoSize.setText(String.valueOf(movieVideoList.get(adapterPosition).getVideoSize()));
 
         final String videoID = movieVideoList.get(adapterPosition).getVideoKey();
+        Log.v("VIDEO KEY", videoID);
+        holder.itemView.setTag(videoID);
+
         holder.buttonViewOnWeb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openWebPage(ApiConfig.getBaseVideoUrlYoutube() + videoID);
+
+                Uri uriWebPage = Uri.parse(ApiConfig.getBaseVideoUrlYoutube() + videoID);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uriWebPage);
+                if (intent.resolveActivity(mContext.getPackageManager()) != null) {
+                    mContext.startActivity(intent);
+                }
+
                 Log.v("VIDEO LINK", ApiConfig.getBaseVideoUrlYoutube() + videoID);
             }
         });

@@ -24,6 +24,12 @@ public class ReviewListLoader extends AsyncTaskLoader<List<MovieReview>> {
     }
 
     @Override
+    protected void onStartLoading() {
+        super.onStartLoading();
+        forceLoad();
+    }
+
+    @Override
     public List<MovieReview> loadInBackground() {
         if (reviewsRequestUrl == null) {
             return null;

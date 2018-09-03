@@ -42,4 +42,6 @@
     <string name="author">Author:</string>
     <string name="comment_url_not_available">Comment url not available!</string>
     <string name="see_on_youtube">See on YouTube</string>
+    <string name="no_comments_available_for_this_movie">No comments available for this movie</string>
+    <string name="no_videos_available_for_this_movie">No videos available for this movie</string>
 </resources>

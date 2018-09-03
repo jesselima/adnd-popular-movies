@@ -48,15 +48,15 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     /**
      * Inflates the layout for each movie item and return that view.
      * @param viewType The view type of the new View.
-     * @param parent  The ViewGroup into which the new View will be added after it is bound to an adapter position. It's the ViewGroup object used by the Inflater.
+     * @param viewGroup  The ViewGroup into which the new View will be added after it is bound to an adapter position. It's the ViewGroup object used by the Inflater.
      * @return a movie item view object represents the inflated layout filled with
      * data for each item(movie) in the list on the UI
      * Official Documentation: https://developer.android.com/reference/android/support/v7/widget/RecyclerView.Adapter#onBindViewHolder
      */
     @NonNull
     @Override
-    public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_list_movie, parent, false);
+    public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list_movie, viewGroup, false);
         return new MovieViewHolder(view);
     }
 

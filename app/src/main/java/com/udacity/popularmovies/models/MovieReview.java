@@ -52,4 +52,14 @@ public class MovieReview {
     public void setReviewUrl(String reviewUrl) {
         this.reviewUrl = reviewUrl;
     }
+
+    @Override
+    public String toString() {
+        return "MovieReview{" +
+                "reviewID='" + reviewID + '\'' +
+                ", reviewAuthor='" + reviewAuthor + '\'' +
+                ", reviewAContent='" + reviewAContent + '\'' +
+                ", reviewUrl='" + reviewUrl + '\'' +
+                '}';
+    }
 }

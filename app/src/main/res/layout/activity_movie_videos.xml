@@ -1,14 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.MovieVideosActivity">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_movies_videos"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <TextView
+        android:id="@+id/tv_network_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="VIDEOS"/>
+        android:layout_gravity="center"
+        android:layout_marginBottom="70dp"
+        android:text="@string/no_internet_connection"
+        android:textColor="@color/colorWarning"
+        android:visibility="gone"/>
 
-</android.support.constraint.ConstraintLayout>
+    <ImageView
+        android:id="@+id/iv_no_videos_placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="@string/no_videos_available_for_this_movie"
+        android:src="@drawable/ic_movie"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_warning_no_reviews"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="70dp"
+        android:text="@string/no_videos_available_for_this_movie"
+        android:textSize="16sp"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/iv_no_movies_placeholder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:contentDescription="@string/no_movies_found_image"
+        android:src="@drawable/film_strip_2"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        android:id="@+id/loading_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+</android.support.design.widget.CoordinatorLayout>
+
+
+
+
+
+
