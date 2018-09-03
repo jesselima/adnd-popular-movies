@@ -58,6 +58,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
+            android:id="@+id/nested_scroll_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -93,6 +94,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/container_details"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -197,65 +199,95 @@
                             tools:text="$3,298,111.86"/>
                     </LinearLayout>
                 </LinearLayout>
-
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_genres"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/default_layout_margin"
-                android:layout_marginRight="@dimen/default_layout_margin"
-                android:layout_marginTop="@dimen/medium_layout_margin"
-                android:padding="4dp"
-                android:textColor="@color/colorAccent"
-                tools:text="Avventura, Fantascienza, Fantasy, Azione"/>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/card_margin"
-                app:cardCornerRadius="3dp"
-                app:cardElevation="4dp">
-
-                <LinearLayout
-                    style="@style/Widget.CardContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <TextView
-                        android:id="@+id/tv_tagline"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:gravity="center"
-                        android:textSize="20sp"
-                        android:textStyle="italic|bold"
-                        tools:text="Some Missions Are Not A Choice"/>
-                    <TextView
-                        android:id="@+id/tv_overview"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="4dp"
-                        android:textSize="16sp"
-                        tools:text="Overview"/>
-                    <Button
-                        android:id="@+id/bt_home_page"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:text="@string/homepage"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="16sp"/>
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-
             <LinearLayout
+                android:id="@+id/container_additional_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="visible">
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tv_genres"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingLeft="@dimen/medium_layout_margin"
+                    android:paddingRight="@dimen/medium_layout_margin"
+                    android:layout_marginLeft="@dimen/default_layout_margin"
+                    android:layout_marginRight="@dimen/default_layout_margin"
+                    android:layout_marginTop="@dimen/medium_layout_margin"
+                    android:padding="4dp"
+                    android:textColor="@color/colorAccent"
+                    tools:text="Avventura, Fantascienza, Fantasy, Azione"/>
+
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/card_margin"
+                    android:layout_marginRight="@dimen/card_margin"
+                    android:layout_marginTop="@dimen/card_margin"
+                    app:cardCornerRadius="3dp"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        style="@style/Widget.CardContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:id="@+id/tv_tagline"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center"
+                            android:textSize="20sp"
+                            android:textStyle="italic|bold"
+                            tools:text="Some Missions Are Not A Choice"/>
+                        <TextView
+                            android:id="@+id/tv_overview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:textSize="16sp"
+                            tools:text="Overview"/>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center">
+                            <Button
+                                android:id="@+id/bt_videos"
+                                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:text="Videos"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="16sp"/>
+                            <Button
+                                android:id="@+id/bt_reviews"
+                                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:text="Reviews"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="16sp"/>
+                            <Button
+                                android:id="@+id/bt_home_page"
+                                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="end"
+                                android:text="@string/homepage"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="16sp"/>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -276,7 +308,16 @@
                     android:layout_width="200dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"/>
+
             </LinearLayout>
+
+
+            <!--<LinearLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:orientation="vertical">-->
+                <!---->
+            <!--</LinearLayout>-->
 
             <TextView
                 android:id="@+id/tv_network_status"
@@ -297,7 +338,6 @@
                 android:visibility="gone"/>
 
             <include layout="@layout/tmdb_branding"/>
-
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

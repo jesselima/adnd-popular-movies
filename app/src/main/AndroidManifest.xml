@@ -5,6 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Allows the application to keep the screen from dimming or the processor from sleeping -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -27,8 +29,20 @@
         <activity
             android:name=".activities.MovieDetailsActivity"
             android:label="Movie Details"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:parentActivityName=".activities.MovieListActivity" />
-        <activity android:name=".activities.BookmarkActivity"></activity>
+        <activity
+            android:name=".activities.BookmarkActivity"
+            android:label="Bookmarks (offline)"
+            android:parentActivityName=".activities.MovieListActivity" />
+        <activity
+            android:name=".activities.MovieVideosActivity"
+            android:label="Trailers and Clips"
+            android:parentActivityName=".activities.MovieDetailsActivity"/>
+        <activity
+            android:name=".activities.MovieReviewsActivity"
+            android:label="Movie Reviews"
+            android:parentActivityName=".activities.MovieDetailsActivity"/>
     </application>
 
 </manifest>

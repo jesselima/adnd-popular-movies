@@ -27,7 +27,7 @@ public class Movie {
     private int movieRevenue;
     private int movieRunTime;
     private String movieGenres;
-    private List<Company> companiesArrayList;
+    private List<MovieProductionCompany> companiesArrayList;
     private String movieHomepage;
 
     // Empty constructor
@@ -43,7 +43,7 @@ public class Movie {
     }
 
     // Constructor for movie details object.
-    public Movie(int movieId, String moviePosterPath, String movieOriginalTitle, String movieOverview, String movieReleaseDate, double movieVoteAverage, int movieMdbId, String movieTitle, String movieOriginalLanguage, int movieVoteCount, String movieBackdropPath, double moviePopularity, String movieTagline, int movieBuget, int movieRevenue, int movieRunTime, String movieGenres, ArrayList<Company> companiesArrayList, String movieHomepage) {
+    public Movie(int movieId, String moviePosterPath, String movieOriginalTitle, String movieOverview, String movieReleaseDate, double movieVoteAverage, int movieMdbId, String movieTitle, String movieOriginalLanguage, int movieVoteCount, String movieBackdropPath, double moviePopularity, String movieTagline, int movieBuget, int movieRevenue, int movieRunTime, String movieGenres, ArrayList<MovieProductionCompany> companiesArrayList, String movieHomepage) {
         this.movieId = movieId;
         this.moviePosterPath = moviePosterPath;
         this.movieOriginalTitle = movieOriginalTitle;
@@ -201,11 +201,11 @@ public class Movie {
         this.movieGenres = movieGenres;
     }
 
-    public List<Company> getCompaniesArrayList() {
+    public List<MovieProductionCompany> getCompaniesArrayList() {
         return companiesArrayList;
     }
 
-    public void setCompaniesArrayList(List<Company> companiesArrayList) {
+    public void setCompaniesArrayList(List<MovieProductionCompany> companiesArrayList) {
         this.companiesArrayList = companiesArrayList;
     }
 

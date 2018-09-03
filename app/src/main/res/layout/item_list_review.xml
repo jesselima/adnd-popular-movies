@@ -11,84 +11,67 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_layout_margin"
         android:layout_marginBottom="@dimen/small_layout_margin"
         android:layout_marginLeft="@dimen/small_layout_margin"
         android:layout_marginRight="@dimen/small_layout_margin"
+        android:layout_marginTop="@dimen/small_layout_margin"
         app:cardCornerRadius="3dp"
         app:cardElevation="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_original_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/medium_layout_margin"
-                android:gravity="center"
-                android:maxLines="2"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:text="Mission Impossible - Fallout"/>
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/default_layout_margin"
+            android:paddingRight="@dimen/default_layout_margin">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
                 android:orientation="horizontal">
                 <TextView
-                    android:id="@+id/tv_release_date"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginEnd="@dimen/default_layout_margin"
-                    android:layout_weight="1"
-                    android:gravity="end"
-                    android:textSize="16sp"
-                    tools:text="2018"/>
-                <TextView
-                    android:id="@+id/tv_runtime"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:layout_marginStart="@dimen/default_layout_margin"
-                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
                     android:gravity="start"
+                    android:maxLines="1"
+                    android:text="@string/author"
                     android:textSize="16sp"
-                    tools:text="147min"/>
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/tv_review_author"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:maxLines="2"
+                    android:textSize="16sp"
+                    tools:text="TopKek"/>
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tv_genres"
+                android:id="@+id/tv_review_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textColor="@color/colorPrimary"
                 android:textSize="14sp"
-                tools:text="Adventure | Action | Thriller"/>
+                tools:text="Mission Impossible - Fallout is a continuation of Mission Impossible - Rogue Nation. It is directed by Christopher McQuarrie who also directed Rogue Nation and also has the return of the psycho villain Solomon Lane (Sean Harris) who the bad guys want to set free.\n\nEthan Hunt (Tom Cruise) is after the mysterious John Lark and a terrorist group called the Apostles who have stolen three plutonium grade devices and plan to set them off.\n\nHunt has to reluctantly accept a new team member. CIA operative August Walker (Henry Cavill) because the IMF team were responsible for losing the plutonium in Berlin.\n\nAs a spy thriller there is enough tension, thrills and a serpentine story with several twists.\n\nHowever the film is overlong and I felt that some of the action scenes consisted of myriad chase scenes that were stylishly done but nothing really memorable liked the Burj Khalifa climbing scene."/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="end"
                 android:orientation="horizontal">
+
                 <Button
-                    android:id="@+id/bt_item_list_details"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:text="@string/details"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"/>
-                <Button
-                    android:id="@+id/bt_item_list_homepage"
+                    android:id="@+id/bt_see_review_on_web"
                     style="@style/Base.Widget.AppCompat.Button.Borderless.Colored"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end"
-                    android:text="@string/homepage"
-                    android:textColor="@color/colorPrimary"
+                    android:layout_marginBottom="4dp"
+                    android:text="See on the Web"
+                    android:textColor="@color/colorAccent"
                     android:textSize="14sp"/>
             </LinearLayout>
 

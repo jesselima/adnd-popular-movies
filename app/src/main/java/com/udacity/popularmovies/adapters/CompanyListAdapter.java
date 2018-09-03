@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.R;
-import com.udacity.popularmovies.models.Company;
+import com.udacity.popularmovies.models.MovieProductionCompany;
 
 import java.util.ArrayList;
 
 /**
  * An {@link CompanyListAdapter} knows how to create a list item layout for each company item
- * in the data source (a list of {@link Company} objects).
+ * in the data source (a list of {@link MovieProductionCompany} objects).
  * <p>
  * These list item layouts will be provided to an adapter view like RecyclerView
  * to be displayed to the user.
@@ -30,7 +30,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
     @SuppressWarnings("unused")
     private static final String LOG_TAG = CompanyListAdapter.class.getSimpleName();
 
-    private final ArrayList<Company> companies;
+    private final ArrayList<MovieProductionCompany> companies;
     private final Context context;
 
     /**
@@ -39,7 +39,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
      * @param context  of the app
      * @param companies is the list of companies, which is the data source of the adapter
      */
-    public CompanyListAdapter(Context context, ArrayList<Company> companies) {
+    public CompanyListAdapter(Context context, ArrayList<MovieProductionCompany> companies) {
         this.context = context;
         this.companies = companies;
     }

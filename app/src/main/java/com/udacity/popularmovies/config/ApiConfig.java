@@ -36,10 +36,12 @@ public final class ApiConfig {
     private static final String ORIGINAL    = "original";
 
     private static final String BASE_URL_V3_DISCOVER    = "https://api.themoviedb.org/3/discover/movie";
-    private static final String BASE_URL_V3_DEFAULT    = "https://api.themoviedb.org/3/movie/";
+    private static final String BASE_URL_V3_DEFAULT     = "https://api.themoviedb.org/3/movie/";
     private static final String BASE_IMAGE_URL          = "http://image.tmdb.org/t/p/";
     private static final String SECURE_BASE_IMAGE_URL   = "https://image.tmdb.org/t/p/";
-    private static final String BASE_MOVIE_DETAILS_URL   = "https://api.themoviedb.org/3/movie/";
+    private static final String BASE_MOVIE_DETAILS_URL  = "https://api.themoviedb.org/3/movie/";
+    private static final String BASE_VIDEO_URL_YOUTUBE  = "https://www.youtube.com/watch?v=";
+
 
     public static String getBaseMovieApiUrlV3() {
         return BASE_URL_V3_DISCOVER;
@@ -59,6 +61,10 @@ public final class ApiConfig {
 
     public static String getBaseUrlV3Default() {
         return BASE_URL_V3_DEFAULT;
+    }
+
+    public static String getBaseVideoUrlYoutube() {
+        return BASE_VIDEO_URL_YOUTUBE;
     }
 
     /* URL CONSTANT PARAMS KEYS */
@@ -103,6 +109,8 @@ public final class ApiConfig {
         public static final String IMAGE_STILL_W185     = W185;
         public static final String IMAGE_STILL_W300     = W300;
         public static final String IMAGE_STILL_ORIGINAL = ORIGINAL;
+
+        public static final int VIDEO_SIZE = 360;
 
     }
 
