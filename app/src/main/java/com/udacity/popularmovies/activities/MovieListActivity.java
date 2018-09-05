@@ -47,6 +47,10 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
     // Movie List Loader ID
     private static final int MOVIE_LOADER_ID = 1;
+    private static Bundle bundleRecyclerView;
+    private final ArrayList<Movie> movieList = new ArrayList<>();
+    // Implementation for save state
+    private final String KEY_RECYCLER_STATE = "recycler_state";
     // Global variable to be used with system language abbreviation in two letters
     private String loadApiLanguage = UrlParamValue.LANGUAGE_DEFAULT;
     // Page value for pagination control
@@ -63,12 +67,6 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     // Objects ro set and control RecyclerView and the list of movie data
     private RecyclerView recyclerView;
     private MovieListAdapter movieListAdapter;
-    private final ArrayList<Movie> movieList = new ArrayList<>();
-
-
-    // Implementation for save state
-    private final String KEY_RECYCLER_STATE = "recycler_state";
-    private static Bundle bundleRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +82,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
                     case R.id.button_nav_most_popular:
                         if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
                             doToast(getResources().getString(R.string.warning_check_internet_connection));
-                        }else {
+                        } else {
                             page = 1;
                             sortBy = UrlParamValue.POPULAR;
                             restartLoader();
@@ -93,7 +91,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
                     case R.id.button_nav_most_rated:
                         if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
                             doToast(getResources().getString(R.string.warning_check_internet_connection));
-                        }else {
+                        } else {
                             page = 1;
                             sortBy = UrlParamValue.TOP_RATED;
                             restartLoader();
@@ -102,14 +100,14 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
                     case R.id.button_pagination_backward:
                         if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
                             doToast(getResources().getString(R.string.warning_check_internet_connection));
-                        }else {
+                        } else {
                             paginationBackward();
                         }
                         break;
                     case R.id.button_pagination_forward:
                         if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
                             doToast(getResources().getString(R.string.warning_check_internet_connection));
-                        }else {
+                        } else {
                             paginationForward();
                         }
                         break;
@@ -168,15 +166,16 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         movieList.clear();
         hideNoResultsWarning();
         hideConnectionWarning();
-        if (page == 1){
+        if (page == 1) {
             doToast(getResources().getString(R.string.you_are_at_page_1));
-        }else {
+        } else {
             page--;
             movieList.clear();
             restartLoader();
             doToast(getResources().getString(R.string.page) + String.valueOf(page));
         }
     }
+
     // When clicked, restart the loader with the current page + 1. So the loader will make another
     // request to load the next 20 movies. If the current.
     private void paginationForward() {
@@ -191,8 +190,9 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     /* IMPLEMENTATION FOR LoaderCallbacks */
 
     /**
-     *  Instantiate and return a new Loader for the given ID.
-     * @param id is the loader id.
+     * Instantiate and return a new Loader for the given ID.
+     *
+     * @param id     is the loader id.
      * @param bundle A mapping from String keys to various Parcelable values.
      * @return a new MovieListLoader object. This loader will receive the request URL and
      * make this request to the server in a background thread.
@@ -244,10 +244,12 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     /**
      * Called when a previously created loader is being reset, and thus making its data unavailable.
      * The application should at this point remove any references it has to the Loader's data.
+     *
      * @param loader The Loader that is being reset.
      */
     @Override
-    public void onLoaderReset(Loader loader) {}
+    public void onLoaderReset(Loader loader) {
+    }
 
     /**
      * Check internet connection when activity is started.
@@ -304,11 +306,13 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
      */
 
     private void showLoadingIndicator() {
+        loadingIndicator.setIndeterminate(true);
         loadingIndicator.setVisibility(View.VISIBLE);
     }
 
     private void hideLoadingIndicator() {
         loadingIndicator.setVisibility(View.GONE);
+        loadingIndicator.setIndeterminate(false);
     }
 
     private void showNoResultsWarning() {
@@ -368,7 +372,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.settings:
                 Toast.makeText(this, "Settings clicked!", Toast.LENGTH_SHORT).show();
         }

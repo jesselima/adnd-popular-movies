@@ -43,9 +43,12 @@
 
     <ProgressBar
         android:id="@+id/loading_indicator"
-        android:layout_width="wrap_content"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="49dp"
+        android:progress="20"/>
 
     <android.support.design.widget.BottomNavigationView
         xmlns:android="http://schemas.android.com/apk/res/android"

@@ -2,10 +2,12 @@ package com.udacity.popularmovies.activities;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +40,7 @@ import com.udacity.popularmovies.utils.DateUtils;
 import com.udacity.popularmovies.utils.LanguageUtils;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -48,22 +52,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private static final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
     // The Loader ID to be used by the LoaderManager
     private static final int MOVIE_DETAILS_LOADER_ID = 2;
-
+    private final ArrayList<MovieProductionCompany> companies = new ArrayList<>();
     private int movieId;
     private String movieOriginalTitle = "";
     private String loadApiLanguage = ApiConfig.UrlParamValue.LANGUAGE_DEFAULT;
-
     private Toast toast;
-
     // Object for UI references
     private ImageView imageViewMoviePoster, imageViewMovieBackdrop;
     private TextView textViewOverview, textViewReleaseDate, textViewRuntime, textViewTitle, textViewVoteAverage, textViewOriginalLanguage, textViewTagline, textViewPopularity, textViewVoteCount, textViewBuget, textViewRevenue, textViewGenres;
     private TextView textViewNetworkStatus, textViewNoMovieDetails;
     private LinearLayout linearLayoutContainerDetails, linearLayoutAdditionalInfo;
-
     private Movie movieData = new Movie();
     private CompanyListAdapter companyListAdapter;
-    private final ArrayList<MovieProductionCompany> companies = new ArrayList<>();
     private String movieHomepageUrl;
 
     private SQLiteDatabase sqLiteDatabase;
@@ -71,11 +71,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     private FloatingActionButton floatingBookmarkButton = null;
     private FloatingActionButton floatingShareButton = null;
+    private ProgressBar progressBar;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+
+        progressBar = findViewById(R.id.indeterminateBar);
+        showProgressBar();
 
         bookmarkDbHelper = new BookmarkDbHelper(this);
         sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
@@ -83,23 +88,23 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         getIncomingIntent();
 
         // UI REFERENCES
-        imageViewMoviePoster     = findViewById(R.id.iv_movie_poster);
-        imageViewMovieBackdrop   = findViewById(R.id.iv_movie_backdrop);
-        textViewOverview         = findViewById(R.id.tv_overview);
-        textViewReleaseDate      = findViewById(R.id.tv_release_date);
-        textViewRuntime          = findViewById(R.id.tv_runtime);
-        textViewTitle            = findViewById(R.id.tv_title);
+        imageViewMoviePoster = findViewById(R.id.iv_movie_poster);
+        imageViewMovieBackdrop = findViewById(R.id.iv_movie_backdrop);
+        textViewOverview = findViewById(R.id.tv_overview);
+        textViewReleaseDate = findViewById(R.id.tv_release_date);
+        textViewRuntime = findViewById(R.id.tv_runtime);
+        textViewTitle = findViewById(R.id.tv_title);
         textViewOriginalLanguage = findViewById(R.id.tv_original_language);
-        textViewTagline          = findViewById(R.id.tv_tagline);
-        textViewPopularity       = findViewById(R.id.tv_popularity);
-        textViewVoteCount        = findViewById(R.id.tv_vote_count);
-        textViewBuget            = findViewById(R.id.tv_buget);
-        textViewRevenue          = findViewById(R.id.tv_revenue);
-        textViewVoteAverage      = findViewById(R.id.tv_vote_average);
-        textViewGenres           = findViewById(R.id.tv_genres);
+        textViewTagline = findViewById(R.id.tv_tagline);
+        textViewPopularity = findViewById(R.id.tv_popularity);
+        textViewVoteCount = findViewById(R.id.tv_vote_count);
+        textViewBuget = findViewById(R.id.tv_buget);
+        textViewRevenue = findViewById(R.id.tv_revenue);
+        textViewVoteAverage = findViewById(R.id.tv_vote_average);
+        textViewGenres = findViewById(R.id.tv_genres);
         // Warnings UI View references.
-        textViewNetworkStatus    = findViewById(R.id.tv_network_status);
-        textViewNoMovieDetails   = findViewById(R.id.tv_no_movie_details);
+        textViewNetworkStatus = findViewById(R.id.tv_network_status);
+        textViewNoMovieDetails = findViewById(R.id.tv_no_movie_details);
         linearLayoutContainerDetails = findViewById(R.id.container_details);
         linearLayoutAdditionalInfo = findViewById(R.id.container_additional_content);
 
@@ -117,9 +122,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             public void onClick(View view) {
                 if (movieData.getMovieHomepage().equals("null")) {
                     doToast(getString(R.string.warning_homepage_not_available));
-                } else if (!NetworkUtils.isDeviceConnected(getApplicationContext())){
+                } else if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
                     doToast(getString(R.string.warning_you_are_not_connected));
-                }else {
+                } else {
                     openWebPage(movieHomepageUrl);
                 }
             }
@@ -130,8 +135,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MovieReviewsActivity.class);
-                    intent.putExtra(ApiConfig.JsonKey.ID, movieData.getMovieId());
-                    intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
+                intent.putExtra(ApiConfig.JsonKey.ID, movieData.getMovieId());
+                intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
                 startActivity(intent);
             }
         });
@@ -141,8 +146,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MovieVideosActivity.class);
-                    intent.putExtra(ApiConfig.JsonKey.ID, movieData.getMovieId());
-                    intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
+                intent.putExtra(ApiConfig.JsonKey.ID, movieData.getMovieId());
+                intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
                 startActivity(intent);
             }
         });
@@ -156,8 +161,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
                     deleteBookmark(movieData.getMovieId());
                     floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
                     doToast(getResources().getString(R.string.movie_removed));
-                }else {
-                    saveBookmark();
+                } else {
+                    saveBookmark(convertImageViewToBytes(imageViewMoviePoster));
                     floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
                     doToast(getResources().getString(R.string.movie_saved));
                 }
@@ -205,9 +210,25 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         }
     }
 
+    private void checkConnectionAndStartLoader() {
+        // Check for internet connection before start the loader
+        if (!NetworkUtils.isDeviceConnected(this)) {
+            doToast(getString(R.string.warning_you_are_not_connected));
+            showConnectionWarning();
+            hideProgressBar();
+        } else {
+            hideConnectionWarning();
+            showProgressBar();
+            // Shows loading indicator and Kick off the loader
+            android.app.LoaderManager loaderManager = getLoaderManager();
+            loaderManager.initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
+        }
+    }
+
     /**
-     *  Instantiate and return a new Loader for the given ID.
-     * @param id is the loader id.
+     * Instantiate and return a new Loader for the given ID.
+     *
+     * @param id   is the loader id.
      * @param args A mapping from String keys to various Parcelable values.
      * @return a new MovieListLoader object. This loader will receive the request URL and
      * make this request to the server in a background thread.
@@ -227,7 +248,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
      * Called when a previously created loader has finished its work.
      *
      * @param loader The Loader that has finished.
-     * @param movie The data generated by the Loader. In this case, details of a movie.
+     * @param movie  The data generated by the Loader. In this case, details of a movie.
      */
     @Override
     public void onLoadFinished(Loader<Movie> loader, Movie movie) {
@@ -242,7 +263,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
             if (checkBookmarkOnDatabase()) {
                 floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
-            }else {
+            } else {
                 floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
             }
 
@@ -252,13 +273,15 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             // Add new data to the list.
             companies.addAll(movieData.getCompaniesArrayList());
             companyListAdapter.notifyDataSetChanged();
+
         } else {
             textViewNoMovieDetails.setVisibility(View.VISIBLE);
         }
     }
 
     /**
-     *  Check uf the movie returned from the Loader is valid
+     * Check uf the movie returned from the Loader is valid
+     *
      * @param movie is the {@link Movie} object with details.
      * @return return true is the movie is
      */
@@ -269,26 +292,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     /**
      * Called when a previously created loader is being reset, and thus making its data unavailable.
      * The application should at this point remove any references it has to the Loader's data.
+     *
      * @param loader The Loader that is being reset.
      */
     @Override
-    public void onLoaderReset(Loader<Movie> loader) {}
-
-    /**
-     * This method makes the reuse of toast object to avoid toasts queue
-     *
-     * @param toastThisText is the text you want to show in the toast.
-     */
-    private void doToast(String toastThisText) {
-        if (toast != null) {
-            toast.cancel();
-        }
-        toast = Toast.makeText(this, toastThisText, Toast.LENGTH_LONG);
-        toast.show();
+    public void onLoaderReset(Loader<Movie> loader) {
     }
 
     /**
-     *  When called receives the movie object with movie details and updates the UI.
+     * When called receives the movie object with movie details and updates the UI.
+     *
      * @param movie is the {@link Movie} object with movie details.
      */
     private void updateUI(Movie movie) {
@@ -316,7 +329,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         textViewReleaseDate.setText(formatedDate);
 
         textViewTitle.setText(movie.getMovieTitle());
-        textViewOriginalLanguage.setText(movie.getMovieOriginalLanguage());
+        textViewOriginalLanguage.setText(movie.getMovieSpokenLanguage());
 
         String taglineWithQuotes = movie.getMovieTagline();
         textViewTagline.setText(taglineWithQuotes);
@@ -329,38 +342,30 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
         textViewGenres.setText(movie.getMovieGenres());
 
+        progressBar.setVisibility(View.INVISIBLE);
+
     }// Closes updateUI method
 
-    /**
-     * When called must receive a number that will be converted to a String with the pattern $###,###,###.##
-     * @param numberToBeFormated is the number (Buget or Revenue) to be formated.
-     * @return a the number as String properly formated.
-     */
-    private String formatNumber(int numberToBeFormated) {
-        DecimalFormat myFormatter = new DecimalFormat("$###,###,###.##");
-        return myFormatter.format(numberToBeFormated);
-    }
 
-    /**
-     * When called must receive a String url and will open default browser on device or ask to the
-     * user about what application he wants to uses to open the URL.
-     * @param url is the url to be open in the browser.
-     */
-    private void openWebPage(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
+    private long saveBookmark(byte[] imageInBytesArray) {
 
-    private long saveBookmark() {
         ContentValues contentValues = new ContentValues();
-            contentValues.put(BookmarkEntry.COLUMN_API_ID,         movieData.getMovieId());
-            contentValues.put(BookmarkEntry.COLUMN_ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
-            contentValues.put(BookmarkEntry.COLUMN_RELEASE_DATE,   movieData.getMovieReleaseDate());
-            contentValues.put(BookmarkEntry.COLUMN_RUNTIME,        movieData.getMovieRunTime());
-            contentValues.put(BookmarkEntry.COLUMN_GENRES,         movieData.getMovieGenres());
-            contentValues.put(BookmarkEntry.COLUMN_HOMEPAGE,       movieData.getMovieHomepage());
+        contentValues.put(BookmarkEntry.COLUMN_API_ID, movieData.getMovieId());
+        contentValues.put(BookmarkEntry.COLUMN_ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
+        contentValues.put(BookmarkEntry.COLUMN_RELEASE_DATE, movieData.getMovieReleaseDate());
+        contentValues.put(BookmarkEntry.COLUMN_RUNTIME, movieData.getMovieRunTime());
+        contentValues.put(BookmarkEntry.COLUMN_GENRES, movieData.getMovieGenres());
+        contentValues.put(BookmarkEntry.COLUMN_HOMEPAGE, movieData.getMovieHomepage());
+        contentValues.put(BookmarkEntry.COLUMN_TAGLINE, movieData.getMovieTagline());
+        contentValues.put(BookmarkEntry.COLUMN_OVERVIEW, movieData.getMovieOverview());
+        contentValues.put(BookmarkEntry.COLUMN_SPOKEN_LANGUAGES, movieData.getMovieSpokenLanguage());
+        contentValues.put(BookmarkEntry.COLUMN_VOTE_AVERAGE, movieData.getMovieVoteAverage());
+        contentValues.put(BookmarkEntry.COLUMN_VOTE_COUNT, movieData.getMovieVoteCount());
+        contentValues.put(BookmarkEntry.COLUMN_POPULARITY, movieData.getMoviePopularity());
+        contentValues.put(BookmarkEntry.COLUMN_BUDGET, movieData.getMovieBuget());
+        contentValues.put(BookmarkEntry.COLUMN_REVENUE, movieData.getMovieRevenue());
+        contentValues.put(BookmarkEntry.COLUMN_HOMEPAGE, movieData.getMovieHomepage());
+        contentValues.put(BookmarkEntry.COLUMN_MOVIE_IMAGE, imageInBytesArray);
         return sqLiteDatabase.insert(BookmarkEntry.TABLE_NAME, null, contentValues);
     }
 
@@ -372,18 +377,30 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private boolean checkBookmarkOnDatabase() {
 
         Cursor cursor = sqLiteDatabase.query(
-            BookmarkEntry.TABLE_NAME,   // table
-            new String[] { BookmarkEntry.COLUMN_API_ID, BookmarkEntry.COLUMN_ORIGINAL_TITLE },  // columns
-            BookmarkEntry.COLUMN_API_ID + "=?",   // selection
-            new String[] { String.valueOf(movieData.getMovieId()) },   // selectionArgs
-            null,      // groupBy
-            null,       // having
-            null);     // orderBy
+                BookmarkEntry.TABLE_NAME,   // table
+                new String[]{BookmarkEntry.COLUMN_API_ID, BookmarkEntry.COLUMN_ORIGINAL_TITLE},  // columns
+                BookmarkEntry.COLUMN_API_ID + "=?",   // selection
+                new String[]{String.valueOf(movieData.getMovieId())},   // selectionArgs
+                null,      // groupBy
+                null,       // having
+                null);     // orderBy
 
         boolean isOnDatabase = cursor.getCount() > 0;
         cursor.close();
 
         return isOnDatabase;
+    }
+
+    public byte[] convertImageViewToBytes(ImageView imageView) {
+        /* Get ImageView to Bitmap from Greg Giacovelli
+        https://stackoverflow.com/questions/4715044/android-how-to-convert-whole-imageview-to-bitmap */
+        imageView.buildDrawingCache();
+        Bitmap imageBitmap = imageView.getDrawingCache();
+        /* */
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
     }
 
     private void shareWebUrl(String webUrl, String warningString) {
@@ -418,17 +435,14 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         imageViewMoviePoster.setVisibility(View.VISIBLE);
     }
 
-    private void checkConnectionAndStartLoader(){
-        // Check for internet connection before start the loader
-        if (!NetworkUtils.isDeviceConnected(this)) {
-            doToast(getString(R.string.warning_you_are_not_connected));
-            showConnectionWarning();
-        } else {
-            hideConnectionWarning();
-            // Shows loading indicator and Kick off the loader
-            android.app.LoaderManager loaderManager = getLoaderManager();
-            loaderManager.initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
-        }
+    private void showProgressBar() {
+        progressBar.setIndeterminate(true);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProgressBar() {
+        progressBar.setIndeterminate(false);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -478,6 +492,43 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             getLoaderManager().restartLoader(MOVIE_DETAILS_LOADER_ID, null, this);
         } else {
             showConnectionWarning();
+        }
+    }
+
+    /**
+     * This method makes the reuse of toast object to avoid toasts queue
+     *
+     * @param toastThisText is the text you want to show in the toast.
+     */
+    private void doToast(String toastThisText) {
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(this, toastThisText, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    /**
+     * When called must receive a number that will be converted to a String with the pattern $###,###,###.##
+     *
+     * @param numberToBeFormated is the number (Buget or Revenue) to be formated.
+     * @return a the number as String properly formated.
+     */
+    private String formatNumber(int numberToBeFormated) {
+        DecimalFormat myFormatter = new DecimalFormat("$###,###,###.##");
+        return myFormatter.format(numberToBeFormated);
+    }
+
+    /**
+     * When called must receive a String url and will open default browser on device or ask to the
+     * user about what application he wants to uses to open the URL.
+     *
+     * @param url is the url to be open in the browser.
+     */
+    private void openWebPage(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
         }
     }
 }
