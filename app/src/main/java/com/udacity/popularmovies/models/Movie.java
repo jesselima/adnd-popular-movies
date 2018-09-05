@@ -129,7 +129,7 @@ public class Movie {
         this.movieTitle = movieTitle;
     }
 
-    public String getMovieOriginalLanguage() {
+    public String getMovieSpokenLanguage() {
         return movieOriginalLanguage;
     }
 
