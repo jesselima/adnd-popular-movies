@@ -1,5 +1,6 @@
 package com.udacity.popularmovies.localdatabase;
 
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 import com.udacity.popularmovies.config.ApiConfig;
@@ -11,7 +12,18 @@ import com.udacity.popularmovies.config.ApiConfig.JsonKey;
  */
 public class BookmarkContract {
 
+    // 1TODO: Content authority
+    public static final String AUTHORITY = "com.udacity.popularmovies";
+    // 2TODO: Base content URI
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    // 3TODO: Paths to bookmarks directory
+    public static final String PATH_MOVIES_BOOKMARKS = "movie_bookmark";
+
     public static final class BookmarkEntry implements BaseColumns {
+
+        // 4TODO: Content URI for data in BookmarkEntry class
+        public static final Uri CONTENT_URI =
+                BookmarkContract.BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES_BOOKMARKS).build();
 
         public static final String TABLE_NAME = "movie_bookmark";
         public static final String COLUMN_API_ID = "api_id";

@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Allows the application to keep the screen from dimming or the processor from sleeping -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.udacity.popularmovies.TERMS_READ"/>
 
     <application
         android:allowBackup="true"
@@ -43,6 +44,12 @@
             android:name=".activities.MovieReviewsActivity"
             android:label="Movie Reviews"
             android:parentActivityName=".activities.MovieDetailsActivity"/>
+
+        <!-- Bookmark Provider for Database access through ContentProvider class -->
+        <provider
+            android:authorities="com.udacity.popularmovies"
+            android:name="com.udacity.popularmovies.localdatabase.BookmarkContentProvider"
+            android:exported="true"/>
     </application>
 
 </manifest>
