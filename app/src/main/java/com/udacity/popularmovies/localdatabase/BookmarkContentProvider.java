@@ -2,6 +2,8 @@ package com.udacity.popularmovies.localdatabase;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -13,10 +15,34 @@ import android.support.annotation.Nullable;
  */
 public class BookmarkContentProvider extends ContentProvider {
 
+    public static final int BOOKMARKS = 100;
+    public static final int BOOKMARK_WITH_ID = 101;
+
+    /* This way UriMatcher can be accessed throughout all the provider code, and don't forget to set it equal to the return value */
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
+
+    public static UriMatcher buildUriMatcher() {
+        // NO_MATCH construct a empty matcher
+        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+        // Add matches with addUri(String authority, String path, int code):
+        // Directory
+        uriMatcher.addURI(BookmarkContract.AUTHORITY, BookmarkContract.PATH_MOVIES_BOOKMARKS, BOOKMARKS);
+        // Single item
+        uriMatcher.addURI(BookmarkContract.AUTHORITY, BookmarkContract.PATH_MOVIES_BOOKMARKS + "/#", BOOKMARK_WITH_ID);
+
+        return uriMatcher;
+    }
+
+    // BookmarkDbHelper to provide access to the database
+    private  BookmarkDbHelper bookmarkDbHelper;
+
 
     @Override
     public boolean onCreate() {
-        return false;
+        Context context = getContext();
+        bookmarkDbHelper = new BookmarkDbHelper(context);
+        return true;
     }
 
     @Nullable
