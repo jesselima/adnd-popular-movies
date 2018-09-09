@@ -1,13 +1,17 @@
 package com.udacity.popularmovies.localdatabase;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+
+import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
 
 /**
  * Created by jesse on 08/09/18.
@@ -60,7 +64,36 @@ public class BookmarkContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
-        return null;
+        // Get access to the popular_movies database (with write privileges)
+        final SQLiteDatabase db = bookmarkDbHelper.getWritableDatabase();
+        // Write UR matching code to identify the match  for the bookmarks directory
+        int match = sUriMatcher.match(uri);
+
+        Uri returnUri;
+
+        switch (match) {
+            case BOOKMARKS:
+                // Insert values into database
+                // If the insert does not work the return will bee -1. If  It's success return the new row id.
+                long id = db.insert(BookmarkEntry.TABLE_NAME, null, contentValues);
+
+                if (id > 0){
+                    // success
+                    returnUri = ContentUris.withAppendedId(BookmarkEntry.CONTENT_URI, id);
+                }else {
+                    // failed
+                    throw new UnsupportedOperationException("Failed to insert row into: " + uri);
+                }
+                break;
+            // Default case throws an UnsupportedOperationException
+            default:
+                throw new UnsupportedOperationException("Unknown Uri: " + uri);
+        }
+
+        // Notify the resolver if the uri has been changed
+        getContext().getContentResolver().notifyChange(uri, null);
+
+        return returnUri;
     }
 
     @Override

@@ -346,8 +346,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     }// Closes updateUI method
 
-
-    private long saveBookmark(byte[] imageInBytesArray) {
+    private boolean saveBookmark(byte[] imageInBytesArray) {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(BookmarkEntry.COLUMN_API_ID, movieData.getMovieId());
@@ -366,7 +365,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         contentValues.put(BookmarkEntry.COLUMN_REVENUE, movieData.getMovieRevenue());
         contentValues.put(BookmarkEntry.COLUMN_HOMEPAGE, movieData.getMovieHomepage());
         contentValues.put(BookmarkEntry.COLUMN_MOVIE_IMAGE, imageInBytesArray);
-        return sqLiteDatabase.insert(BookmarkEntry.TABLE_NAME, null, contentValues);
+
+        Uri uri = getContentResolver().insert(BookmarkEntry.CONTENT_URI, contentValues);
+        // Return TRUE if the uri returned uri is not null.
+        return uri != null;
+
     }
 
     private boolean deleteBookmark(long id) {
