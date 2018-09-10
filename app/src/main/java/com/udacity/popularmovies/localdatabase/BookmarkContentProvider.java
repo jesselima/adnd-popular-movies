@@ -51,8 +51,37 @@ public class BookmarkContentProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
-        return null;
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+
+        // gaining access to read our underlying database
+        final SQLiteDatabase db = bookmarkDbHelper.getReadableDatabase();
+
+        // URI matcher to get a match number that identifies the passed in URI
+        int match = sUriMatcher.match(uri);
+
+        Cursor returnCursor;
+
+        switch (match) {
+            case BOOKMARKS:
+                returnCursor = db.query(
+                        BookmarkEntry.TABLE_NAME,   // table
+                        projection,  // columns
+                        selection,   // selection
+                        selectionArgs,   // selectionArgs
+                        null,      // groupBy
+                        null,       // having
+                        sortOrder);     // orderBy
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown Uri: " + uri);
+        }
+
+        // Set notification changes. It tells the cursor what content URI it was created for.
+        // This way, if anything changes in the URI, the cursor will know.
+        returnCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        // Return a cursor with data (this cursor might be empty or full)
+        return returnCursor;
     }
 
     @Nullable

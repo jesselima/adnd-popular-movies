@@ -67,6 +67,7 @@
             <VideoView
                 android:id="@+id/vv_movie_video"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_marginLeft="@dimen/medium_layout_margin"
                 android:layout_marginRight="@dimen/medium_layout_margin"
                 android:layout_height="250dp"/>
