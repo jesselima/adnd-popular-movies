@@ -1,11 +1,10 @@
 package com.udacity.popularmovies.activities;
 
 import android.app.LoaderManager;
-import android.content.Loader;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -32,7 +31,6 @@ import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.adapters.CompanyListAdapter;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.loaders.MovieLoader;
-import com.udacity.popularmovies.localdatabase.BookmarkContract;
 import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
 import com.udacity.popularmovies.localdatabase.BookmarkDbHelper;
 import com.udacity.popularmovies.models.Movie;
@@ -355,7 +353,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     /* SQLite Database management methods */
     // TODO save bookmarks in async task
-
     private boolean saveBookmark(byte[] imageInBytesArray) {
 
         ContentValues contentValues = new ContentValues();
@@ -384,8 +381,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
     // TODO delete bookmarks in async task
     private boolean deleteBookmark(long id) {
-        return sqLiteDatabase.delete(BookmarkContract.BookmarkEntry.TABLE_NAME,
-                BookmarkEntry.COLUMN_API_ID + "=" + id, null) > 0;
+        return getContentResolver().delete(BookmarkEntry.CONTENT_URI, BookmarkEntry._ID, null) > 0;
     }
 
     // TODO check bookmarks in async task
@@ -552,6 +548,5 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             showConnectionWarning();
         }
     }
-
 
 }

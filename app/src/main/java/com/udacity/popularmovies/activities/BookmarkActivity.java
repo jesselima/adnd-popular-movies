@@ -2,7 +2,6 @@ package com.udacity.popularmovies.activities;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,16 +9,16 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,6 +28,7 @@ import android.widget.Toast;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.adapters.BookmarkAdapter;
 import com.udacity.popularmovies.localdatabase.BookmarkContract;
+import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
 import com.udacity.popularmovies.localdatabase.BookmarkDbHelper;
 
 public class BookmarkActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -48,7 +48,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     private RecyclerView recyclerViewBookmark;
     private BookmarkAdapter bookmarkAdapter;
 
-    Cursor mCursorData = null; // TODO: This load the bookmarks when activity starts
+    Cursor mCursorData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,6 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         recyclerViewBookmark = findViewById(R.id.recycler_view_bookmark);
         recyclerViewBookmark.setLayoutManager(new LinearLayoutManager(this));
 
-//        mCursorData = updateBookmarkList();// TODO
         bookmarkAdapter = new BookmarkAdapter(this);
         bookmarkAdapter.notifyDataSetChanged();
         recyclerViewBookmark.setAdapter(bookmarkAdapter);
@@ -81,9 +80,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 long movieApiId = (long) viewHolder.itemView.getTag();
-
                 showDeleteConfirmationDialog(movieApiId);
-
             }
         }).attachToRecyclerView(recyclerViewBookmark);
 
@@ -99,16 +96,11 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         // Start the Loader Callbacks to query the list of movie bookmarks asynchronously
          getSupportLoaderManager().initLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
 
-    }
-    // Close onCreate
+    } // Close onCreate
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-         getSupportLoaderManager().restartLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
-    }
 
-    /* TODO *** Loader Callbacks *** */
+    /* === LOADER CALLBACKS === */
+
     @SuppressLint("StaticFieldLeak")
     @NonNull
     @Override
@@ -156,21 +148,26 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         mCursorData = data;
+        if (data.getCount() < 1) {
+            showNoBookmarkWarning();
+        }else {
+            hideNoBookmarkWarning();
+        }
         bookmarkAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
-        sqLiteDatabase = bookmarkDbHelper.getReadableDatabase();
         bookmarkAdapter.swapCursor(null);
     }
 
     private void restartLoaderBookmarks() {
+        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
         getSupportLoaderManager().restartLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
     }
 
 
-    /* TODO *** DATABASE MANIPULATION *** */
+    /* === DATABASE MANIPULATION === */
 
     private boolean deleteBookmark(long id) {
         sqLiteDatabase.isOpen();
@@ -179,17 +176,30 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                 BookmarkContract.BookmarkEntry._ID + "=" + id, null) > 0;
     }
 
+    private boolean deleteAllBookmarks() {
+        int rowsDeleted = getContentResolver().delete(BookmarkContract.BookmarkEntry.CONTENT_URI, BookmarkEntry._ID, null);
+//        int rowsDeleted = getContentResolver().delete(BookmarkContract.BookmarkEntry.CONTENT_URI, null, null);
+        if (rowsDeleted > 0) {
+            doToast(rowsDeleted + getResources().getString(R.string.number_of_deleted_bookmarks));
+            showNoBookmarkWarning();
+        }
+
+        // After delete all Bookmarks
+        restartLoaderBookmarks();
+
+        return rowsDeleted > 0;
+    }
+
+
     private void showDeleteConfirmationDialog(final long movieApiId) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Delete this movie from bookmarks?");
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.delete_movie_bookmark_item);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-                if (deleteBookmark(movieApiId)) {
-                    doToast("Deleted!");
-                } else {
-                    doToast("Deleted!");
+                if (!deleteBookmark(movieApiId)) {
+                    doToast(getString(R.string.warning_could_not_be_deleted));
                 }
                 restartLoaderBookmarks();
 
@@ -200,13 +210,11 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                 }
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (dialog != null) {
                     dialog.dismiss();
                     restartLoaderBookmarks();
-//                    bookmarkAdapter.swapCursor(getBookmarks());
-//                    bookmarkAdapter.swapCursor(mCursorData);
                 }
             }
         });
@@ -216,7 +224,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     }
 
 
-    /* UI WARNINGS TODO******* */
+    /* === UI WARNINGS === */
 
     /**
      *
@@ -253,4 +261,62 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         toast.show();
     }
 
+
+    /* === BOOKMARKS ACTION MENU === */
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.bookmark_menu, menu);
+        return true;
+    }
+
+    /**
+     * This method handles the clicked item menu
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_all_bookmarks_item:
+                showDeleteConfirmationDialog();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+    /**
+     * When "Delete all entries is clicked this confirmation dialog pops up.
+     */
+    private void showDeleteConfirmationDialog() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(R.string.warning_delete_all_bookmarks);
+
+        builder.setPositiveButton(R.string.yes_delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                deleteAllBookmarks();
+            }
+        });
+        builder.setNegativeButton(R.string.no_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                }
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
+    /* === LIFECYCLE METHODS === */
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        restartLoaderBookmarks();
+    }
 }

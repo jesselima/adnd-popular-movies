@@ -126,8 +126,30 @@ public class BookmarkContentProvider extends ContentProvider {
     }
 
     @Override
-    public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+    public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
+
+        final SQLiteDatabase db = bookmarkDbHelper.getWritableDatabase();
+        int rowsDeleted;
+
+        int match = sUriMatcher.match(uri);
+
+        switch (match) {
+            case BOOKMARKS:
+                rowsDeleted = db.delete(BookmarkEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            case BOOKMARK_WITH_ID:
+                selection = BookmarkEntry._ID + "=?";
+                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri))};
+                rowsDeleted = db.delete(BookmarkEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("Delete not supported for " + uri);
+        }
+        if (rowsDeleted > 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+
+        return rowsDeleted;
     }
 
     @Override
