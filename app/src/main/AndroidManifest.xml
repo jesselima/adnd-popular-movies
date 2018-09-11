@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Allows the application to keep the screen from dimming or the processor from sleeping -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="com.udacity.popularmovies.TERMS_READ"/>
+    <uses-permission android:name="com.udacity.popularmovies.TERMS_READ" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +20,7 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
             android:name=".activities.MovieListActivity"
-            android:label="Popular Movies">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,28 +29,40 @@
         </activity>
         <activity
             android:name=".activities.MovieDetailsActivity"
+            android:label="@string/movie_details"
             android:launchMode="singleTop"
-            android:label="Movie Details"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:parentActivityName=".activities.MovieListActivity" />
+            android:parentActivityName=".activities.MovieListActivity"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
         <activity
             android:name=".activities.BookmarkActivity"
-            android:label="Bookmarks (offline)"
+            android:label="@string/bookmarks_offline"
             android:parentActivityName=".activities.MovieListActivity" />
         <activity
             android:name=".activities.MovieVideosActivity"
-            android:label="Trailers and Clips"
-            android:parentActivityName=".activities.MovieDetailsActivity"/>
+            android:launchMode="singleTop"
+            android:label="@string/trailers_and_clips"
+            android:parentActivityName=".activities.MovieDetailsActivity" />
         <activity
             android:name=".activities.MovieReviewsActivity"
-            android:label="Movie Reviews"
-            android:parentActivityName=".activities.MovieDetailsActivity"/>
+            android:label="@string/movie_reviews"
+            android:parentActivityName=".activities.MovieDetailsActivity" />
 
         <!-- Bookmark Provider for Database access through ContentProvider class -->
         <provider
+            android:name=".localdatabase.BookmarkContentProvider"
             android:authorities="com.udacity.popularmovies"
-            android:name="com.udacity.popularmovies.localdatabase.BookmarkContentProvider"
-            android:exported="true"/>
+            android:exported="true" />
+
+        <activity
+            android:name=".activities.VideoPlayerActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_video_player"
+            android:parentActivityName=".activities.MovieVideosActivity"
+            android:theme="@style/FullscreenTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.udacity.popularmovies.activities.MovieVideosActivity" />
+        </activity>
     </application>
 
 </manifest>

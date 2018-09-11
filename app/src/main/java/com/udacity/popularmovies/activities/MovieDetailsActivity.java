@@ -257,7 +257,6 @@ public class MovieDetailsActivity extends AppCompatActivity
         uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.API_KEY, API_KEY);
         uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.LANGUAGE, loadApiLanguage);
 
-        Log.d("Request URL ", uriBuilder.toString());
         return new MovieLoader(this, uriBuilder.toString());
     }
 

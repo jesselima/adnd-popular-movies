@@ -11,11 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.R;
+import com.udacity.popularmovies.activities.VideoPlayerActivity;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.models.MovieVideo;
 
@@ -45,7 +48,7 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieVideoViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final MovieVideoViewHolder holder, final int position) {
         int adapterPosition = holder.getAdapterPosition();
 
         holder.videoTitle.setText(movieVideoList.get(adapterPosition).getVideoName());
@@ -71,29 +74,28 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
                 if (intent.resolveActivity(mContext.getPackageManager()) != null) {
                     mContext.startActivity(intent);
                 }
-
-                Log.v("VIDEO LINK", ApiConfig.getBaseVideoUrlYoutube() + videoID);
             }
         });
 
         holder.iconPlayVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, "Play clicked!", Toast.LENGTH_SHORT).show();
-                Log.v("VIDEO IMAGE", movieVideoList.get(position).getVideoThumbnailUrl());
+                String videoUrl = ApiConfig.getBaseVideoUrlYoutube() + videoID;
+                Intent intentVideoPlayer = new Intent(mContext, VideoPlayerActivity.class);
+                intentVideoPlayer.putExtra("videoUrl", videoUrl);
+                mContext.startActivity(intentVideoPlayer);
+                Log.d("VIDEO URL", "===>>MovieVideosAdapter" + " - " + ApiConfig.getBaseVideoUrlYoutube() + videoID);
             }
         });
 
         holder.buttonShareUrl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
                 intent.putExtra(Intent.EXTRA_TEXT, ApiConfig.getBaseVideoUrlYoutube() + videoID);
                 intent.setType("text/plain");
                 mContext.startActivity(Intent.createChooser(intent, mContext.getResources().getString(R.string.share_to)));
-
             }
         });
     }
@@ -113,7 +115,6 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
         private final ImageView videoThumbnailUrl;
         private final Button buttonViewOnWeb;
         private final Button buttonShareUrl;
-        private final Button buttonPlayVideo;
         private final ImageView iconPlayVideo;
 
 
@@ -127,7 +128,6 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
 
             buttonViewOnWeb = itemView.findViewById(R.id.bt_see_on_youtube);
             buttonShareUrl = itemView.findViewById(R.id.bt_share_youtube_url);
-            buttonPlayVideo = itemView.findViewById(R.id.bt_play_video);
             iconPlayVideo = itemView.findViewById(R.id.iv_movie_video_play_icon);
         }
     }

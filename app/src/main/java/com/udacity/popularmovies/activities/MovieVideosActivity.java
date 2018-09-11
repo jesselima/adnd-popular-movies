@@ -2,7 +2,6 @@ package com.udacity.popularmovies.activities;
 
 
 import android.app.LoaderManager;
-import android.content.Intent;
 import android.content.Loader;
 import android.net.Uri;
 import android.os.Bundle;
@@ -53,6 +52,8 @@ public class MovieVideosActivity extends AppCompatActivity implements LoaderMana
     private String movieOriginalTitle = "";
     private int page = 1;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +73,9 @@ public class MovieVideosActivity extends AppCompatActivity implements LoaderMana
 
         getIncomingIntent();
         checkConnectionAndStartLoader();
+
+
+
     }
 
     private void getIncomingIntent() {
@@ -175,7 +179,5 @@ public class MovieVideosActivity extends AppCompatActivity implements LoaderMana
         toast = Toast.makeText(this, toastThisText, Toast.LENGTH_LONG);
         toast.show();
     }
-
-
 
 }

@@ -58,4 +58,13 @@
     <string name="youtube">YouTube</string>
     <string name="share">SHARE</string>
     <string name="vertical_text_divider" translatable="false">|</string>
+    <string name="title_activity_video_player">VideoPlayerActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="back">BACK</string>
+    <string name="movie_reviews">Movie Reviews</string>
+    <string name="movie_details">Movie Details</string>
+    <string name="bookmarks_offline">Bookmarks (offline)</string>
+    <string name="trailers_and_clips">Trailers and Clips</string>
+    <string name="video_player">VIDEO PLAYER</string>
 </resources>

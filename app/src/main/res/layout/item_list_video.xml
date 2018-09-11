@@ -79,15 +79,6 @@
                     tools:text="1080"/>
             </LinearLayout>
 
-            <VideoView
-                android:id="@+id/vv_movie_video"
-                android:layout_width="320dp"
-                android:layout_height="180dp"
-                android:visibility="gone"
-                android:layout_gravity="center"
-                android:layout_marginLeft="@dimen/medium_layout_margin"
-                android:layout_marginRight="@dimen/medium_layout_margin"/>
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -153,17 +144,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center">
-                <Button
-                    android:id="@+id/bt_play_video"
-                    style="@style/Base.Widget.AppCompat.Button.Borderless"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:text="@string/play"
-                    android:layout_margin="@dimen/small_layout_margin"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="14sp"/>
                 <Button
                     android:id="@+id/bt_see_on_youtube"
                     style="@style/Base.Widget.AppCompat.Button.Borderless"
