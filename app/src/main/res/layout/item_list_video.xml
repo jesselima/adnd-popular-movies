@@ -11,10 +11,7 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_layout_margin"
-        android:layout_marginBottom="@dimen/small_layout_margin"
-        android:layout_marginLeft="@dimen/small_layout_margin"
-        android:layout_marginRight="@dimen/small_layout_margin"
+        android:layout_margin="@dimen/medium_layout_margin"
         app:cardCornerRadius="3dp"
         app:cardElevation="4dp">
 
@@ -45,20 +42,38 @@
                     android:id="@+id/tv_video_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14sp"
                     android:layout_marginLeft="@dimen/small_layout_margin"
                     android:layout_marginRight="@dimen/small_layout_margin"
                     tools:text="Clip"/>
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14sp"
+                    android:text="@string/vertical_text_divider"/>
+                <TextView
                     android:id="@+id/tv_video_site"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14sp"
                     android:layout_marginLeft="@dimen/small_layout_margin"
                     android:layout_marginRight="@dimen/small_layout_margin"
                     tools:text="YouTube"/>
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14sp"
+                    android:text="@string/vertical_text_divider"/>
+                <TextView
                     android:id="@+id/tv_video_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="14sp"
                     android:layout_marginLeft="@dimen/small_layout_margin"
                     android:layout_marginRight="@dimen/small_layout_margin"
                     tools:text="1080"/>
@@ -66,22 +81,111 @@
 
             <VideoView
                 android:id="@+id/vv_movie_video"
-                android:layout_width="match_parent"
+                android:layout_width="320dp"
+                android:layout_height="180dp"
                 android:visibility="gone"
-                android:layout_marginLeft="@dimen/medium_layout_margin"
-                android:layout_marginRight="@dimen/medium_layout_margin"
-                android:layout_height="250dp"/>
-
-            <Button
-                android:id="@+id/bt_see_on_youtube"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/see_on_youtube"
-                android:layout_margin="@dimen/small_layout_margin"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp"/>
+                android:layout_marginLeft="@dimen/medium_layout_margin"
+                android:layout_marginRight="@dimen/medium_layout_margin"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_movie_video_poster"
+                    android:layout_width="320dp"
+                    android:layout_height="180dp"
+                    android:visibility="visible"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:elevation="2dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/video_poster_place_holder"
+                    android:layout_marginLeft="@dimen/medium_layout_margin"
+                    android:layout_marginRight="@dimen/medium_layout_margin"/>
+
+                <ImageView
+                    android:id="@+id/iv_movie_video_play_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:visibility="visible"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:elevation="2dp"
+                    android:backgroundTint="@color/colorAccentAlpha200"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_play_arrow"/>
+
+                <TextView
+                    android:id="@+id/play_with_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:visibility="gone"
+                    android:textColor="@color/colorTextDefault"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:backgroundTint="@color/colorAccentAlpha200"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginStart="120dp"
+                    android:gravity="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="50dp"
+                    android:drawableStart="@drawable/ic_play_arrow"
+                    android:elevation="2dp"
+                    android:text="PLAY"/>
+
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+                <Button
+                    android:id="@+id/bt_play_video"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:text="@string/play"
+                    android:layout_margin="@dimen/small_layout_margin"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp"/>
+                <Button
+                    android:id="@+id/bt_see_on_youtube"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/youtube"
+                    android:layout_margin="@dimen/small_layout_margin"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp"/>
+                <Button
+                    android:id="@+id/bt_share_youtube_url"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/share"
+                    android:layout_margin="@dimen/small_layout_margin"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
         </LinearLayout>
     </android.support.v7.widget.CardView>
 

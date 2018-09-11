@@ -41,6 +41,7 @@ public final class ApiConfig {
     private static final String SECURE_BASE_IMAGE_URL   = "https://image.tmdb.org/t/p/";
     private static final String BASE_MOVIE_DETAILS_URL  = "https://api.themoviedb.org/3/movie/";
     private static final String BASE_VIDEO_URL_YOUTUBE  = "https://www.youtube.com/watch?v=";
+    private static final String BASE_VIDEO_URL_xYOUTUBE  = "https://img.youtube.com/vi/VIDEO_ID/mqdefault.jpg";
 
 
     public static String getBaseMovieApiUrlV3() {

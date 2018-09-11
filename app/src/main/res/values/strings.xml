@@ -51,7 +51,11 @@
     <string name="cancel">Cancel</string>
     <string name="number_of_deleted_bookmarks">\u0020 bookmarks deleted.</string>
     <string name="warning_could_not_be_deleted">Oops! Could not be deleted!</string>
-    <string name="yes_delete">Yes, Delete</string>
-    <string name="no_cancel">No, Cancel</string>
+    <string name="yes_delete">Yes, Delete.</string>
+    <string name="no_cancel">No, Cancel.</string>
     <string name="warning_delete_all_bookmarks">This action will delete all saved movie bookmarks. This action can not be undone. Are you sure?</string>
+    <string name="play">PLAY</string>
+    <string name="youtube">YouTube</string>
+    <string name="share">SHARE</string>
+    <string name="vertical_text_divider" translatable="false">|</string>
 </resources>

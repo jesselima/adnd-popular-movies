@@ -44,7 +44,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Movie> {
+public class MovieDetailsActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<Movie> {
 
     private static final String API_KEY = BuildConfig.API_KEY;
 
@@ -57,9 +58,22 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     private String loadApiLanguage = ApiConfig.UrlParamValue.LANGUAGE_DEFAULT;
     private Toast toast;
     // Object for UI references
-    private ImageView imageViewMoviePoster, imageViewMovieBackdrop;
-    private TextView textViewOverview, textViewReleaseDate, textViewRuntime, textViewTitle, textViewVoteAverage, textViewOriginalLanguage, textViewTagline, textViewPopularity, textViewVoteCount, textViewBuget, textViewRevenue, textViewGenres;
-    private TextView textViewNetworkStatus, textViewNoMovieDetails;
+    private ImageView imageViewMoviePoster;
+    private  ImageView imageViewMovieBackdrop;
+    private TextView textViewOverview;
+    private TextView textViewReleaseDate;
+    private TextView textViewRuntime;
+    private TextView textViewTitle;
+    private TextView textViewVoteAverage;
+    private TextView textViewOriginalLanguage;
+    private TextView textViewTagline;
+    private TextView textViewPopularity;
+    private TextView textViewVoteCount;
+    private TextView textViewBuget;
+    private TextView textViewRevenue;
+    private TextView textViewGenres;
+    private TextView textViewNetworkStatus;
+    private TextView textViewNoMovieDetails;
     private LinearLayout linearLayoutContainerDetails, linearLayoutAdditionalInfo;
     private Movie movieData = new Movie();
     private CompanyListAdapter companyListAdapter;
@@ -77,6 +91,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
+        Log.d("===>>> onCreate", " called");
 
         progressBar = findViewById(R.id.indeterminateBar);
         showProgressBar();
@@ -156,7 +171,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
             public void onClick(View view) {
                 if (checkBookmarkOnDatabase()) {
                     // if the Movie is already bookmarked, remove it from the database and update icon status to unsaved icon
-                    deleteBookmark(movieData.getMovieId());
+                    deleteBookmark(/*movieData.getMovieId()*/);
                     floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
                     doToast(getResources().getString(R.string.movie_removed));
                 } else {
@@ -242,6 +257,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.API_KEY, API_KEY);
         uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.LANGUAGE, loadApiLanguage);
 
+        Log.d("Request URL ", uriBuilder.toString());
         return new MovieLoader(this, uriBuilder.toString());
     }
 
@@ -380,7 +396,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     }
 
     // TODO delete bookmarks in async task
-    private boolean deleteBookmark(long id) {
+    private boolean deleteBookmark(/*long id*/) {
         return getContentResolver().delete(BookmarkEntry.CONTENT_URI, BookmarkEntry._ID, null) > 0;
     }
 
@@ -502,7 +518,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     @Override
     protected void onStart() {
         super.onStart();
-        Log.v("===>>> onStart", " called");
+        Log.d("===>>> onStart", " called");
         if (NetworkUtils.isDeviceConnected(this)) {
             hideConnectionWarning();
         } else {
@@ -513,7 +529,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     @Override
     protected void onPause() {
         super.onPause();
-        Log.v("===>>> onPause", " called");
+        Log.d("===>>> onPause", " called");
         if (NetworkUtils.isDeviceConnected(this)) {
             hideConnectionWarning();
         } else {
@@ -524,7 +540,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v("===>>> onResume", " called");
+        Log.d("===>>> onResume", " called");
         // Check internet connection when activity is resumed.
         if (NetworkUtils.isDeviceConnected(this)) {
             hideConnectionWarning();
@@ -532,21 +548,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         } else {
             showConnectionWarning();
         }
-
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-
-        Log.v("===>>> onRestart", " called");
-        // Check internet connection when activity is resumed.
-        if (NetworkUtils.isDeviceConnected(this)) {
-            hideConnectionWarning();
-            getLoaderManager().restartLoader(MOVIE_DETAILS_LOADER_ID, null, this);
-        } else {
-            showConnectionWarning();
-        }
+        Log.d("===>>> onRestart", " called");
     }
 
 }
