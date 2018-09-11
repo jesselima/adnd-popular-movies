@@ -32,7 +32,7 @@
     <string name="more_details">MORE</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="you_do_not_have_any_bookmarks">You don\'t have any bookmarks…</string>
-    <string name="navigate_to_bookmarks">Navigate through movie details and add some!</string>
+    <string name="navigate_to_bookmarks">Let\'s navigate through movie details and add some!</string>
     <string name="movie_removed">Movie removed from bookmarks</string>
     <string name="movie_saved">Movie saved to bookmarks</string>
     <string name="see_on_the_web">SEE ON THE WEB</string>
@@ -45,4 +45,13 @@
     <string name="no_comments_available_for_this_movie">No comments available for this movie</string>
     <string name="no_videos_available_for_this_movie">No videos available for this movie</string>
     <string name="languages_label">Languages:\u0020</string>
+    <string name="delete_movie_bookmark_item">Delete this movie from bookmarks?</string>
+    <string name="delete_all_bookmarks">Delete All Bookmarks</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="number_of_deleted_bookmarks">\u0020 bookmarks deleted.</string>
+    <string name="warning_could_not_be_deleted">Oops! Could not be deleted!</string>
+    <string name="yes_delete">Yes, Delete</string>
+    <string name="no_cancel">No, Cancel</string>
+    <string name="warning_delete_all_bookmarks">This action will delete all saved movie bookmarks. This action can not be undone. Are you sure?</string>
 </resources>

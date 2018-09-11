@@ -31,7 +31,6 @@ import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.adapters.CompanyListAdapter;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.loaders.MovieLoader;
-import com.udacity.popularmovies.localdatabase.BookmarkContract;
 import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
 import com.udacity.popularmovies.localdatabase.BookmarkDbHelper;
 import com.udacity.popularmovies.models.Movie;
@@ -82,7 +81,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         progressBar = findViewById(R.id.indeterminateBar);
         showProgressBar();
 
-        bookmarkDbHelper = new BookmarkDbHelper(this);
         sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
         // Get the movie ID and Title from the clicked item on the RecyclerView item.
         getIncomingIntent();
@@ -225,6 +223,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         }
     }
 
+
+    /* === LOADER CALLBACKS === */
+
     /**
      * Instantiate and return a new Loader for the given ID.
      *
@@ -299,6 +300,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     public void onLoaderReset(Loader<Movie> loader) {
     }
 
+
+    /* === UPDATE UI === */
+
     /**
      * When called receives the movie object with movie details and updates the UI.
      *
@@ -347,7 +351,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
     }// Closes updateUI method
 
 
-    private long saveBookmark(byte[] imageInBytesArray) {
+    /* SQLite Database management methods */
+    // TODO save bookmarks in async task
+    private boolean saveBookmark(byte[] imageInBytesArray) {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put(BookmarkEntry.COLUMN_API_ID, movieData.getMovieId());
@@ -366,14 +372,19 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         contentValues.put(BookmarkEntry.COLUMN_REVENUE, movieData.getMovieRevenue());
         contentValues.put(BookmarkEntry.COLUMN_HOMEPAGE, movieData.getMovieHomepage());
         contentValues.put(BookmarkEntry.COLUMN_MOVIE_IMAGE, imageInBytesArray);
-        return sqLiteDatabase.insert(BookmarkEntry.TABLE_NAME, null, contentValues);
+
+        Uri uri = getContentResolver().insert(BookmarkEntry.CONTENT_URI, contentValues);
+        // Return TRUE if the uri returned uri is not null.
+        return uri != null;
+
     }
 
+    // TODO delete bookmarks in async task
     private boolean deleteBookmark(long id) {
-        return sqLiteDatabase.delete(BookmarkContract.BookmarkEntry.TABLE_NAME,
-                BookmarkEntry.COLUMN_API_ID + "=" + id, null) > 0;
+        return getContentResolver().delete(BookmarkEntry.CONTENT_URI, BookmarkEntry._ID, null) > 0;
     }
 
+    // TODO check bookmarks in async task
     private boolean checkBookmarkOnDatabase() {
 
         Cursor cursor = sqLiteDatabase.query(
@@ -390,6 +401,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
 
         return isOnDatabase;
     }
+
+
+    /* Helper methods */
 
     public byte[] convertImageViewToBytes(ImageView imageView) {
         /* Get ImageView to Bitmap from Greg Giacovelli
@@ -445,6 +459,46 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         progressBar.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * This method makes the reuse of toast object to avoid toasts queue
+     *
+     * @param toastThisText is the text you want to show in the toast.
+     */
+    private void doToast(String toastThisText) {
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(this, toastThisText, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    /**
+     * When called must receive a number that will be converted to a String with the pattern $###,###,###.##
+     *
+     * @param numberToBeFormated is the number (Buget or Revenue) to be formated.
+     * @return a the number as String properly formated.
+     */
+    private String formatNumber(int numberToBeFormated) {
+        DecimalFormat myFormatter = new DecimalFormat("$###,###,###.##");
+        return myFormatter.format(numberToBeFormated);
+    }
+
+    /**
+     * When called must receive a String url and will open default browser on device or ask to the
+     * user about what application he wants to uses to open the URL.
+     *
+     * @param url is the url to be open in the browser.
+     */
+    private void openWebPage(String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+
+    /* Lifecycle methods */
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -495,40 +549,4 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderMan
         }
     }
 
-    /**
-     * This method makes the reuse of toast object to avoid toasts queue
-     *
-     * @param toastThisText is the text you want to show in the toast.
-     */
-    private void doToast(String toastThisText) {
-        if (toast != null) {
-            toast.cancel();
-        }
-        toast = Toast.makeText(this, toastThisText, Toast.LENGTH_LONG);
-        toast.show();
-    }
-
-    /**
-     * When called must receive a number that will be converted to a String with the pattern $###,###,###.##
-     *
-     * @param numberToBeFormated is the number (Buget or Revenue) to be formated.
-     * @return a the number as String properly formated.
-     */
-    private String formatNumber(int numberToBeFormated) {
-        DecimalFormat myFormatter = new DecimalFormat("$###,###,###.##");
-        return myFormatter.format(numberToBeFormated);
-    }
-
-    /**
-     * When called must receive a String url and will open default browser on device or ask to the
-     * user about what application he wants to uses to open the URL.
-     *
-     * @param url is the url to be open in the browser.
-     */
-    private void openWebPage(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-    }
 }

@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +35,8 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
     private Cursor cursor;
     private Context context;
 
-    public BookmarkAdapter (Context contextInput, Cursor cursorInput) {
+    public BookmarkAdapter (Context contextInput) {
         this.context = contextInput;
-        this.cursor = cursorInput;
     }
 
     @NonNull
@@ -122,6 +122,9 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
 
     @Override
     public int getItemCount() {
+        if (cursor == null) {
+            return 0;
+        }
         return cursor.getCount();
     }
 

@@ -1,43 +1,61 @@
 package com.udacity.popularmovies.activities;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.adapters.BookmarkAdapter;
 import com.udacity.popularmovies.localdatabase.BookmarkContract;
+import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
 import com.udacity.popularmovies.localdatabase.BookmarkDbHelper;
 
-public class BookmarkActivity extends AppCompatActivity {
+public class BookmarkActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private final static String LOG_TAG = BookmarkActivity.class.getSimpleName();
+    private static final int LOADER_ID_MOVIE_BOOKMARKS_LIST = 3;
+    Toast toast;
 
-    private BookmarkAdapter bookmarkAdapter;
+
     private SQLiteDatabase sqLiteDatabase;
-    private BookmarkDbHelper bookmarkDbHelper;
+    private BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
 
     private TextView textViewNoBookmarks, textViewNavigateToBookmarks;
     private ImageView imageViewNoBookmarks;
     Button buttonNavigateToMovies;
 
-    private RecyclerView recyclerViewBookmark = null;
+    private RecyclerView recyclerViewBookmark;
+    private BookmarkAdapter bookmarkAdapter;
+
+    Cursor mCursorData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
+
+        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
 
         textViewNoBookmarks = findViewById(R.id.text_view_no_bookmarks);
         textViewNavigateToBookmarks = findViewById(R.id.text_view_navigate_to_bookmarks);
@@ -47,18 +65,12 @@ public class BookmarkActivity extends AppCompatActivity {
         recyclerViewBookmark = findViewById(R.id.recycler_view_bookmark);
         recyclerViewBookmark.setLayoutManager(new LinearLayoutManager(this));
 
-        bookmarkDbHelper = new BookmarkDbHelper(this);
-        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
-
-        final Cursor cursor = updateBookmarkList();
-        bookmarkAdapter = new BookmarkAdapter(this, cursor);
+        bookmarkAdapter = new BookmarkAdapter(this);
+        bookmarkAdapter.notifyDataSetChanged();
         recyclerViewBookmark.setAdapter(bookmarkAdapter);
 
-        if (bookmarkAdapter.getItemCount() == 0) {
-            showNoBookmarkWarning();
-        }
-
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
@@ -68,9 +80,7 @@ public class BookmarkActivity extends AppCompatActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 long movieApiId = (long) viewHolder.itemView.getTag();
-
                 showDeleteConfirmationDialog(movieApiId);
-
             }
         }).attachToRecyclerView(recyclerViewBookmark);
 
@@ -82,48 +92,143 @@ public class BookmarkActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
-    // Close onCreate
 
+        // Start the Loader Callbacks to query the list of movie bookmarks asynchronously
+         getSupportLoaderManager().initLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
+
+    } // Close onCreate
+
+
+    /* === LOADER CALLBACKS === */
+
+    @SuppressLint("StaticFieldLeak")
+    @NonNull
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, @Nullable final Bundle loaderArgs) {
+
+        return new AsyncTaskLoader<Cursor>(this) {
+
+            // Initialize a cursor object to receive the cursor data returned from the task
+            Cursor mCursorData = null;
+
+            @Override
+            protected void onStartLoading() {
+                if (mCursorData != null) {
+                    deliverResult(mCursorData);
+                }else {
+                    forceLoad();
+                }
+            }
+
+            @Nullable
+            @Override
+            public Cursor loadInBackground() {
+                try {
+                    return getContentResolver().query(
+                            BookmarkContract.BookmarkEntry.CONTENT_URI,
+                            null,
+                            null,
+                            null,
+                            BookmarkContract.BookmarkEntry.COLUMN_TIMESTAMP + " DESC");
+                }catch (Exception e) {
+                    Log.e(LOG_TAG, "Fail to load data");
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+
+            @Override
+            public void deliverResult(Cursor data) {
+                mCursorData = data;
+                super.deliverResult(data);
+            }
+        };
+    }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        getBookmarks();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        getBookmarks();
-    }
-
-    private Cursor updateBookmarkList() {
-        Cursor cursor = getBookmarks();
-        bookmarkAdapter = new BookmarkAdapter(this, cursor);
-        return cursor;
-    }
-
-    private Cursor getBookmarks() {
-        if (!sqLiteDatabase.isOpen()) {
-            sqLiteDatabase = bookmarkDbHelper.getReadableDatabase();
+    public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
+        mCursorData = data;
+        if (data.getCount() < 1) {
+            showNoBookmarkWarning();
+        }else {
+            hideNoBookmarkWarning();
         }
-        return sqLiteDatabase.query(
-                BookmarkContract.BookmarkEntry.TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                BookmarkContract.BookmarkEntry.COLUMN_TIMESTAMP + " DESC"
-        );
+        bookmarkAdapter.swapCursor(data);
     }
+
+    @Override
+    public void onLoaderReset(@NonNull Loader<Cursor> loader) {
+        bookmarkAdapter.swapCursor(null);
+    }
+
+    private void restartLoaderBookmarks() {
+        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
+        getSupportLoaderManager().restartLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
+    }
+
+
+    /* === DATABASE MANIPULATION === */
 
     private boolean deleteBookmark(long id) {
+        sqLiteDatabase.isOpen();
+        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
         return sqLiteDatabase.delete(BookmarkContract.BookmarkEntry.TABLE_NAME,
                 BookmarkContract.BookmarkEntry._ID + "=" + id, null) > 0;
     }
 
+    private boolean deleteAllBookmarks() {
+        int rowsDeleted = getContentResolver().delete(BookmarkContract.BookmarkEntry.CONTENT_URI, BookmarkEntry._ID, null);
+//        int rowsDeleted = getContentResolver().delete(BookmarkContract.BookmarkEntry.CONTENT_URI, null, null);
+        if (rowsDeleted > 0) {
+            doToast(rowsDeleted + getResources().getString(R.string.number_of_deleted_bookmarks));
+            showNoBookmarkWarning();
+        }
+
+        // After delete all Bookmarks
+        restartLoaderBookmarks();
+
+        return rowsDeleted > 0;
+    }
+
+
+    private void showDeleteConfirmationDialog(final long movieApiId) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.delete_movie_bookmark_item);
+        builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                if (!deleteBookmark(movieApiId)) {
+                    doToast(getString(R.string.warning_could_not_be_deleted));
+                }
+                restartLoaderBookmarks();
+
+                if (bookmarkAdapter.getItemCount() == 0) {
+                    showNoBookmarkWarning();
+                } else {
+                    hideNoBookmarkWarning();
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                if (dialog != null) {
+                    dialog.dismiss();
+                    restartLoaderBookmarks();
+                }
+            }
+        });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+
+    /* === UI WARNINGS === */
+
+    /**
+     *
+     */
     private void showNoBookmarkWarning() {
         recyclerViewBookmark.setVisibility(View.GONE);
         textViewNoBookmarks.setVisibility(View.VISIBLE);
@@ -132,6 +237,9 @@ public class BookmarkActivity extends AppCompatActivity {
         textViewNavigateToBookmarks.setVisibility(View.VISIBLE);
     }
 
+    /**
+     *
+     */
     private void hideNoBookmarkWarning() {
         recyclerViewBookmark.setVisibility(View.VISIBLE);
         textViewNoBookmarks.setVisibility(View.GONE);
@@ -140,35 +248,75 @@ public class BookmarkActivity extends AppCompatActivity {
         textViewNavigateToBookmarks.setVisibility(View.GONE);
     }
 
-    private void showDeleteConfirmationDialog(final long movieApiId) {
+    /**
+     * This method makes the reuse of toast object to avoid toasts queue
+     *
+     * @param toastThisText is the text you want to show in the toast.
+     */
+    private void doToast(String toastThisText) {
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(this, toastThisText, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+
+    /* === BOOKMARKS ACTION MENU === */
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.bookmark_menu, menu);
+        return true;
+    }
+
+    /**
+     * This method handles the clicked item menu
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.delete_all_bookmarks_item:
+                showDeleteConfirmationDialog();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+    /**
+     * When "Delete all entries is clicked this confirmation dialog pops up.
+     */
+    private void showDeleteConfirmationDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Delete this movie from bookmarks?");
-        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+
+        builder.setMessage(R.string.warning_delete_all_bookmarks);
+
+        builder.setPositiveButton(R.string.yes_delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
-                deleteBookmark(movieApiId);
-
-                bookmarkAdapter.swapCursor(getBookmarks());
-
-                if (bookmarkAdapter.getItemCount() == 0) {
-                    showNoBookmarkWarning();
-                } else {
-                    hideNoBookmarkWarning();
-                    bookmarkAdapter.swapCursor(getBookmarks());
-                }
+                deleteAllBookmarks();
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.no_cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 if (dialog != null) {
                     dialog.dismiss();
-                    bookmarkAdapter.swapCursor(getBookmarks());
                 }
             }
         });
 
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
+    }
+
+
+    /* === LIFECYCLE METHODS === */
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        restartLoaderBookmarks();
     }
 }

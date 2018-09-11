@@ -130,9 +130,11 @@ public class MovieVideosActivity extends AppCompatActivity implements LoaderMana
 
     private void showNoResultsWarning() {
         imageViewNoVideos.setVisibility(View.VISIBLE);
+        textViewNoVideosWarning.setVisibility(View.VISIBLE);
     }
     private void hideNoResultsWarning() {
         imageViewNoVideos.setVisibility(View.GONE);
+        textViewNoVideosWarning.setVisibility(View.GONE);
     }
 
     private void showConnectionWarning() {
