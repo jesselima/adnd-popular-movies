@@ -1,5 +1,6 @@
 package com.udacity.popularmovies.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,8 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.youtube.player.YouTubeStandalonePlayer;
+import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.models.MovieVideo;
@@ -42,7 +46,7 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieVideoViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MovieVideoViewHolder holder, final int position) {
         int adapterPosition = holder.getAdapterPosition();
 
         holder.videoTitle.setText(movieVideoList.get(adapterPosition).getVideoName());
@@ -50,21 +54,47 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
         holder.videoSite.setText(movieVideoList.get(adapterPosition).getVideoSite());
         holder.videoSize.setText(String.valueOf(movieVideoList.get(adapterPosition).getVideoSize()));
 
+        Picasso.get()
+                .load(movieVideoList.get(position).getVideoThumbnailUrl())
+                .placeholder(R.drawable.video_poster_place_holder)
+                .fit().centerInside()
+                .error(R.drawable.video_poster_place_holder)
+                .into(holder.videoThumbnailUrl);
+
+        final String videoTitle = movieVideoList.get(adapterPosition).getVideoName();
         final String videoID = movieVideoList.get(adapterPosition).getVideoKey();
-        Log.v("VIDEO KEY", videoID);
+
         holder.itemView.setTag(videoID);
+        final Uri uriWebPage = Uri.parse(ApiConfig.getBaseVideoUrlYoutube() + videoID);
 
         holder.buttonViewOnWeb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                Uri uriWebPage = Uri.parse(ApiConfig.getBaseVideoUrlYoutube() + videoID);
                 Intent intent = new Intent(Intent.ACTION_VIEW, uriWebPage);
                 if (intent.resolveActivity(mContext.getPackageManager()) != null) {
                     mContext.startActivity(intent);
                 }
+            }
+        });
 
-                Log.v("VIDEO LINK", ApiConfig.getBaseVideoUrlYoutube() + videoID);
+        holder.iconPlayVideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                playThisVideo(videoID);
+                Log.d(LOG_TAG, "VIDEO ID: " + videoID);
+            }
+        });
+
+        holder.buttonShareUrl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                    String infoToShared = videoTitle + "\n" +
+                            ApiConfig.getBaseVideoUrlYoutube() + videoID;
+                    intent.setAction(Intent.ACTION_SEND);
+                    intent.putExtra(Intent.EXTRA_TEXT, infoToShared);
+                    intent.setType("text/plain");
+                mContext.startActivity(Intent.createChooser(intent, mContext.getResources().getString(R.string.share_to)));
             }
         });
     }
@@ -81,7 +111,10 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
         private final TextView videoType;
         private final TextView videoSite;
         private final TextView videoSize;
+        private final ImageView videoThumbnailUrl;
         private final Button buttonViewOnWeb;
+        private final Button buttonShareUrl;
+        private final ImageView iconPlayVideo;
 
 
         public MovieVideoViewHolder(View itemView) {
@@ -90,15 +123,17 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
             videoType = itemView.findViewById(R.id.tv_video_type);
             videoSite = itemView.findViewById(R.id.tv_video_site);
             videoSize = itemView.findViewById(R.id.tv_video_size);
+            videoThumbnailUrl = itemView.findViewById(R.id.iv_movie_video_poster);
+
             buttonViewOnWeb = itemView.findViewById(R.id.bt_see_on_youtube);
+            buttonShareUrl = itemView.findViewById(R.id.bt_share_youtube_url);
+            iconPlayVideo = itemView.findViewById(R.id.iv_movie_video_play_icon);
         }
     }
 
-    private void openWebPage(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        if (intent.resolveActivity(mContext.getPackageManager()) != null) {
-            mContext.startActivity(intent);
-        }
+    private void playThisVideo(String videoID) {
+        Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) mContext, ApiConfig.getYoutubeApiKey(), videoID);
+        mContext.startActivity(intent);
     }
 
 }

@@ -43,6 +43,14 @@ public final class ApiConfig {
     private static final String BASE_VIDEO_URL_YOUTUBE  = "https://www.youtube.com/watch?v=";
 
 
+    // TODO: Set you YOUTUBE API KEY
+    private static final String YOUTUBE_API_KEY = "YOUTUBE_API_KEY";
+
+    public static String getYoutubeApiKey() {
+        return YOUTUBE_API_KEY;
+    }
+
+
     public static String getBaseMovieApiUrlV3() {
         return BASE_URL_V3_DISCOVER;
     }

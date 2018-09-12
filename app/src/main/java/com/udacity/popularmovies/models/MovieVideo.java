@@ -10,15 +10,17 @@ public class MovieVideo {
     private String videoType;
     private String videoSite;
     private int videoSize;
+    private String videoThumbnailUrl;
 
     public MovieVideo() {}
 
-    public MovieVideo(String videoKey, String videoName, String videoType, String videoSite, int videoSize) {
+    public MovieVideo(String videoKey, String videoName, String videoType, String videoSite, int videoSize, String videoThumbnailUrl) {
         this.videoKey = videoKey;
         this.videoName = videoName;
         this.videoType = videoType;
         this.videoSite = videoSite;
         this.videoSize = videoSize;
+        this.videoThumbnailUrl = videoThumbnailUrl;
     }
 
     public String getVideoKey() {
@@ -60,4 +62,13 @@ public class MovieVideo {
     public void setVideoSize(int videoSize) {
         this.videoSize = videoSize;
     }
+
+    public String getVideoThumbnailUrl() {
+        return videoThumbnailUrl;
+    }
+
+    public void setVideoThumbnailUrl(String videoThumbnailUrl) {
+        this.videoThumbnailUrl = videoThumbnailUrl;
+    }
+
 }

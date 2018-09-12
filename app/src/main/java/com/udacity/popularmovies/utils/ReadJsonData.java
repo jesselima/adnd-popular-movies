@@ -177,8 +177,10 @@ final class ReadJsonData {
                 String videoSite = currentMovieVideoItemData.optString("site");
                 int videoSize = currentMovieVideoItemData.optInt("size");
 
+                String videoThumbnailUrl = "https://img.youtube.com/vi/" + videoKey + "/mqdefault.jpg";
+
                 // Instantiate a Movie class object and add the JSON data as inputs parameters.
-                MovieVideo movieVideoItem = new MovieVideo(videoKey, videoName, videoType, videoSite, videoSize);
+                MovieVideo movieVideoItem = new MovieVideo(videoKey, videoName, videoType, videoSite, videoSize, videoThumbnailUrl);
                 movieVideoList.add(movieVideoItem);
             }
 

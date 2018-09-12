@@ -52,6 +52,8 @@ public class MovieVideosActivity extends AppCompatActivity implements LoaderMana
     private String movieOriginalTitle = "";
     private int page = 1;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +73,9 @@ public class MovieVideosActivity extends AppCompatActivity implements LoaderMana
 
         getIncomingIntent();
         checkConnectionAndStartLoader();
+
+
+
     }
 
     private void getIncomingIntent() {
@@ -162,7 +167,17 @@ public class MovieVideosActivity extends AppCompatActivity implements LoaderMana
         }
     }
 
-
-
+    /**
+     * This method makes the reuse of toast object to avoid toasts queue
+     *
+     * @param toastThisText is the text you want to show in the toast.
+     */
+    private void doToast(String toastThisText) {
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(this, toastThisText, Toast.LENGTH_LONG);
+        toast.show();
+    }
 
 }
