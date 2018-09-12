@@ -39,8 +39,8 @@
             android:parentActivityName=".activities.MovieListActivity" />
         <activity
             android:name=".activities.MovieVideosActivity"
-            android:launchMode="singleTop"
             android:label="@string/trailers_and_clips"
+            android:launchMode="singleTop"
             android:parentActivityName=".activities.MovieDetailsActivity" />
         <activity
             android:name=".activities.MovieReviewsActivity"
@@ -63,6 +63,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.udacity.popularmovies.activities.MovieVideosActivity" />
         </activity>
+        <activity android:name=".activities.PlayerActivity"></activity>
     </application>
 
 </manifest>

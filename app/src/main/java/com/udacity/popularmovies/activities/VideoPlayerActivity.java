@@ -13,11 +13,12 @@ import android.support.v4.app.NavUtils;
 import android.widget.Button;
 
 import com.udacity.popularmovies.R;
-import com.udacity.popularmovies.config.ApiConfig;
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
+ * https://google-developer-training.gitbooks.io/android-developer-advanced-course-practicals/unit-5-advanced-graphics-and-views/lesson-13-media/13-1-p-playing-video-with-videoview/13-1-p-playing-video-with-videoview.html
  */
 public class VideoPlayerActivity extends AppCompatActivity {
 
@@ -96,7 +97,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
 
     // *ME*
-    private String videoUrl;
+    private String videoID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +129,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         // *ME* Get the video url that have been sent from MovieVideosActivity.
         getIncomingIntent();
-        Log.d("Video URL ===>>", LOG_TAG + " - " + videoUrl);
+        Log.d("Video URL ===>>", LOG_TAG + " - " + videoID);
 
         // *ME* Take the user back to MovieVideosActivity and close this () activity.
         Button buttonBackToVideosList = findViewById(R.id.button_back_to_movie_videos);
@@ -206,12 +207,17 @@ public class VideoPlayerActivity extends AppCompatActivity {
     }
 
     private void getIncomingIntent() {
-        if (getIntent().hasExtra("videoUrl")) {
+        if (getIntent().hasExtra("videoID")) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
-                videoUrl = bundle.getString("videoUrl");
+                videoID = bundle.getString("videoID");
+                playThisVideo(videoID);
             }
         }
+    }
+
+    private void playThisVideo(String videoId) {
+        // Do something
     }
 
 }
