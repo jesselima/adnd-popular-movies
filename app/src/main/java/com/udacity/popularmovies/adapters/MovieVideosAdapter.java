@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import android.widget.TextView;
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.R;
+import com.udacity.popularmovies.activities.Player2Activity;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.models.MovieVideo;
 
@@ -80,8 +80,15 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
         holder.iconPlayVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                playThisVideo(videoID);
-                Log.d(LOG_TAG, "VIDEO ID: " + videoID);
+
+//                playThisVideo(videoID);
+//                Log.d(LOG_TAG, "VIDEO ID: " + videoID);
+
+                Intent intentVideoPlayer = new Intent(mContext, Player2Activity.class);
+                intentVideoPlayer.putExtra("videoID", videoID);
+                intentVideoPlayer.putExtra("videoTitle", videoTitle);
+                mContext.startActivity(intentVideoPlayer);
+
             }
         });
 
