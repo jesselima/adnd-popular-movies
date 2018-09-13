@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapter.MovieReviewViewHolder> {
 
     private static final String LOG_TAG = MovieReviewsAdapter.class.getSimpleName();
+    private static final int COMMENT_MAX_LINES = 999;
 
     private final ArrayList<MovieReview> movieReviewList;
     private final Context mContext;
@@ -43,7 +45,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MovieReviewViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final MovieReviewViewHolder holder, int position) {
         final int adapterPosition = holder.getAdapterPosition();
 
         holder.textViewReviewAuthor.setText(movieReviewList.get(adapterPosition).getReviewAuthor());
@@ -51,7 +53,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
 
         final String commentUrl = movieReviewList.get(adapterPosition).getReviewUrl();
         holder.itemView.setTag(commentUrl);
-        holder.buttonSeeReviewOnWeb.setOnClickListener(new View.OnClickListener() {
+        holder.textViewSeeReviewOnWeb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (commentUrl.equals("null") || TextUtils.isEmpty(commentUrl)) {
@@ -65,6 +67,26 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
                 }
             }
         });
+
+        holder.buttonReadButtonMoreShow.setOnClickListener(new View.OnClickListener() {
+            boolean isReadMoreButtonVisible;
+
+            @Override
+            public void onClick(View view) {
+                TransitionManager.beginDelayedTransition(holder.transitionsContainer);
+                if (!isReadMoreButtonVisible){
+                    isReadMoreButtonVisible = true;
+                    holder.textViewReviewContent.setMaxLines(COMMENT_MAX_LINES);
+                    holder.buttonReadButtonMoreShow.setText(R.string.hide);
+                    holder.textViewReviewContent.setVisibility(isReadMoreButtonVisible ? View.VISIBLE : View.GONE);
+                } else {
+                    isReadMoreButtonVisible = false;
+                    holder.textViewReviewContent.setMaxLines(5);
+                    holder.buttonReadButtonMoreShow.setText(R.string.read_more);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -76,13 +98,18 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
 
         private final TextView textViewReviewAuthor;
         private final TextView textViewReviewContent;
-        private final Button buttonSeeReviewOnWeb;
+        private final TextView textViewSeeReviewOnWeb;
+        private final Button buttonReadButtonMoreShow;
+        private final ViewGroup transitionsContainer;
 
         public MovieReviewViewHolder(View itemView) {
             super(itemView);
             textViewReviewAuthor = itemView.findViewById(R.id.tv_review_author);
             textViewReviewContent = itemView.findViewById(R.id.tv_review_content);
-            buttonSeeReviewOnWeb = itemView.findViewById(R.id.bt_see_review_on_web);
+            textViewSeeReviewOnWeb = itemView.findViewById(R.id.bt_see_review_on_web);
+
+            buttonReadButtonMoreShow = itemView.findViewById(R.id.bt_read_more_show);
+            transitionsContainer = itemView.findViewById(R.id.transitions_container);
         }
     }
 }

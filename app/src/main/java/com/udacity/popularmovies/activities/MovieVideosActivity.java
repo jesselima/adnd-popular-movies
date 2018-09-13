@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.udacity.popularmovies.BuildConfig;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.adapters.MovieVideosAdapter;
@@ -26,7 +27,7 @@ import com.udacity.popularmovies.utils.NetworkUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieVideosActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<MovieVideo>> {
+public class MovieVideosActivity extends YouTubeBaseActivity implements LoaderManager.LoaderCallbacks<List<MovieVideo>> {
 
     private static final String API_KEY = BuildConfig.API_KEY;
 

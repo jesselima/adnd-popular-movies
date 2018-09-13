@@ -54,7 +54,7 @@
             android:exported="true" />
 
         <activity
-            android:name=".activities.VideoPlayerActivity"
+            android:name=".activities.Player3Activity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_video_player"
             android:parentActivityName=".activities.MovieVideosActivity"
@@ -63,7 +63,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.udacity.popularmovies.activities.MovieVideosActivity" />
         </activity>
-        <activity android:name=".activities.PlayerActivity"></activity>
+        <activity android:name=".activities.Player1Activity" />
+        <activity android:name=".activities.Player2Activity"></activity>
     </application>
 
 </manifest>

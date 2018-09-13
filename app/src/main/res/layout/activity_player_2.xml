@@ -1,0 +1,27 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.Player2Activity">
+
+    <TextView
+        android:id="@+id/text_view_video_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginLeft="@dimen/default_layout_margin"
+        android:layout_marginRight="@dimen/default_layout_margin"
+        android:textColor="@color/colorAccent"
+        android:textStyle="bold"
+        android:textSize="24sp"
+        android:gravity="center"
+        tools:text="Video Title"/>
+
+    <com.google.android.youtube.player.YouTubePlayerView
+        android:id="@+id/youtube_view_player"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

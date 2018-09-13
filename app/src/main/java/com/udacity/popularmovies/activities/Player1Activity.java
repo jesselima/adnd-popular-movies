@@ -8,14 +8,14 @@ import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
-import com.udacity.popularmovies.BuildConfig;
 import com.udacity.popularmovies.R;
+import com.udacity.popularmovies.config.ApiConfig;
 
-public class PlayerActivity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener{
+public class Player1Activity extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener{
 
 
 
-    private static final String API_KEY_YOUTUBE = BuildConfig.API_KEY;
+    private static final String API_KEY_YOUTUBE = ApiConfig.getYoutubeApiKey();
 
     // String to identify the activity when using logging messages
     private static final String LOG_TAG = MovieListActivity.class.getSimpleName();
@@ -26,7 +26,7 @@ public class PlayerActivity extends YouTubeBaseActivity implements YouTubePlayer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_player);
+        setContentView(R.layout.activity_player_1);
 
         getIncomingIntent();
         Log.d("Video ID: ", videoID);

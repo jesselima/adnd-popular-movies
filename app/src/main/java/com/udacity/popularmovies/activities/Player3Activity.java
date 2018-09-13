@@ -20,10 +20,10 @@ import com.udacity.popularmovies.R;
  * status bar and navigation/system bar) with user interaction.
  * https://google-developer-training.gitbooks.io/android-developer-advanced-course-practicals/unit-5-advanced-graphics-and-views/lesson-13-media/13-1-p-playing-video-with-videoview/13-1-p-playing-video-with-videoview.html
  */
-public class VideoPlayerActivity extends AppCompatActivity {
+public class Player3Activity extends AppCompatActivity {
 
     // *ME*
-    private final static String LOG_TAG = VideoPlayerActivity.class.getSimpleName();
+    private final static String LOG_TAG = Player3Activity.class.getSimpleName();
 
     /**
      * Whether or not the system UI should be auto-hidden after
@@ -103,7 +103,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_video_player);
+        setContentView(R.layout.activity_player_3);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
