@@ -104,6 +104,8 @@ public class MovieReviewsActivity extends AppCompatActivity implements LoaderCal
         if (movieReviews == null || movieReviews.isEmpty()) {
             // If there is no movie to show give a warning to the user in the UI.
             showNoResultsWarning();
+            hideLoadingIndicator();
+            hideConnectionWarning();
         } else {
             hideLoadingIndicator();
             hideConnectionWarning();
@@ -127,9 +129,11 @@ public class MovieReviewsActivity extends AppCompatActivity implements LoaderCal
 
     private void showNoResultsWarning() {
         imageViewNoReviews.setVisibility(View.VISIBLE);
+        textViewNoReviewsWarning.setVisibility(View.VISIBLE);
     }
     private void hideNoResultsWarning() {
         imageViewNoReviews.setVisibility(View.GONE);
+        textViewNoReviewsWarning.setVisibility(View.GONE);
     }
 
     private void showConnectionWarning() {
