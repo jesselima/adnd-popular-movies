@@ -187,7 +187,7 @@ public class MovieDetailsActivity extends AppCompatActivity
         floatingShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                shareWebUrl(movieData.getMovieHomepage(), getString(R.string.warning_homepage_not_available));
+                shareWebUrl();
             }
         });
 
@@ -432,13 +432,16 @@ public class MovieDetailsActivity extends AppCompatActivity
         return stream.toByteArray();
     }
 
-    private void shareWebUrl(String webUrl, String warningString) {
-        if (webUrl.equals("null")) {
-            doToast(warningString);
+    private void shareWebUrl() {
+        if (movieData.getMovieHomepage().equals("null")) {
+            doToast(getString(R.string.warning_homepage_not_available));
         } else {
+            String movieInfoToShare = getString(R.string.checkout_this_movie);
+            movieInfoToShare += "\n" + movieData.getMovieOriginalTitle();
+            movieInfoToShare += "\n" + movieData.getMovieHomepage();
             Intent intent = new Intent();
             intent.setAction(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_TEXT, webUrl);
+            intent.putExtra(Intent.EXTRA_TEXT, movieInfoToShare);
             intent.setType("text/plain");
             startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_to)));
         }
@@ -502,13 +505,12 @@ public class MovieDetailsActivity extends AppCompatActivity
      * When called must receive a String url and will open default browser on device or ask to the
      * user about what application he wants to uses to open the URL.
      *
-     * @param url is the url to be open in the browser.
+     * @param urlHomepage is the url to be open in the browser.
      */
-    private void openWebPage(String url) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
+    private void openWebPage(String urlHomepage) {
+        Intent intent = new Intent(this, WebViewActivity.class);
+        intent.putExtra(ApiConfig.JsonKey.HOMEPAGE, urlHomepage);
+        startActivity(intent);
     }
 
 
