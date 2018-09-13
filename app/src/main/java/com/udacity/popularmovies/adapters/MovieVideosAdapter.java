@@ -6,21 +6,23 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.R;
-import com.udacity.popularmovies.activities.Player2Activity;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.models.MovieVideo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jesse on 01/09/18.
@@ -47,7 +49,7 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull final MovieVideoViewHolder holder, final int position) {
-        int adapterPosition = holder.getAdapterPosition();
+        final int adapterPosition = holder.getAdapterPosition();
 
         holder.videoTitle.setText(movieVideoList.get(adapterPosition).getVideoName());
         holder.videoType.setText(movieVideoList.get(adapterPosition).getVideoType());
@@ -63,6 +65,7 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
 
         final String videoTitle = movieVideoList.get(adapterPosition).getVideoName();
         final String videoID = movieVideoList.get(adapterPosition).getVideoKey();
+        final String videoSite = movieVideoList.get(adapterPosition).getVideoSite();
 
         holder.itemView.setTag(videoID);
         final Uri uriWebPage = Uri.parse(ApiConfig.getBaseVideoUrlYoutube() + videoID);
@@ -80,15 +83,11 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
         holder.iconPlayVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-//                playThisVideo(videoID);
-//                Log.d(LOG_TAG, "VIDEO ID: " + videoID);
-
-                Intent intentVideoPlayer = new Intent(mContext, Player2Activity.class);
-                intentVideoPlayer.putExtra("videoID", videoID);
-                intentVideoPlayer.putExtra("videoTitle", videoTitle);
-                mContext.startActivity(intentVideoPlayer);
-
+                if (TextUtils.equals(mContext.getString(R.string.video_site_youtube), videoSite)) {
+                    playThisVideo(/*videoID,*/ adapterPosition);
+                } else {
+                    Toast.makeText(mContext, R.string.warning_only_youtube_supported, Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -138,9 +137,28 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
         }
     }
 
-    private void playThisVideo(String videoID) {
-        Intent intent = YouTubeStandalonePlayer.createVideoIntent((Activity) mContext, ApiConfig.getYoutubeApiKey(), videoID);
-        mContext.startActivity(intent);
+    private void playThisVideo(/*String videoID, */int index) {
+
+        List<String> videoIds = new ArrayList<>();
+        for (int i = 0; movieVideoList.size() > i; i++) {
+            videoIds.add(movieVideoList.get(i).getVideoKey());
+        }
+
+        Intent intent = YouTubeStandalonePlayer.createVideosIntent(
+                (Activity) mContext,            /* Activity/Application  */
+                ApiConfig.getYoutubeApiKey(),   /* API KEY */
+                videoIds,                       /* List of videoIds */
+                index,                          /* startIndex */
+                1,                          /* timeMillis */
+                true,                       /* autoplay */
+                true                       /* lightboxMode */
+        );
+
+        if (intent.resolveActivity(mContext.getPackageManager()) != null) {
+            mContext.startActivity(intent);
+        } else {
+            Toast.makeText(mContext, R.string.warning_device_can_not_play_video, Toast.LENGTH_SHORT).show();
+        }
     }
 
 }
