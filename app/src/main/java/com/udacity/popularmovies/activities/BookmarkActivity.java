@@ -172,13 +172,19 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     private boolean deleteBookmark(long id) {
         sqLiteDatabase.isOpen();
         sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
-        return sqLiteDatabase.delete(BookmarkContract.BookmarkEntry.TABLE_NAME,
-                BookmarkContract.BookmarkEntry._ID + "=" + id, null) > 0;
+        return getContentResolver().delete(
+                                    BookmarkEntry.CONTENT_URI,
+                                    BookmarkContract.BookmarkEntry._ID + "=" + id,
+                                    null
+                                    ) > 0;
     }
 
     private boolean deleteAllBookmarks() {
-        int rowsDeleted = getContentResolver().delete(BookmarkContract.BookmarkEntry.CONTENT_URI, BookmarkEntry._ID, null);
-//        int rowsDeleted = getContentResolver().delete(BookmarkContract.BookmarkEntry.CONTENT_URI, null, null);
+        int rowsDeleted = getContentResolver().delete(
+                                                BookmarkEntry.CONTENT_URI,
+                                                null,
+                                                null);
+
         if (rowsDeleted > 0) {
             doToast(rowsDeleted + getResources().getString(R.string.number_of_deleted_bookmarks));
             showNoBookmarkWarning();
@@ -186,7 +192,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
         // After delete all Bookmarks
         restartLoaderBookmarks();
-
+        // Return true if the row is deleted from database.
         return rowsDeleted > 0;
     }
 
