@@ -30,14 +30,17 @@ import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.BuildConfig;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.adapters.CompanyListAdapter;
+import com.udacity.popularmovies.adapters.MovieReviewsAdapter;
 import com.udacity.popularmovies.adapters.MovieVideosAdapter;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.loaders.MovieLoader;
+import com.udacity.popularmovies.loaders.ReviewListLoader;
 import com.udacity.popularmovies.loaders.VideoListLoader;
 import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
 import com.udacity.popularmovies.localdatabase.BookmarkDbHelper;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.models.MovieProductionCompany;
+import com.udacity.popularmovies.models.MovieReview;
 import com.udacity.popularmovies.models.MovieVideo;
 import com.udacity.popularmovies.utils.DateUtils;
 import com.udacity.popularmovies.utils.LanguageUtils;
@@ -55,8 +58,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
     private static final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
     // The Loader ID to be used by the LoaderManager
-    private static final int MOVIE_DETAILS_LOADER_ID = 2;
-    private static final int MOVIE_VIDEOS_LOADER_ID = 5;
+    private static final int MOVIE_DETAILS_LOADER_ID = 100;
+    private static final int MOVIE_VIDEOS_LOADER_ID = 200;
+    private static final int MOVIE_REVIEWS_LOADER_ID = 300;
 
     private Movie movieData = new Movie();
 
@@ -86,6 +90,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private TextView textViewNoMovieDetails;
     private LinearLayout linearLayoutContainerDetails, linearLayoutAdditionalInfo;
     private String movieHomepageUrl;
+    private ImageView imageViewArrowRight;
 
     private SQLiteDatabase sqLiteDatabase;
     private BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
@@ -101,6 +106,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private MovieVideosAdapter movieVideosAdapter;
     private final ArrayList<MovieVideo> movieVideosList = new ArrayList<>();
     private List<MovieVideo> movieVideoList = new ArrayList<>();
+
+    private RecyclerView recyclerViewReviews;
+    private MovieReviewsAdapter movieReviewsAdapter;
+    private final ArrayList<MovieReview> movieReviewsList = new ArrayList<>();
+    private List<MovieReview> movieReviewList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +147,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         textViewNoMovieDetails = findViewById(R.id.tv_no_movie_details);
         linearLayoutContainerDetails = findViewById(R.id.container_details);
         linearLayoutAdditionalInfo = findViewById(R.id.container_additional_content);
+        imageViewArrowRight = findViewById(R.id.image_view_arrow_right);
 
         // RecyclerView for the list of companies
         RecyclerView recyclerViewCompanies = findViewById(R.id.rv_companies);
@@ -157,6 +168,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
         // Author: https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
         ViewCompat.setNestedScrollingEnabled(recyclerViewVideos, false);
+
+        // RecyclerView references and setups
+        recyclerViewReviews = findViewById(R.id.rv_movies_reviews_details);
+        movieReviewsAdapter = new MovieReviewsAdapter(this, movieReviewsList);
+        recyclerViewReviews.setAdapter(movieReviewsAdapter);
+        recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewReviews.setHasFixedSize(true);
+        // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
+        // Author: https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
+        ViewCompat.setNestedScrollingEnabled(recyclerViewReviews, false);
 
         // Button inside Overview card that send user to the movie homepage in the browser if URL is not null
         Button buttonHomepage = findViewById(R.id.bt_home_page);
@@ -298,6 +319,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             android.app.LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
             loaderManager.initLoader(MOVIE_VIDEOS_LOADER_ID, null, this);
+            loaderManager.initLoader(MOVIE_REVIEWS_LOADER_ID, null, this);
         }
     }
 
@@ -322,20 +344,23 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             Uri.Builder uriBuilder = baseUrl.buildUpon();
             uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.API_KEY, API_KEY);
             uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.LANGUAGE, loadApiLanguage);
-            //YourLoaderClass1 is you loaderClass where you implement onStartLoading and loadingInBackground()
             return new MovieLoader(this, uriBuilder.toString());
 
         } else if (loaderId == MOVIE_VIDEOS_LOADER_ID ) {
-
             Uri stringBaseUrl = Uri.parse(ApiConfig.getBaseUrlV3Default() + String.valueOf(movieId) + "/videos");
             Uri.Builder uriBuilder = stringBaseUrl.buildUpon();
             uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.API_KEY, API_KEY);
             uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.LANGUAGE, loadApiLanguage);
             uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.PAGE, String.valueOf(page));
-
-            Log.d(LOG_TAG + "Request URL", uriBuilder.toString());
             return new VideoListLoader(this, uriBuilder.toString());
 
+        } else if (loaderId == MOVIE_REVIEWS_LOADER_ID) {
+            Uri stringBaseUrl = Uri.parse(ApiConfig.getBaseUrlV3Default() + String.valueOf(movieId) + "/reviews");
+            Uri.Builder uriBuilder = stringBaseUrl.buildUpon();
+            uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.API_KEY, API_KEY);
+            uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.LANGUAGE, loadApiLanguage);
+            uriBuilder.appendQueryParameter(ApiConfig.UrlParamKey.PAGE, String.valueOf(page));
+            return new ReviewListLoader(this,uriBuilder.toString());
         }
         return null;
 
@@ -387,14 +412,38 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 //                showNoResultsWarning();
                 doToast("No videos to show");
             } else {
-//                hideLoadingIndicator();
+
+                hideProgressBar();
                 hideConnectionWarning();
 //                hideNoResultsWarning();
+                if (movieVideoList.size() > 1){
+                    imageViewArrowRight.setVisibility(View.VISIBLE);
+                }else {
+                    imageViewArrowRight.setVisibility(View.GONE);
+                }
             }
             movieVideosList.clear();
             movieVideosList.addAll(movieVideoList);
             movieVideosAdapter.notifyDataSetChanged();
 
+        } else if (id == MOVIE_REVIEWS_LOADER_ID) {
+            movieReviewList = (List<MovieReview>)data;
+
+            // When the onCreateLoader finish its job, it will pass the data do this method.
+            if (movieReviewList == null || movieReviewList.isEmpty()) {
+                // If there is no movie to show give a warning to the user in the UI.
+//                showNoResultsWarning();
+                hideProgressBar();
+                hideConnectionWarning();
+            } else {
+                hideProgressBar();
+                hideConnectionWarning();
+//                hideNoResultsWarning();
+            }
+
+            movieReviewsList.clear();
+            movieReviewsList.addAll(movieReviewList);
+            movieReviewsAdapter.notifyDataSetChanged();
         }
 
     }

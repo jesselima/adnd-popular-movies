@@ -136,7 +136,7 @@
                         <TextView
                             android:id="@+id/tv_vote_average"
                             style="@style/DetailItemValueStyle"
-                            tools:text="0"/>
+                            tools:text="8.3"/>
                         <TextView
                             style="@style/DetailItemLabelStyle"
                             android:text="@string/slash"/>
@@ -220,6 +220,7 @@
                     android:id="@+id/tab_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:background="@color/colorLightGrey"
                     android:layout_marginLeft="@dimen/default_layout_margin"
                     android:layout_marginRight="@dimen/default_layout_margin">
@@ -311,19 +312,47 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/default_layout_margin"
+                    android:layout_marginLeft="@dimen/default_layout_margin"
+                    android:layout_marginRight="@dimen/default_layout_margin"
+                    android:layout_marginTop="@dimen/default_layout_margin"
                     android:gravity="center"
                     android:text="@string/videos"
                     android:textAllCaps="true"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
+                <ImageView
+                    android:id="@+id/image_view_arrow_right"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_forward"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="@dimen/default_layout_margin"
+                    android:layout_marginBottom="@dimen/small_layout_margin"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_movies_videos_details"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/medium_layout_margin"
-                    android:layout_marginRight="@dimen/medium_layout_margin"/>
+                    android:layout_marginLeft="@dimen/default_layout_margin"
+                    android:layout_marginRight="@dimen/default_layout_margin"/>
+
+                <include layout="@layout/divider"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_layout_margin"
+                    android:gravity="center"
+                    android:text="@string/reviews"
+                    android:textAllCaps="true"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_movies_reviews_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/default_layout_margin"
+                    android:layout_marginRight="@dimen/default_layout_margin"/>
 
                 <include layout="@layout/divider"/>
 
@@ -340,11 +369,26 @@
                     android:textSize="16sp"
                     android:textStyle="bold"/>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_companies"
-                    android:layout_width="200dp"
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"/>
+                    android:layout_marginLeft="@dimen/card_margin"
+                    android:layout_marginRight="@dimen/card_margin"
+                    android:layout_marginTop="@dimen/card_margin"
+                    android:layout_marginBottom="@dimen/card_margin"
+                    app:cardCornerRadius="3dp"
+                    app:cardElevation="4dp">
+                    <LinearLayout
+                        style="@style/Widget.CardContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/rv_companies"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"/>
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
 
             </LinearLayout>
 
