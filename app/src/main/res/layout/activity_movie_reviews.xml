@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:contentDescription="@string/no_comments_available_for_this_movie"
-        android:src="@drawable/ic_no_comments"
+        android:src="@drawable/ic_comments"
         android:visibility="gone"/>
 
     <TextView
