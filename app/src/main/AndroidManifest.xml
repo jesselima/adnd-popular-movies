@@ -39,14 +39,21 @@
             android:name=".activities.BookmarkActivity"
             android:label="@string/bookmarks_offline"
             android:parentActivityName=".activities.MovieListActivity" />
+
+
+
         <activity
             android:name=".activities.MovieVideosActivity"
             android:label="@string/trailers_and_clips"
             android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:parentActivityName=".activities.MovieDetailsActivity" />
+
+
         <activity
             android:name=".activities.MovieReviewsActivity"
             android:label="@string/movie_reviews"
+            android:launchMode="singleTop"
             android:parentActivityName=".activities.MovieDetailsActivity" />
 
         <!-- Bookmark Provider for Database access through ContentProvider class -->

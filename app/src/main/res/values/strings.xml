@@ -81,4 +81,9 @@
     <string name="warning_device_can_not_play_video">Sorry, your device does not have support to play this video.</string>
     <string name="video_site_youtube" translatable="false">YouTube</string>
     <string name="warning_only_youtube_supported">App supports YouTube videos only.</string>
+    <string name="unavailable">Unavailable</string>
+    <string name="details">Details</string>
+    <string name="reviews">Reviews</string>
+    <string name="videos">Videos</string>
+    <string name="info">Info</string>
 </resources>

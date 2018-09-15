@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,7 +16,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.udacity.popularmovies.BuildConfig;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.adapters.MovieVideosAdapter;
@@ -27,7 +27,7 @@ import com.udacity.popularmovies.utils.NetworkUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieVideosActivity extends YouTubeBaseActivity implements LoaderManager.LoaderCallbacks<List<MovieVideo>> {
+public class MovieVideosActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<List<MovieVideo>> {
 
     private static final String API_KEY = BuildConfig.API_KEY;
 
@@ -60,6 +60,11 @@ public class MovieVideosActivity extends YouTubeBaseActivity implements LoaderMa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_videos);
 
+        Toolbar myToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+        myToolbar.setTitle("Jesse Movie");
+        myToolbar.setSubtitle("The Mission");
+
         loadingIndicator = findViewById(R.id.loading_indicator);
         imageViewNoVideos = findViewById(R.id.iv_no_movies_placeholder);
         tvNetworkStatus = findViewById(R.id.tv_network_status);
@@ -75,8 +80,6 @@ public class MovieVideosActivity extends YouTubeBaseActivity implements LoaderMa
         getIncomingIntent();
         checkConnectionAndStartLoader();
 
-
-
     }
 
     private void getIncomingIntent() {
@@ -90,7 +93,7 @@ public class MovieVideosActivity extends YouTubeBaseActivity implements LoaderMa
     }
 
     @Override
-    public Loader<List<MovieVideo>> onCreateLoader(int i, Bundle bundle) {
+    public Loader<List<MovieVideo>> onCreateLoader(int loaderId, Bundle bundle) {
 
         Uri stringBaseUrl = Uri.parse(ApiConfig.getBaseUrlV3Default() + String.valueOf(movieId) + "/videos");
         Uri.Builder uriBuilder = stringBaseUrl.buildUpon();

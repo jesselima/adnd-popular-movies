@@ -55,6 +55,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -103,6 +104,7 @@
                     android:id="@+id/container_details"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_layout_margin"
                     android:layout_marginStart="8dp"
                     android:layout_weight="7"
                     android:orientation="vertical">
@@ -211,7 +213,17 @@
                 android:id="@+id/container_additional_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_layout_margin"
                 android:orientation="vertical">
+
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/tab_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorLightGrey"
+                    android:layout_marginLeft="@dimen/default_layout_margin"
+                    android:layout_marginRight="@dimen/default_layout_margin">
+                </android.support.design.widget.TabLayout>
 
                 <TextView
                     android:id="@+id/tv_genres"
@@ -222,11 +234,10 @@
                     android:paddingRight="@dimen/medium_layout_margin"
                     android:layout_marginLeft="@dimen/default_layout_margin"
                     android:layout_marginRight="@dimen/default_layout_margin"
-                    android:layout_marginTop="@dimen/medium_layout_margin"
+                    android:layout_marginTop="@dimen/default_layout_margin"
                     android:padding="4dp"
                     android:textColor="@color/colorAccent"
                     tools:text="Avventura, Fantascienza, Fantasy, Azione"/>
-
 
                 <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
@@ -261,6 +272,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
+                            android:visibility="gone"
                             android:gravity="center">
                             <Button
                                 android:id="@+id/bt_videos"
@@ -268,7 +280,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="end"
-                                android:text="Videos"
+                                android:text="@string/videos"
                                 android:textColor="@color/colorAccent"
                                 android:textSize="16sp"/>
                             <Button
@@ -277,7 +289,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="end"
-                                android:text="Reviews"
+                                android:text="@string/reviews"
                                 android:textColor="@color/colorAccent"
                                 android:textSize="16sp"/>
                             <Button
@@ -294,6 +306,27 @@
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
 
+                <include layout="@layout/divider"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_layout_margin"
+                    android:gravity="center"
+                    android:text="@string/videos"
+                    android:textAllCaps="true"
+                    android:textSize="16sp"
+                    android:textStyle="bold"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_movies_videos_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/medium_layout_margin"
+                    android:layout_marginRight="@dimen/medium_layout_margin"/>
+
+                <include layout="@layout/divider"/>
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -306,8 +339,6 @@
                     android:textAllCaps="true"
                     android:textSize="16sp"
                     android:textStyle="bold"/>
-
-                <include layout="@layout/divider"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_companies"
