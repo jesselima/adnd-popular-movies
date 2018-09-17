@@ -1,9 +1,9 @@
 package com.udacity.popularmovies.activities;
 
-import android.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -315,10 +315,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             hideConnectionWarning();
             showProgressBar();
             // Shows loading indicator and Kick off the loader
-            android.app.LoaderManager loaderManager = getLoaderManager();
-            loaderManager.initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
-            loaderManager.initLoader(MOVIE_VIDEOS_LOADER_ID, null, this);
-            loaderManager.initLoader(MOVIE_REVIEWS_LOADER_ID, null, this);
+            getSupportLoaderManager().initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
+            getSupportLoaderManager().initLoader(MOVIE_VIDEOS_LOADER_ID, null, this);
+            getSupportLoaderManager().initLoader(MOVIE_REVIEWS_LOADER_ID, null, this);
         }
     }
 
@@ -695,7 +694,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         // Check internet connection when activity is resumed.
         if (NetworkUtils.isDeviceConnected(this)) {
             hideConnectionWarning();
-            getLoaderManager().restartLoader(MOVIE_DETAILS_LOADER_ID, null, this);
+            getSupportLoaderManager().restartLoader(MOVIE_DETAILS_LOADER_ID, null, this);
         } else {
             showConnectionWarning();
         }

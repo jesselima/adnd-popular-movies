@@ -1,6 +1,6 @@
 package com.udacity.popularmovies.loaders;
 
-import android.content.AsyncTaskLoader;
+import android.support.v4.content.AsyncTaskLoader;
 import android.content.Context;
 
 import com.udacity.popularmovies.models.MovieReview;
