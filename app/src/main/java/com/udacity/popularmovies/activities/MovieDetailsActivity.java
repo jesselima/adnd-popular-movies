@@ -62,6 +62,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private static final int MOVIE_VIDEOS_LOADER_ID = 200;
     private static final int MOVIE_REVIEWS_LOADER_ID = 300;
 
+    private static final int TAB_DETAILS = 0;
+    private static final int TAB_VIDEOS = 1;
+    private static final int TAB_REVIEWS = 2;
+    private static final int TAB_COMPANIES = 3;
+    private static final int TAB_BOOKMARKS = 4;
+
     private Movie movieData = new Movie();
 
     private int movieId;
@@ -90,7 +96,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private TextView textViewNoMovieDetails;
     private LinearLayout linearLayoutContainerDetails, linearLayoutAdditionalInfo;
     private String movieHomepageUrl;
-    private ImageView imageViewArrowRight;
 
     private SQLiteDatabase sqLiteDatabase;
     private BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
@@ -112,6 +117,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private final ArrayList<MovieReview> movieReviewsList = new ArrayList<>();
     private List<MovieReview> movieReviewList = new ArrayList<>();
 
+    private LinearLayout linearLayoutSectionInfo;
+    private LinearLayout linearLayoutSectionVideos;
+    private LinearLayout linearLayoutSectionReviews;
+    private LinearLayout linearLayoutSectionCompanies;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,6 +129,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         Log.d("===>>> onCreate", " called");
 
         tabLayout = findViewById(R.id.tab_layout);
+        linearLayoutSectionInfo     = findViewById(R.id.section_info);
+        linearLayoutSectionVideos   = findViewById(R.id.section_videos);
+        linearLayoutSectionReviews  = findViewById(R.id.section_reviews);
+        linearLayoutSectionCompanies  = findViewById(R.id.section_companies);
+
 
         progressBar = findViewById(R.id.indeterminateBar);
         showProgressBar();
@@ -147,13 +162,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         textViewNoMovieDetails = findViewById(R.id.tv_no_movie_details);
         linearLayoutContainerDetails = findViewById(R.id.container_details);
         linearLayoutAdditionalInfo = findViewById(R.id.container_additional_content);
-        imageViewArrowRight = findViewById(R.id.image_view_arrow_right);
 
         // RecyclerView for the list of companies
         RecyclerView recyclerViewCompanies = findViewById(R.id.rv_companies);
         companyListAdapter = new CompanyListAdapter(this, companies);
         recyclerViewCompanies.setAdapter(companyListAdapter);
-        recyclerViewCompanies.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewCompanies.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewCompanies.setHasFixedSize(true);
         // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
         // https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
@@ -163,7 +177,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         recyclerViewVideos = findViewById(R.id.rv_movies_videos_details);
         movieVideosAdapter = new MovieVideosAdapter(this, movieVideosList);
         recyclerViewVideos.setAdapter(movieVideosAdapter);
-        recyclerViewVideos.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewVideos.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewVideos.setHasFixedSize(true);
         // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
         // Author: https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
@@ -173,7 +187,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         recyclerViewReviews = findViewById(R.id.rv_movies_reviews_details);
         movieReviewsAdapter = new MovieReviewsAdapter(this, movieReviewsList);
         recyclerViewReviews.setAdapter(movieReviewsAdapter);
-        recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewReviews.setHasFixedSize(true);
         // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
         // Author: https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
@@ -194,27 +208,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             }
         });
 
-        Button buttonReviews = findViewById(R.id.bt_reviews);
-        buttonReviews.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MovieReviewsActivity.class);
-                intent.putExtra(ApiConfig.JsonKey.ID, movieData.getMovieId());
-                intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
-                startActivity(intent);
-            }
-        });
-
-        Button buttonVideos = findViewById(R.id.bt_videos);
-        buttonVideos.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MovieVideosActivity.class);
-                intent.putExtra(ApiConfig.JsonKey.ID, movieData.getMovieId());
-                intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
-                startActivity(intent);
-            }
-        });
 
         floatingBookmarkButton = findViewById(R.id.float_save_bookmark);
         floatingBookmarkButton.setOnClickListener(new View.OnClickListener() {
@@ -233,26 +226,32 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             }
         });
 
-        // TODO === <SETUP TABS> ====
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_details)/*.setText(R.string.details)*/);
         tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_movie)/*.setText(R.string.videos)*/);
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_comments)/*.setText(R.string.reviews)*/);
-
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_reviews)/*.setText(R.string.videos)*/);
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_companies)/*.setText(R.string.videos)*/);
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_collections_bookmark)/*.setText(R.string.videos)*/);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-                doToast("Tab selected at position:" + String.valueOf(tab.getPosition()));
                 int tabPosition = tab.getPosition();
                 switch (tabPosition) {
-                    case 0:
-                        doToast("Tab selected at position: " + String.valueOf(tab.getPosition()) + " - Details");
+                    case TAB_DETAILS:
+                        showInfo();
                         break;
-                    case 1:
-                        doToast("Tab selected at position: " + String.valueOf(tab.getPosition()) + " - Videos");
+                    case TAB_VIDEOS:
+                        showVideos();
                         break;
-                    default:
-                        doToast("Tab selected at position:  " + String.valueOf(tab.getPosition()) + " - Reviews");
+                    case TAB_REVIEWS:
+                        showReviews();
+                        break;
+                    case TAB_COMPANIES:
+                        showCompanies();
+                        break;
+                    case TAB_BOOKMARKS:
+                        startActivity(new Intent(getApplicationContext(), BookmarkActivity.class));
+                        break;
                 }
             }
 
@@ -416,11 +415,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 hideProgressBar();
                 hideConnectionWarning();
 //                hideNoResultsWarning();
-                if (movieVideoList.size() > 1){
-                    imageViewArrowRight.setVisibility(View.VISIBLE);
-                }else {
-                    imageViewArrowRight.setVisibility(View.GONE);
-                }
             }
             movieVideosList.clear();
             movieVideosList.addAll(movieVideoList);
@@ -713,4 +707,28 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         Log.d("===>>> onRestart", " called");
     }
 
+    private void showInfo() {
+        linearLayoutSectionInfo.setVisibility(View.VISIBLE);
+        linearLayoutSectionVideos.setVisibility(View.GONE);
+        linearLayoutSectionReviews.setVisibility(View.GONE);
+        linearLayoutSectionCompanies.setVisibility(View.GONE);
+    }
+    private void showVideos() {
+        linearLayoutSectionInfo.setVisibility(View.GONE);
+        linearLayoutSectionVideos.setVisibility(View.VISIBLE);
+        linearLayoutSectionReviews.setVisibility(View.GONE);
+        linearLayoutSectionCompanies.setVisibility(View.GONE);
+    }
+    private void showReviews() {
+        linearLayoutSectionInfo.setVisibility(View.GONE);
+        linearLayoutSectionVideos.setVisibility(View.GONE);
+        linearLayoutSectionReviews.setVisibility(View.VISIBLE);
+        linearLayoutSectionCompanies.setVisibility(View.GONE);
+    }
+    private void showCompanies() {
+        linearLayoutSectionInfo.setVisibility(View.GONE);
+        linearLayoutSectionVideos.setVisibility(View.GONE);
+        linearLayoutSectionReviews.setVisibility(View.GONE);
+        linearLayoutSectionCompanies.setVisibility(View.VISIBLE);
+    }
 }

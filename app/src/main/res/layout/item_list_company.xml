@@ -10,7 +10,7 @@
             android:id="@+id/iv_production_company"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/default_layout_margin"
+            android:layout_marginTop="@dimen/medium_layout_margin"
             android:contentDescription="@string/production_companies"
             android:gravity="center"
             android:src="@drawable/production_company_sample"/>
@@ -23,8 +23,7 @@
             android:layout_marginTop="@dimen/medium_layout_margin"
             android:gravity="center"
             android:textSize="14sp"
+            android:textStyle="bold"
             tools:text="Company Name"/>
-
-    <include layout="@layout/divider"/>
 
 </LinearLayout>
