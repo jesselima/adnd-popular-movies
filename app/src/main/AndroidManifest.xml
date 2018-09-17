@@ -50,12 +50,6 @@
             android:parentActivityName=".activities.MovieDetailsActivity" />
 
 
-        <activity
-            android:name=".activities.MovieReviewsActivity"
-            android:label="@string/movie_reviews"
-            android:launchMode="singleTop"
-            android:parentActivityName=".activities.MovieDetailsActivity" />
-
         <!-- Bookmark Provider for Database access through ContentProvider class -->
         <provider
             android:name=".localdatabase.BookmarkContentProvider"

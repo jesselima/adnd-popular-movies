@@ -26,10 +26,7 @@ import com.udacity.popularmovies.utils.NetworkUtils;
 
 import java.text.DecimalFormat;
 
-/**
- * This is the adapter for the RecyclerView of MovieBookmark objects.
- * This is a part of the project adnd-popular-movies.
- */
+
 public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.BookmarkViewHolder>{
 
     private Cursor cursor;

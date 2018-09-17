@@ -86,4 +86,5 @@
     <string name="reviews">Reviews</string>
     <string name="videos">Videos</string>
     <string name="info">Info</string>
+    <string name="swipe_left_to_load_more_videos">Swipe left to load more videos</string>
 </resources>
