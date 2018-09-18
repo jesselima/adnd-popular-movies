@@ -225,7 +225,12 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         // When the onCreateLoader finish its job, it will pass the data do this method.
         if (movies == null || movies.isEmpty()) {
             // If there is no movie to show give a warning to the user in the UI.
-            showNoResultsWarning();
+            if (NetworkUtils.isDeviceConnected(this)) {
+                hideConnectionWarning();
+                showNoResultsWarning();
+            } else {
+                showConnectionWarning();
+            }
         } else {
             // If the movie list has data, hide the loading indicator, hide connection warnings (if needed)
             // and hide no results UI warnings.
@@ -358,6 +363,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             showConnectionWarning();
         } else {
             // Is device is connected Shows loading indicator and Kick off the loader
+            hideNoResultsWarning();
             showLoadingIndicator();
             android.app.LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(MOVIE_LOADER_ID, null, this);

@@ -106,6 +106,8 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     @Override
     public Loader<Cursor> onCreateLoader(int id, @Nullable final Bundle loaderArgs) {
 
+        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
+
         return new AsyncTaskLoader<Cursor>(this) {
 
             // Initialize a cursor object to receive the cursor data returned from the task
@@ -162,6 +164,9 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     }
 
     private void restartLoaderBookmarks() {
+        BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
+        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
+        sqLiteDatabase.isOpen();
         sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
         getSupportLoaderManager().restartLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
     }
@@ -170,13 +175,16 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     /* === DATABASE MANIPULATION === */
 
     private boolean deleteBookmark(long id) {
-        sqLiteDatabase.isOpen();
         sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
-        return getContentResolver().delete(
-                                    BookmarkEntry.CONTENT_URI,
-                                    BookmarkContract.BookmarkEntry._ID + "=" + id,
-                                    null
-                                    ) > 0;
+
+        boolean isBookmarkDeleted = getContentResolver().delete(
+                BookmarkEntry.CONTENT_URI,
+                BookmarkContract.BookmarkEntry._ID + "=" + id,
+                null
+        ) > 0;
+
+        sqLiteDatabase.close();
+        return isBookmarkDeleted;
     }
 
     private boolean deleteAllBookmarks() {
@@ -323,6 +331,27 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d("===>>> onResume", " called");
         restartLoaderBookmarks();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("===>>> onStart", " called");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("===>>> onPause", " called");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        restartLoaderBookmarks();
+        Log.d("===>>> onRestart", " called");
+    }
+
 }

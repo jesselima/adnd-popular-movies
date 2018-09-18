@@ -1,11 +1,15 @@
 package com.udacity.popularmovies.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -31,12 +35,6 @@ public class WebViewActivity extends AppCompatActivity {
         progressBar =findViewById(R.id.loading_page_indicator);
         webView = findViewById(R.id.webview);
         Toolbar toolbar = findViewById(R.id.toolbar_web_view);
-
-//        ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
-
 
         int loadingProgress = webView.getProgress();
         String title = webView.getTitle();
@@ -80,4 +78,32 @@ public class WebViewActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.web_view, menu);
+        return true;
+    }
+
+    /**
+     * This method handles the clicked item menu
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.open_in_the_browser:
+                openWebPage(urlHomepage);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void openWebPage(String url) {
+        Uri uriWebPage = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uriWebPage);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
 }
