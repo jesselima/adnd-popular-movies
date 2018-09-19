@@ -36,19 +36,14 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     private final static String LOG_TAG = BookmarkActivity.class.getSimpleName();
     private static final int LOADER_ID_MOVIE_BOOKMARKS_LIST = 3;
     Toast toast;
-
-
+    Button buttonNavigateToMovies;
+    Cursor mCursorData = null;
     private SQLiteDatabase sqLiteDatabase;
     private BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
-
     private TextView textViewNoBookmarks, textViewNavigateToBookmarks;
     private ImageView imageViewNoBookmarks;
-    Button buttonNavigateToMovies;
-
     private RecyclerView recyclerViewBookmark;
     private BookmarkAdapter bookmarkAdapter;
-
-    Cursor mCursorData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +89,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         });
 
         // Start the Loader Callbacks to query the list of movie bookmarks asynchronously
-         getSupportLoaderManager().initLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
+        getSupportLoaderManager().initLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
 
     } // Close onCreate
 
@@ -117,7 +112,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
             protected void onStartLoading() {
                 if (mCursorData != null) {
                     deliverResult(mCursorData);
-                }else {
+                } else {
                     forceLoad();
                 }
             }
@@ -132,7 +127,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                             null,
                             null,
                             BookmarkContract.BookmarkEntry.COLUMN_TIMESTAMP + " DESC");
-                }catch (Exception e) {
+                } catch (Exception e) {
                     Log.e(LOG_TAG, "Fail to load data");
                     e.printStackTrace();
                     return null;
@@ -152,7 +147,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         mCursorData = data;
         if (data.getCount() < 1) {
             showNoBookmarkWarning();
-        }else {
+        } else {
             hideNoBookmarkWarning();
         }
         bookmarkAdapter.swapCursor(data);
@@ -177,21 +172,28 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     private boolean deleteBookmark(long id) {
         sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
 
-        boolean isBookmarkDeleted = getContentResolver().delete(
+        boolean wasBookmarkDeleted = getContentResolver().delete(
                 BookmarkEntry.CONTENT_URI,
                 BookmarkContract.BookmarkEntry._ID + "=" + id,
                 null
         ) > 0;
 
         sqLiteDatabase.close();
-        return isBookmarkDeleted;
+        if (wasBookmarkDeleted) {
+            Log.v("Deletou com sucesso", "");
+        }
+        else {
+            Log.v("Não deletou.", "");
+        }
+
+        return wasBookmarkDeleted;
     }
 
     private boolean deleteAllBookmarks() {
         int rowsDeleted = getContentResolver().delete(
-                                                BookmarkEntry.CONTENT_URI,
-                                                null,
-                                                null);
+                BookmarkEntry.CONTENT_URI,
+                null,
+                null);
 
         if (rowsDeleted > 0) {
             doToast(rowsDeleted + getResources().getString(R.string.number_of_deleted_bookmarks));
@@ -212,10 +214,12 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-                if (!deleteBookmark(movieApiId)) {
+                if (deleteBookmark(movieApiId)) {
+                    doToast(getString(R.string.deleted));
+                    restartLoaderBookmarks();
+                }else {
                     doToast(getString(R.string.warning_could_not_be_deleted));
                 }
-                restartLoaderBookmarks();
 
                 if (bookmarkAdapter.getItemCount() == 0) {
                     showNoBookmarkWarning();
@@ -229,6 +233,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                 if (dialog != null) {
                     dialog.dismiss();
                     restartLoaderBookmarks();
+                    doToast(getString(R.string.canceled));
                 }
             }
         });
@@ -296,7 +301,6 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
     /**

@@ -12,7 +12,8 @@ public class MovieVideo {
     private int videoSize;
     private String videoThumbnailUrl;
 
-    public MovieVideo() {}
+    public MovieVideo() {
+    }
 
     public MovieVideo(String videoKey, String videoName, String videoType, String videoSite, int videoSize, String videoThumbnailUrl) {
         this.videoKey = videoKey;

@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.transition.TransitionManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +57,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
             public void onClick(View view) {
                 if (commentUrl.equals("null") || TextUtils.isEmpty(commentUrl)) {
                     Toast.makeText(mContext, R.string.comment_url_not_available, Toast.LENGTH_SHORT).show();
-                }else {
+                } else {
                     Uri uriWebPage = Uri.parse(commentUrl);
                     Intent intent = new Intent(Intent.ACTION_VIEW, uriWebPage);
                     if (intent.resolveActivity(mContext.getPackageManager()) != null) {
@@ -74,7 +73,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
             @Override
             public void onClick(View view) {
                 TransitionManager.beginDelayedTransition(holder.transitionsContainer);
-                if (!isReadMoreButtonVisible){
+                if (!isReadMoreButtonVisible) {
                     isReadMoreButtonVisible = true;
                     holder.textViewReviewContent.setMaxLines(COMMENT_MAX_LINES);
                     holder.buttonReadButtonMoreShow.setText(R.string.hide);
@@ -94,7 +93,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
         return movieReviewList.size();
     }
 
-    public static class MovieReviewViewHolder extends RecyclerView.ViewHolder{
+    public static class MovieReviewViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView textViewReviewAuthor;
         private final TextView textViewReviewContent;

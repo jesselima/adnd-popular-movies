@@ -31,7 +31,8 @@ public class Movie {
     private String movieHomepage;
 
     // Empty constructor
-    public Movie() {}
+    public Movie() {
+    }
 
     // Constructor to use in posters movie list object
     public Movie(int movieId, String moviePosterPath, String movieOriginalTitle, String movieReleaseDate, double movieVoteAverage) {

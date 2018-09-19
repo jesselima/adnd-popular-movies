@@ -4,9 +4,7 @@
     <color name="colorPrimaryDark">#082d29</color>
     <color name="colorAccent">#1b9286</color>
     <color name="colorAccentAlpha200">#c81b9286</color>
-    <color name="colorAccentAlpha0">#001b9286</color>
     <color name="colorLightGrey">#ededed</color>
-    <color name="colorDarkGrey">#3d3d3d</color>
     <color name="colorMediumGrey">#686868</color>
     <color name="colorWarning">#c90505</color>
     <color name="colorYouTube">#b71c1c</color>

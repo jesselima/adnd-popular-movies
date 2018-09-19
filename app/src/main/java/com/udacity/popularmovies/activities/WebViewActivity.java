@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -32,7 +31,7 @@ public class WebViewActivity extends AppCompatActivity {
 
         getIncomingIntent();
 
-        progressBar =findViewById(R.id.loading_page_indicator);
+        progressBar = findViewById(R.id.loading_page_indicator);
         webView = findViewById(R.id.webview);
         Toolbar toolbar = findViewById(R.id.toolbar_web_view);
 
@@ -57,7 +56,7 @@ public class WebViewActivity extends AppCompatActivity {
 
         // enable the ability to zoom-in controls on the page
         webView.getSettings().setSupportZoom(true);
-        webView.getSettings().setBuiltInZoomControls(true); // allow pinch to zooom
+        webView.getSettings().setBuiltInZoomControls(true); // allow pinch to zoom
         webView.getSettings().setDisplayZoomControls(false); // disable the default zoom controls on the page
 
         // Configure the client to use when opening URLs
@@ -65,7 +64,6 @@ public class WebViewActivity extends AppCompatActivity {
         // Load the initial URL
         webView.loadUrl(urlHomepage);
         Log.d("===>>> urlHomepage", urlHomepage);
-
 
 
     }

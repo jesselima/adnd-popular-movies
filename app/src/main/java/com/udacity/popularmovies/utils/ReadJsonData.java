@@ -4,8 +4,8 @@ import android.util.Log;
 
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.config.ApiConfig.JsonKey;
-import com.udacity.popularmovies.models.MovieProductionCompany;
 import com.udacity.popularmovies.models.Movie;
+import com.udacity.popularmovies.models.MovieProductionCompany;
 import com.udacity.popularmovies.models.MovieReview;
 import com.udacity.popularmovies.models.MovieVideo;
 
@@ -50,7 +50,7 @@ final class ReadJsonData {
 
                 int movieId = currentMovieResult.optInt(JsonKey.ID);
                 String posterPathId = currentMovieResult.optString(JsonKey.POSTER_PATH);
-                    String fullPosterPathUrl = getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W342 + posterPathId;
+                String fullPosterPathUrl = getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W342 + posterPathId;
                 String originalTitle = currentMovieResult.optString(JsonKey.ORIGINAL_TITLE);
 
                 String releaseDate = DateUtils.simpleDateFormat(currentMovieResult.optString(JsonKey.RELEASE_DATE));
@@ -86,8 +86,8 @@ final class ReadJsonData {
 
             StringBuilder spokenLanguage = new StringBuilder();
             if (rootJsonObject.has(JsonKey.SPOKEN_LANGUAGES)) {
-                for (int i = 0; i < spokenLanguagesArray.length(); i++){
-                    if (i > 0){
+                for (int i = 0; i < spokenLanguagesArray.length(); i++) {
+                    if (i > 0) {
                         spokenLanguage.append(", ");
                     }
                     JSONObject spokenLanguageObject = spokenLanguagesArray.getJSONObject(i);
@@ -98,7 +98,7 @@ final class ReadJsonData {
             StringBuilder genres = new StringBuilder();
             if (rootJsonObject.has(JsonKey.GENRES)) {
                 for (int i = 0; i < genresArray.length(); i++) {
-                    if (i > 0){
+                    if (i > 0) {
                         genres.append(" | ");
                     }
                     JSONObject genreObject = genresArray.getJSONObject(i);
@@ -127,9 +127,9 @@ final class ReadJsonData {
 
             List<MovieProductionCompany> companies = new ArrayList<>();
 
-            if (rootJsonObject.has(JsonKey.PRODUCTION_COMPANIES)){
+            if (rootJsonObject.has(JsonKey.PRODUCTION_COMPANIES)) {
                 JSONArray companiesJsonArray = rootJsonObject.getJSONArray(JsonKey.PRODUCTION_COMPANIES);
-                for (int i = 0; companiesJsonArray.length() > i; i++){
+                for (int i = 0; companiesJsonArray.length() > i; i++) {
                     JSONObject companyItem = companiesJsonArray.getJSONObject(i);
                     MovieProductionCompany movieProductionCompany = new MovieProductionCompany();
                     movieProductionCompany.setCompanyId(companyItem.optInt(JsonKey.ID));

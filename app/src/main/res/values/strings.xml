@@ -5,11 +5,10 @@
     <string name="tmdb_branding_reference">The Movie Database</string>
     <string name="movie_poster">Movie Poster</string>
     <string name="no_internet_connection">No Internet Connection!</string>
-    <string name="warning_language">Movie data not available in your language. \nEnglish will be used.</string>
-    <string name="warning_no_movies_found">Ooops! We did not find any movie.</string>
+    <string name="warning_no_movies_found">Ops! We did not find any movie.</string>
     <string name="no_movies_found_image">No movies found image</string>
-    <string name="most_popular">Most Popular</string>
-    <string name="highest_rated">Highest Rated</string>
+    <string name="most_popular">Popular</string>
+    <string name="highest_rated">Top Rated</string>
     <string name="min">min</string>
     <string name="slash">\u0020/\u0020</string>
     <string name="movie_details_could_not_be_loaded">Movie details could not be loaded.</string>
@@ -23,7 +22,7 @@
     <string name="homepage">HOMEPAGE</string>
     <string name="production_companies">Production Companies</string>
     <string name="share_to">Share to…</string>
-    <string name="warning_homepage_not_available">Ooops! Homepage not available for this movie. Sorry!…</string>
+    <string name="warning_homepage_not_available">Ops! Homepage not available for this movie. Sorry!…</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
     <string name="warning_check_internet_connection">Please, check your internet connection!</string>
@@ -35,14 +34,11 @@
     <string name="navigate_to_bookmarks">Let\'s add some bookmarks!</string>
     <string name="movie_removed">Movie removed from bookmarks</string>
     <string name="movie_saved">Movie saved to bookmarks</string>
-    <string name="see_on_the_web">SEE ON THE WEB</string>
     <string name="no_bookmarks_in_the_database">No bookmarks in the database</string>
     <string name="see_movies">SEE MOVIES</string>
     <string name="preferences">Preferences</string>
     <string name="author">Author:</string>
     <string name="comment_url_not_available">Comment url not available!</string>
-    <string name="see_on_youtube">See on YouTube</string>
-
     <string name="no_videos_available_for_this_movie">No videos available for this movie</string>
     <string name="languages_label">Languages:\u0020</string>
     <string name="delete_movie_bookmark_item">Delete this movie from bookmarks?</string>
@@ -54,25 +50,13 @@
     <string name="yes_delete">Yes, Delete.</string>
     <string name="no_cancel">No, Cancel.</string>
     <string name="warning_delete_all_bookmarks">This action will delete all saved movie bookmarks. This action can not be undone. Are you sure?</string>
-    <string name="play">PLAY</string>
     <string name="youtube">YouTube</string>
     <string name="share">SHARE</string>
     <string name="vertical_text_divider" translatable="false">|</string>
-    <string name="title_activity_video_player">VideoPlayerActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="back">BACK</string>
-    <string name="movie_reviews">Movie Reviews</string>
     <string name="movie_details">Movie Details</string>
     <string name="bookmarks_offline">Bookmarks (offline)</string>
-    <string name="trailers_and_clips">Trailers and Clips</string>
-    <string name="video_player">VIDEO PLAYER</string>
     <string name="checkout_this_movie">Checkout this movie…</string>
-    <string name="player_error">Error initializing YouTube player: %s</string>
-    <string name="seek_to">Jump To</string>
-    <string name="seek_to_hint">Seconds</string>
     <string name="movie_homepage">Movie Homepage</string>
-    <string name="search">Search</string>
     <string name="read_more">MORE…</string>
     <string name="web">Web</string>
     <string name="hide">HIDE</string>
@@ -84,8 +68,6 @@
     <string name="reviews">Reviews</string>
     <string name="videos">Videos</string>
     <string name="companies">Companies</string>
-    <string name="info">Info</string>
-    <string name="swipe_left_to_load_more_videos">Swipe left to load more videos</string>
     <string name="slash_videos" translatable="false">/videos</string>
     <string name="slash_reviews" translatable="false">/reviews</string>
     <string name="warning_no_videos">Ops! There is no videos available for this movie.</string>
@@ -94,4 +76,8 @@
     <string name="warning_no_companies">Ops! There is companies available for this movie</string>
     <string name="no_info_available">No info available</string>
     <string name="open_in_the_browser">Open in Browser</string>
+    <string name="movie_video">Movie Video</string>
+    <string name="movie_video_play_button">Movie Video Play Button</string>
+    <string name="deleted">Deleted</string>
+    <string name="canceled">Canceled</string>
 </resources>

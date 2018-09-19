@@ -30,9 +30,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:background="@color/colorLightGrey"
+                        android:fontFamily="sans-serif"
                         android:gravity="center"
                         android:maxLines="2"
-                        android:fontFamily="sans-serif"
                         android:textColor="@color/colorTextDefault"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -53,8 +53,8 @@
                                 style="?android:attr/ratingBarStyleSmall"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
                                 android:layout_marginStart="4dp"
+                                android:layout_marginTop="4dp"
                                 android:backgroundTint="@color/colorLightGrey"
                                 android:numStars="1"
                                 android:rating="1"
@@ -62,9 +62,9 @@
                             <TextView
                                 android:id="@+id/tv_vote_average"
                                 style="@style/DetailItemValueStyle"
-                                android:layout_marginTop="3dp"
                                 android:layout_marginEnd="4dp"
                                 android:layout_marginStart="4dp"
+                                android:layout_marginTop="3dp"
                                 android:textColor="@color/colorLightGrey"
                                 tools:text="0"/>
                         </LinearLayout>
@@ -73,8 +73,8 @@
                             android:id="@+id/tv_release_date"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:gravity="center"
                             android:layout_marginStart="16dp"
+                            android:gravity="center"
                             android:textColor="@color/colorTextDefault"
                             android:textSize="16sp"
                             tools:text="2018"/>

@@ -32,6 +32,7 @@ import com.udacity.popularmovies.loaders.MovieListLoader;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.AdaptiveGridLayout;
 import com.udacity.popularmovies.utils.BottomNavigationBehavior;
+import com.udacity.popularmovies.utils.BottomNavigationViewHelper;
 import com.udacity.popularmovies.utils.LanguageUtils;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
@@ -75,6 +76,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
         // Set and handle actions on BottonNavigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

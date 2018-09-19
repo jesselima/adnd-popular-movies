@@ -95,11 +95,11 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent();
-                    String infoToShared = videoTitle + "\n" +
-                            ApiConfig.getBaseVideoUrlYoutube() + videoID;
-                    intent.setAction(Intent.ACTION_SEND);
-                    intent.putExtra(Intent.EXTRA_TEXT, infoToShared);
-                    intent.setType("text/plain");
+                String infoToShared = videoTitle + "\n" +
+                        ApiConfig.getBaseVideoUrlYoutube() + videoID;
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, infoToShared);
+                intent.setType("text/plain");
                 mContext.startActivity(Intent.createChooser(intent, mContext.getResources().getString(R.string.share_to)));
             }
         });
@@ -110,6 +110,29 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
         return movieVideoList.size();
     }
 
+    private void playThisVideo(/*String videoID, */int index) {
+
+        List<String> videoIds = new ArrayList<>();
+        for (int i = 0; movieVideoList.size() > i; i++) {
+            videoIds.add(movieVideoList.get(i).getVideoKey());
+        }
+
+        Intent intent = YouTubeStandalonePlayer.createVideosIntent(
+                (Activity) mContext,            /* Activity/Application  */
+                ApiConfig.getYoutubeApiKey(),   /* API KEY */
+                videoIds,                       /* List of videoIds */
+                index,                          /* startIndex */
+                1,                          /* timeMillis */
+                true,                       /* autoplay */
+                true                       /* lightboxMode */
+        );
+
+        if (intent.resolveActivity(mContext.getPackageManager()) != null) {
+            mContext.startActivity(intent);
+        } else {
+            Toast.makeText(mContext, R.string.warning_device_can_not_play_video, Toast.LENGTH_SHORT).show();
+        }
+    }
 
     public static class MovieVideoViewHolder extends RecyclerView.ViewHolder {
 
@@ -134,30 +157,6 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
             buttonViewOnWeb = itemView.findViewById(R.id.bt_see_on_youtube);
             buttonShareUrl = itemView.findViewById(R.id.bt_share_youtube_url);
             iconPlayVideo = itemView.findViewById(R.id.iv_movie_video_play_icon);
-        }
-    }
-
-    private void playThisVideo(/*String videoID, */int index) {
-
-        List<String> videoIds = new ArrayList<>();
-        for (int i = 0; movieVideoList.size() > i; i++) {
-            videoIds.add(movieVideoList.get(i).getVideoKey());
-        }
-
-        Intent intent = YouTubeStandalonePlayer.createVideosIntent(
-                (Activity) mContext,            /* Activity/Application  */
-                ApiConfig.getYoutubeApiKey(),   /* API KEY */
-                videoIds,                       /* List of videoIds */
-                index,                          /* startIndex */
-                1,                          /* timeMillis */
-                true,                       /* autoplay */
-                true                       /* lightboxMode */
-        );
-
-        if (intent.resolveActivity(mContext.getPackageManager()) != null) {
-            mContext.startActivity(intent);
-        } else {
-            Toast.makeText(mContext, R.string.warning_device_can_not_play_video, Toast.LENGTH_SHORT).show();
         }
     }
 

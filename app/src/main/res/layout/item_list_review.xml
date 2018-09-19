@@ -28,14 +28,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
+                android:layout_marginTop="16dp"
                 android:orientation="horizontal">
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:layout_marginEnd="4dp"
+                    android:layout_weight="1"
                     android:gravity="start"
                     android:maxLines="1"
                     android:text="@string/author"
@@ -55,8 +55,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="end"
                     android:drawableEnd="@drawable/ic_open_in_browser"
+                    android:gravity="end"
                     android:text="@string/web"
                     android:textColor="@color/colorAccent"
                     android:textSize="16sp"/>
@@ -67,8 +67,8 @@
                 android:id="@+id/tv_review_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
                 android:maxLines="5"
+                android:textSize="16sp"
                 tools:text="Mission Impossible - Fallout is a continuation of Mission Impossible - Rogue Nation. It is directed by Christopher McQuarrie who also directed Rogue Nation and also has the return of the psycho villain Solomon Lane (Sean Harris) who the bad guys want to set free.\n\nEthan Hunt (Tom Cruise) is after the mysterious John Lark and a terrorist group called the Apostles who have stolen three plutonium grade devices and plan to set them off.\n\nHunt has to reluctantly accept a new team member. CIA operative August Walker (Henry Cavill) because the IMF team were responsible for losing the plutonium in Berlin.\n\nAs a spy thriller there is enough tension, thrills and a serpentine story with several twists.\n\nHowever the film is overlong and I felt that some of the action scenes consisted of myriad chase scenes that were stylishly done but nothing really memorable liked the Burj Khalifa climbing scene."/>
 
             <LinearLayout

@@ -13,7 +13,6 @@ import android.widget.FrameLayout;
  * This class controls the show/hide behavior of BottonNavigation on Scroll.
  * Created by Ravi Tamada on 21/12/17.
  * https://www.androidhive.info/2017/12/android-working-with-bottom-navigation/
- *
  */
 
 @SuppressWarnings({"ALL", "NullableProblems"})
