@@ -6,10 +6,10 @@ package com.udacity.popularmovies.models;
  */
 public class MovieReview {
 
-    private String reviewID;
-    private String reviewAuthor;
-    private String reviewAContent;
-    private String reviewUrl;
+    private final String reviewID;
+    private final String reviewAuthor;
+    private final String reviewAContent;
+    private final String reviewUrl;
 
     public MovieReview(String reviewID, String reviewAuthor, String reviewAContent, String reviewUrl) {
         this.reviewID = reviewID;

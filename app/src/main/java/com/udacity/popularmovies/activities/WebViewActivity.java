@@ -19,9 +19,7 @@ import com.udacity.popularmovies.config.ApiConfig;
 
 public class WebViewActivity extends AppCompatActivity {
 
-    WebView webView;
-    String urlHomepage;
-    ProgressBar progressBar;
+    private String urlHomepage;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -31,8 +29,8 @@ public class WebViewActivity extends AppCompatActivity {
 
         getIncomingIntent();
 
-        progressBar = findViewById(R.id.loading_page_indicator);
-        webView = findViewById(R.id.webview);
+        ProgressBar progressBar = findViewById(R.id.loading_page_indicator);
+        WebView webView = findViewById(R.id.webview);
         Toolbar toolbar = findViewById(R.id.toolbar_web_view);
 
         int loadingProgress = webView.getProgress();

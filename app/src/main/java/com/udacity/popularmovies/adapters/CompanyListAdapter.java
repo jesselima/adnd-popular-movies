@@ -1,6 +1,5 @@
 package com.udacity.popularmovies.adapters;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,16 +30,13 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
     private static final String LOG_TAG = CompanyListAdapter.class.getSimpleName();
 
     private final ArrayList<MovieProductionCompany> companies;
-    private final Context context;
 
     /**
      * Constructs a new {@link CompanyListAdapter}.
      *
-     * @param context   of the app
      * @param companies is the list of companies, which is the data source of the adapter
      */
-    public CompanyListAdapter(Context context, ArrayList<MovieProductionCompany> companies) {
-        this.context = context;
+    public CompanyListAdapter(ArrayList<MovieProductionCompany> companies) {
         this.companies = companies;
     }
 

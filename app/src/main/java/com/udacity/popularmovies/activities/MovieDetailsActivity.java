@@ -37,7 +37,6 @@ import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.loaders.MovieLoader;
 import com.udacity.popularmovies.loaders.ReviewListLoader;
 import com.udacity.popularmovies.loaders.VideoListLoader;
-import com.udacity.popularmovies.localdatabase.BookmarkContract;
 import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
 import com.udacity.popularmovies.localdatabase.BookmarkDbHelper;
 import com.udacity.popularmovies.models.Movie;
@@ -170,7 +169,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
         // RecyclerView for the list of companies
         recyclerViewCompanies = findViewById(R.id.rv_companies);
-        companyListAdapter = new CompanyListAdapter(this, companies);
+        companyListAdapter = new CompanyListAdapter(companies);
         recyclerViewCompanies.setAdapter(companyListAdapter);
         recyclerViewCompanies.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerViewCompanies.setHasFixedSize(true);

@@ -53,7 +53,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     // Implementation for save state
     private final String KEY_RECYCLER_STATE = "recycler_state";
     // Global variable to be used with system language abbreviation in two letters
-    private String loadApiLanguage = UrlParamValue.LANGUAGE_DEFAULT;
+    private final String loadApiLanguage = UrlParamValue.LANGUAGE_DEFAULT;
     // Page value for pagination control
     private int page = 1;
     // Sort by default value

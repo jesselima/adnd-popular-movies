@@ -5,12 +5,12 @@ package com.udacity.popularmovies.models;
  * This is a part of the project adnd-popular-movies.
  */
 public class MovieVideo {
-    private String videoKey;
-    private String videoName;
-    private String videoType;
-    private String videoSite;
-    private int videoSize;
-    private String videoThumbnailUrl;
+    private final String videoKey;
+    private final String videoName;
+    private final String videoType;
+    private final String videoSite;
+    private final int videoSize;
+    private final String videoThumbnailUrl;
 
     public MovieVideo(String videoKey, String videoName, String videoType, String videoSite, int videoSize, String videoThumbnailUrl) {
         this.videoKey = videoKey;

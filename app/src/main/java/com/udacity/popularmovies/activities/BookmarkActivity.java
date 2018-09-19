@@ -36,11 +36,10 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
     private final static String LOG_TAG = BookmarkActivity.class.getSimpleName();
     private static final int LOADER_ID_MOVIE_BOOKMARKS_LIST = 3;
-    Toast toast;
-    Button buttonNavigateToMovies;
-    Cursor mCursorData = null;
+    private Toast toast;
+    private Button buttonNavigateToMovies;
     private SQLiteDatabase sqLiteDatabase;
-    private BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
+    private final BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
     private TextView textViewNoBookmarks, textViewNavigateToBookmarks;
     private ImageView imageViewNoBookmarks;
     private RecyclerView recyclerViewBookmark;
@@ -145,7 +144,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        mCursorData = data;
+//        mCursorData = data;
         if (data.getCount() < 1) {
             showNoBookmarkWarning();
         } else {
@@ -185,6 +184,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         ) > 0;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     private boolean deleteAllBookmarks() {
         int rowsDeleted = getContentResolver().delete(
                 BookmarkEntry.CONTENT_URI,

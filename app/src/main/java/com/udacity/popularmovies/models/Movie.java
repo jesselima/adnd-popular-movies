@@ -90,9 +90,11 @@ public class Movie {
         this.movieVoteAverage = movieVoteAverage;
     }
 
-    public int getMovieMdbId() {
-        return movieMdbId;
-    }
+// --Commented out by Inspection START (19/09/18 16:38):
+//    public int getMovieMdbId() {
+//        return movieMdbId;
+//    }
+// --Commented out by Inspection STOP (19/09/18 16:38)
 
     public void setMovieMdbId(int movieMdbId) {
         this.movieMdbId = movieMdbId;

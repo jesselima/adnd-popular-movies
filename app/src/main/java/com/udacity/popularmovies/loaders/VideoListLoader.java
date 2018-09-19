@@ -12,6 +12,7 @@ import java.util.List;
  * Created by jesse on 01/09/18.
  * This is a part of the project adnd-popular-movies.
  */
+@SuppressWarnings("ALL")
 public class VideoListLoader extends AsyncTaskLoader<List<MovieVideo>> {
 
     private static final String LOG_TAG = VideoListLoader.class.getSimpleName();

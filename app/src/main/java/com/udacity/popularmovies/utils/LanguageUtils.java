@@ -15,6 +15,7 @@ public class LanguageUtils {
     private LanguageUtils() {
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static String checkSystemLanguage(String loadApiLanguage) {
         String[] apiLanguagesList = ApiConfig.LANGUAGES;
 

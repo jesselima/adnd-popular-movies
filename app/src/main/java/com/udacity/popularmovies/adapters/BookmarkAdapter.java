@@ -29,7 +29,7 @@ import java.text.DecimalFormat;
 public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.BookmarkViewHolder> {
 
     private Cursor cursor;
-    private Context context;
+    private final Context context;
 
     public BookmarkAdapter(Context contextInput) {
         this.context = contextInput;
@@ -160,7 +160,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
         private final TextView textViewRevenue;
         private final ImageView imageViewMoviePoster;
 
-        public BookmarkViewHolder(View itemView) {
+        BookmarkViewHolder(View itemView) {
             super(itemView);
 
             buttonMovieDetails = itemView.findViewById(R.id.bt_item_list_details_db);

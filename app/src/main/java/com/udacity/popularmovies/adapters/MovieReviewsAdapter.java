@@ -23,6 +23,7 @@ import java.util.ArrayList;
  * Created by jesse on 01/09/18.
  * This is a part of the project adnd-popular-movies.
  */
+@SuppressWarnings("unused")
 public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapter.MovieReviewViewHolder> {
 
     @SuppressWarnings("unused")
@@ -44,6 +45,7 @@ public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapte
         return new MovieReviewViewHolder(view);
     }
 
+    @SuppressWarnings("unused")
     @Override
     public void onBindViewHolder(@NonNull final MovieReviewViewHolder holder, int position) {
         final int adapterPosition = holder.getAdapterPosition();
