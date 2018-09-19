@@ -25,6 +25,7 @@ import java.util.ArrayList;
  */
 public class MovieReviewsAdapter extends RecyclerView.Adapter<MovieReviewsAdapter.MovieReviewViewHolder> {
 
+    @SuppressWarnings("unused")
     private static final String LOG_TAG = MovieReviewsAdapter.class.getSimpleName();
     private static final int COMMENT_MAX_LINES = 999;
 

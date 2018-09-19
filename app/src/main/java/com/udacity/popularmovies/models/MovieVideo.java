@@ -12,9 +12,6 @@ public class MovieVideo {
     private int videoSize;
     private String videoThumbnailUrl;
 
-    public MovieVideo() {
-    }
-
     public MovieVideo(String videoKey, String videoName, String videoType, String videoSite, int videoSize, String videoThumbnailUrl) {
         this.videoKey = videoKey;
         this.videoName = videoName;
@@ -28,48 +25,24 @@ public class MovieVideo {
         return videoKey;
     }
 
-    public void setVideoKey(String videoKey) {
-        this.videoKey = videoKey;
-    }
-
     public String getVideoName() {
         return videoName;
-    }
-
-    public void setVideoName(String videoName) {
-        this.videoName = videoName;
     }
 
     public String getVideoType() {
         return videoType;
     }
 
-    public void setVideoType(String videoType) {
-        this.videoType = videoType;
-    }
-
     public String getVideoSite() {
         return videoSite;
-    }
-
-    public void setVideoSite(String videoSite) {
-        this.videoSite = videoSite;
     }
 
     public int getVideoSize() {
         return videoSize;
     }
 
-    public void setVideoSize(int videoSize) {
-        this.videoSize = videoSize;
-    }
-
     public String getVideoThumbnailUrl() {
         return videoThumbnailUrl;
-    }
-
-    public void setVideoThumbnailUrl(String videoThumbnailUrl) {
-        this.videoThumbnailUrl = videoThumbnailUrl;
     }
 
 }

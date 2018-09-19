@@ -28,6 +28,7 @@ import java.util.List;
  * Created by jesse on 01/09/18.
  * This is a part of the project adnd-popular-movies.
  */
+@SuppressWarnings("unused")
 public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.MovieVideoViewHolder> {
 
     private static final String LOG_TAG = MovieVideosAdapter.class.getSimpleName();

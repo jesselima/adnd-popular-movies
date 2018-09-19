@@ -8,8 +8,6 @@ import java.util.Objects;
 
 public class NetworkUtils {
 
-    Context context;
-
     @SuppressWarnings("unused")
     public static final String LOG_TAG = NetworkUtils.class.getSimpleName();
 

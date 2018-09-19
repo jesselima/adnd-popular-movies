@@ -13,13 +13,6 @@ public class MovieProductionCompany {
     public MovieProductionCompany() {
     }
 
-    public MovieProductionCompany(int companyId, String companyLogoPath, String companyName, String companyCountry) {
-        this.companyId = companyId;
-        this.companyLogoPath = companyLogoPath;
-        this.companyName = companyName;
-        this.companyCountry = companyCountry;
-    }
-
     public int getCompanyId() {
         return companyId;
     }
@@ -42,10 +35,6 @@ public class MovieProductionCompany {
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
-    }
-
-    public String getCompanyCountry() {
-        return companyCountry;
     }
 
     public void setCompanyCountry(String companyCountry) {

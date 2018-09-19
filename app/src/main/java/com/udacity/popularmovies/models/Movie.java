@@ -1,7 +1,6 @@
 package com.udacity.popularmovies.models;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Movie {
@@ -41,29 +40,6 @@ public class Movie {
         this.movieOriginalTitle = movieOriginalTitle;
         this.movieReleaseDate = movieReleaseDate;
         this.movieVoteAverage = movieVoteAverage;
-    }
-
-    // Constructor for movie details object.
-    public Movie(int movieId, String moviePosterPath, String movieOriginalTitle, String movieOverview, String movieReleaseDate, double movieVoteAverage, int movieMdbId, String movieTitle, String movieOriginalLanguage, int movieVoteCount, String movieBackdropPath, double moviePopularity, String movieTagline, int movieBuget, int movieRevenue, int movieRunTime, String movieGenres, ArrayList<MovieProductionCompany> companiesArrayList, String movieHomepage) {
-        this.movieId = movieId;
-        this.moviePosterPath = moviePosterPath;
-        this.movieOriginalTitle = movieOriginalTitle;
-        this.movieOverview = movieOverview;
-        this.movieReleaseDate = movieReleaseDate;
-        this.movieVoteAverage = movieVoteAverage;
-        this.movieMdbId = movieMdbId;
-        this.movieTitle = movieTitle;
-        this.movieOriginalLanguage = movieOriginalLanguage;
-        this.movieVoteCount = movieVoteCount;
-        this.movieBackdropPath = movieBackdropPath;
-        this.moviePopularity = moviePopularity;
-        this.movieTagline = movieTagline;
-        this.movieBuget = movieBuget;
-        this.movieRevenue = movieRevenue;
-        this.movieRunTime = movieRunTime;
-        this.movieGenres = movieGenres;
-        this.companiesArrayList = companiesArrayList;
-        this.movieHomepage = movieHomepage;
     }
 
     public int getMovieId() {

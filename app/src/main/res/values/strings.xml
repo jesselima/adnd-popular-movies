@@ -67,7 +67,6 @@
     <string name="details">Details</string>
     <string name="reviews">Reviews</string>
     <string name="videos">Videos</string>
-    <string name="companies">Companies</string>
     <string name="slash_videos" translatable="false">/videos</string>
     <string name="slash_reviews" translatable="false">/reviews</string>
     <string name="warning_no_videos">Ops! There is no videos available for this movie.</string>

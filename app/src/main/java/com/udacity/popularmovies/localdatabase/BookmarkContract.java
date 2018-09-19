@@ -15,7 +15,7 @@ public class BookmarkContract {
     // 1TODO: Content authority
     public static final String AUTHORITY = "com.udacity.popularmovies";
     // 2TODO: Base content URI
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
     // 3TODO: Paths to bookmarks directory
     public static final String PATH_MOVIES_BOOKMARKS = "movie_bookmark";
 

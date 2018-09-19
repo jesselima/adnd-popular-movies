@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -170,23 +171,18 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     /* === DATABASE MANIPULATION === */
 
     private boolean deleteBookmark(long id) {
-        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
 
-        boolean wasBookmarkDeleted = getContentResolver().delete(
-                BookmarkEntry.CONTENT_URI,
-                BookmarkContract.BookmarkEntry._ID + "=" + id,
+        String stringId = Long.toString(id);
+        Uri uri = BookmarkEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(stringId).build();
+
+        Log.v("DELETE URI: ", uri.toString());
+
+        return getContentResolver().delete(
+                uri,
+                BookmarkEntry._ID + "=" + id,
                 null
         ) > 0;
-
-        sqLiteDatabase.close();
-        if (wasBookmarkDeleted) {
-            Log.v("Deletou com sucesso", "");
-        }
-        else {
-            Log.v("Não deletou.", "");
-        }
-
-        return wasBookmarkDeleted;
     }
 
     private boolean deleteAllBookmarks() {
