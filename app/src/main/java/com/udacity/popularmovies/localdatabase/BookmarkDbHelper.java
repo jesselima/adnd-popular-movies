@@ -23,25 +23,27 @@ public class BookmarkDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        final String SQL_CREATE_BOOKMARK_TABLE = "CREATE TABLE " + BookmarkEntry.TABLE_NAME + " (" +
-                BookmarkEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                BookmarkEntry.COLUMN_API_ID + " INTEGER NOT NULL, " +
-                BookmarkEntry.COLUMN_ORIGINAL_TITLE + " TEXT NOT NULL, " +
-                BookmarkEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
-                BookmarkEntry.COLUMN_RUNTIME + " INTEGER NOT NULL, " +
-                BookmarkEntry.COLUMN_GENRES + " TEXT NOT NULL, " +
-                BookmarkEntry.COLUMN_HOMEPAGE + " TEXT, " +
-                BookmarkEntry.COLUMN_TAGLINE + " TEXT DEFAULT NULL, " +
-                BookmarkEntry.COLUMN_OVERVIEW + " TEXT DEFAULT NULL, " +
-                BookmarkEntry.COLUMN_SPOKEN_LANGUAGES + " TEXT DEFAULT NULL, " +
-                BookmarkEntry.COLUMN_VOTE_AVERAGE + " REAL DEFAULT NULL, " +
-                BookmarkEntry.COLUMN_VOTE_COUNT + " INTEGER DEFAULT NULL, " +
-                BookmarkEntry.COLUMN_POPULARITY + " REAL DEFAULT NULL, " +
-                BookmarkEntry.COLUMN_BUDGET + " INTEGER DEFAULT NULL, " +
-                BookmarkEntry.COLUMN_REVENUE + " INTEGER DEFAULT NULL, " +
-                BookmarkEntry.COLUMN_MOVIE_IMAGE + " BLOB DEFAULT NULL, " +
-
-                BookmarkEntry.COLUMN_TIMESTAMP + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" + ");";
+        final String SQL_CREATE_BOOKMARK_TABLE =
+                "CREATE TABLE " +
+                    BookmarkEntry.TABLE_NAME + " (" +
+                    BookmarkEntry._ID                       + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    BookmarkEntry.COLUMN_API_ID             + " INTEGER NOT NULL, " +
+                    BookmarkEntry.COLUMN_ORIGINAL_TITLE     + " TEXT NOT NULL, " +
+                    BookmarkEntry.COLUMN_RELEASE_DATE       + " TEXT NOT NULL, " +
+                    BookmarkEntry.COLUMN_RUNTIME            + " INTEGER NOT NULL, " +
+                    BookmarkEntry.COLUMN_GENRES             + " TEXT NOT NULL, " +
+                    BookmarkEntry.COLUMN_HOMEPAGE           + " TEXT, " +
+                    BookmarkEntry.COLUMN_TAGLINE            + " TEXT DEFAULT NULL, " +
+                    BookmarkEntry.COLUMN_OVERVIEW           + " TEXT DEFAULT NULL, " +
+                    BookmarkEntry.COLUMN_SPOKEN_LANGUAGES   + " TEXT DEFAULT NULL, " +
+                    BookmarkEntry.COLUMN_VOTE_AVERAGE       + " REAL DEFAULT NULL, " +
+                    BookmarkEntry.COLUMN_VOTE_COUNT         + " INTEGER DEFAULT NULL, " +
+                    BookmarkEntry.COLUMN_POPULARITY         + " REAL DEFAULT NULL, " +
+                    BookmarkEntry.COLUMN_BUDGET             + " INTEGER DEFAULT NULL, " +
+                    BookmarkEntry.COLUMN_REVENUE            + " INTEGER DEFAULT NULL, " +
+                    BookmarkEntry.COLUMN_MOVIE_IMAGE        + " BLOB DEFAULT NULL, " +
+                    BookmarkEntry.COLUMN_TIMESTAMP          + " TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+                ");";
         sqLiteDatabase.execSQL(SQL_CREATE_BOOKMARK_TABLE);
     }
 

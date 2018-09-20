@@ -52,14 +52,13 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
         sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
 
-        textViewNoBookmarks = findViewById(R.id.text_view_no_bookmarks);
+        textViewNoBookmarks         = findViewById(R.id.text_view_no_bookmarks);
         textViewNavigateToBookmarks = findViewById(R.id.text_view_navigate_to_bookmarks);
-        imageViewNoBookmarks = findViewById(R.id.image_view_no_bookmarks);
-        buttonNavigateToMovies = findViewById(R.id.bt_navigate_to_movies);
+        imageViewNoBookmarks        = findViewById(R.id.image_view_no_bookmarks);
+        buttonNavigateToMovies      = findViewById(R.id.bt_navigate_to_movies);
+        recyclerViewBookmark        = findViewById(R.id.recycler_view_bookmark);
 
-        recyclerViewBookmark = findViewById(R.id.recycler_view_bookmark);
         recyclerViewBookmark.setLayoutManager(new LinearLayoutManager(this));
-
         bookmarkAdapter = new BookmarkAdapter(this);
         bookmarkAdapter.notifyDataSetChanged();
         recyclerViewBookmark.setAdapter(bookmarkAdapter);
@@ -144,7 +143,6 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-//        mCursorData = data;
         if (data.getCount() < 1) {
             showNoBookmarkWarning();
         } else {

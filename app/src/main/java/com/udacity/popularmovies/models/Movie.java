@@ -5,29 +5,29 @@ import java.util.List;
 
 public class Movie {
 
-    private int movieId;
-    private String moviePosterPath;
+    private int     movieId;
+    private String  moviePosterPath;
 
     // Rubric requirement
-    private String movieOriginalTitle;
-    private String movieOverview;
-    private String movieReleaseDate;
-    private double movieVoteAverage;
+    private String  movieOriginalTitle;
+    private String  movieOverview;
+    private String  movieReleaseDate;
+    private double  movieVoteAverage;
 
     // Additional info
-    private int movieMdbId;
-    private String movieTitle;
-    private String movieOriginalLanguage;
-    private int movieVoteCount;
-    private String movieBackdropPath;
-    private double moviePopularity;
-    private String movieTagline;
-    private int movieBuget;
-    private int movieRevenue;
-    private int movieRunTime;
-    private String movieGenres;
+    private int     movieMdbId;
+    private String  movieTitle;
+    private String  movieOriginalLanguage;
+    private int     movieVoteCount;
+    private String  movieBackdropPath;
+    private double  moviePopularity;
+    private String  movieTagline;
+    private int     movieBuget;
+    private int     movieRevenue;
+    private int     movieRunTime;
+    private String  movieGenres;
     private List<MovieProductionCompany> companiesArrayList;
-    private String movieHomepage;
+    private String  movieHomepage;
 
     // Empty constructor
     public Movie() {
@@ -199,25 +199,25 @@ public class Movie {
     @Override
     public String toString() {
         return "Movie{" +
-                "movieId=" + movieId +
-                ", moviePosterPath='" + moviePosterPath + '\'' +
-                ", movieOriginalTitle='" + movieOriginalTitle + '\'' +
-                ", movieOverview='" + movieOverview + '\'' +
-                ", movieReleaseDate='" + movieReleaseDate + '\'' +
-                ", movieVoteAverage=" + movieVoteAverage +
-                ", movieMdbId=" + movieMdbId +
-                ", movieTitle='" + movieTitle + '\'' +
+                "movieId="                  + movieId +
+                ", moviePosterPath='"       + moviePosterPath + '\'' +
+                ", movieOriginalTitle='"    + movieOriginalTitle + '\'' +
+                ", movieOverview='"         + movieOverview + '\'' +
+                ", movieReleaseDate='"      + movieReleaseDate + '\'' +
+                ", movieVoteAverage="       + movieVoteAverage +
+                ", movieMdbId="             + movieMdbId +
+                ", movieTitle='"            + movieTitle + '\'' +
                 ", movieOriginalLanguage='" + movieOriginalLanguage + '\'' +
-                ", movieVoteCount=" + movieVoteCount +
-                ", movieBackdropPath='" + movieBackdropPath + '\'' +
-                ", moviePopularity=" + moviePopularity +
-                ", movieTagline='" + movieTagline + '\'' +
-                ", movieBuget=" + movieBuget +
-                ", movieRevenue=" + movieRevenue +
-                ", movieRunTime=" + movieRunTime +
-                ", movieGenres='" + movieGenres + '\'' +
-                ", companiesArrayList=" + companiesArrayList +
-                ", movieHomepage='" + movieHomepage + '\'' +
+                ", movieVoteCount="         + movieVoteCount +
+                ", movieBackdropPath='"     + movieBackdropPath + '\'' +
+                ", moviePopularity="        + moviePopularity +
+                ", movieTagline='"          + movieTagline + '\'' +
+                ", movieBuget="             + movieBuget +
+                ", movieRevenue="           + movieRevenue +
+                ", movieRunTime="           + movieRunTime +
+                ", movieGenres='"           + movieGenres + '\'' +
+                ", companiesArrayList="     + companiesArrayList +
+                ", movieHomepage='"         + movieHomepage + '\'' +
                 '}';
     }
 }

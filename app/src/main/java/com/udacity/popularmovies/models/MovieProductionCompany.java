@@ -44,9 +44,9 @@ public class MovieProductionCompany {
     @Override
     public String toString() {
         return "\n" + "MovieProductionCompany {" + "\n" +
-                "companyId: " + companyId + ",\n" +
-                "companyLogoPath: '" + companyLogoPath + '\'' + ",\n" +
-                "companyName: '" + companyName + '\'' + ",\n" +
+                "companyId: "       + companyId + ",\n" +
+                "companyLogoPath: '"+ companyLogoPath + '\'' + ",\n" +
+                "companyName: '"    + companyName + '\'' + ",\n" +
                 "companyCountry: '" + companyCountry + '\'' + "\n" +
                 '}';
     }

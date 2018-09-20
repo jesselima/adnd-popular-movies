@@ -45,4 +45,15 @@ public class MovieVideo {
         return videoThumbnailUrl;
     }
 
+    @Override
+    public String toString() {
+        return "MovieVideo{"        + '\'' +
+                "videoKey='"        + videoKey + '\'' +
+                ", videoName='"     + videoName + '\'' +
+                ", videoType='"     + videoType + '\'' +
+                ", videoSite='"     + videoSite + '\'' +
+                ", videoSize="      + videoSize +
+                ", videoThumbnailUrl='" + videoThumbnailUrl + '\'' +
+                '}';
+    }
 }

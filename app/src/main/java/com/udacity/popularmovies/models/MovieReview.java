@@ -32,11 +32,11 @@ public class MovieReview {
 
     @Override
     public String toString() {
-        return "MovieReview{" +
-                "reviewID='" + reviewID + '\'' +
-                ", reviewAuthor='" + reviewAuthor + '\'' +
-                ", reviewAContent='" + reviewAContent + '\'' +
-                ", reviewUrl='" + reviewUrl + '\'' +
+        return "MovieReview{"           + '\'' +
+                "  reviewID='"          + reviewID + '\'' +
+                ", reviewAuthor='"      + reviewAuthor + '\'' +
+                ", reviewAContent='"    + reviewAContent + '\'' +
+                ", reviewUrl='"         + reviewUrl + '\'' +
                 '}';
     }
 }

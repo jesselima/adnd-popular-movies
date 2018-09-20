@@ -60,17 +60,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
     private static final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
     // The Loader ID to be used by the LoaderManager
-    private static final int MOVIE_DETAILS_LOADER_ID = 100;
-    private static final int MOVIE_VIDEOS_LOADER_ID = 200;
-    private static final int MOVIE_REVIEWS_LOADER_ID = 300;
+    private static final int MOVIE_DETAILS_LOADER_ID    = 100;
+    private static final int MOVIE_VIDEOS_LOADER_ID     = 200;
+    private static final int MOVIE_REVIEWS_LOADER_ID    = 300;
 
-    private static final int TAB_DETAILS = 0;
-    private static final int TAB_VIDEOS = 1;
-    private static final int TAB_REVIEWS = 2;
-    private static final int TAB_COMPANIES = 3;
+    private static final int TAB_DETAILS    = 0;
+    private static final int TAB_VIDEOS     = 1;
+    private static final int TAB_REVIEWS    = 2;
+    private static final int TAB_COMPANIES  = 3;
 
-    private final int HIDE = View.GONE;
-    private final int SHOW = View.VISIBLE;
+    private final int HIDE      = View.GONE;
+    private final int SHOW      = View.VISIBLE;
+    private final int INVISIBLE = View.INVISIBLE;
 
     private String loadApiLanguage = ApiConfig.UrlParamValue.LANGUAGE_DEFAULT;
     private int page = 1;
@@ -89,7 +90,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private TextView textViewRuntime;
     private TextView textViewTitle;
     private TextView textViewVoteAverage;
-    private TextView textViewOriginalLanguage;
+    private TextView textViewOriginalLang;
     private TextView textViewTagline;
     private TextView textViewPopularity;
     private TextView textViewVoteCount;
@@ -149,26 +150,26 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         setupTabs();
 
         // UI REFERENCES
-        imageViewMoviePoster = findViewById(R.id.iv_movie_poster);
-        imageViewMovieBackdrop = findViewById(R.id.iv_movie_backdrop);
-        textViewOverview = findViewById(R.id.tv_overview);
-        textViewReleaseDate = findViewById(R.id.tv_release_date);
-        textViewRuntime = findViewById(R.id.tv_runtime);
-        textViewTitle = findViewById(R.id.tv_title);
-        textViewOriginalLanguage = findViewById(R.id.tv_original_language);
-        textViewTagline = findViewById(R.id.tv_tagline);
-        textViewPopularity = findViewById(R.id.tv_popularity);
-        textViewVoteCount = findViewById(R.id.tv_vote_count);
-        textViewBuget = findViewById(R.id.tv_buget);
-        textViewRevenue = findViewById(R.id.tv_revenue);
-        textViewVoteAverage = findViewById(R.id.tv_vote_average);
-        textViewGenres = findViewById(R.id.tv_genres);
+        imageViewMoviePoster    = findViewById(R.id.iv_movie_poster);
+        imageViewMovieBackdrop  = findViewById(R.id.iv_movie_backdrop);
+        textViewOverview        = findViewById(R.id.tv_overview);
+        textViewReleaseDate     = findViewById(R.id.tv_release_date);
+        textViewRuntime         = findViewById(R.id.tv_runtime);
+        textViewTitle           = findViewById(R.id.tv_title);
+        textViewOriginalLang    = findViewById(R.id.tv_original_language);
+        textViewTagline         = findViewById(R.id.tv_tagline);
+        textViewPopularity      = findViewById(R.id.tv_popularity);
+        textViewVoteCount       = findViewById(R.id.tv_vote_count);
+        textViewBuget           = findViewById(R.id.tv_buget);
+        textViewRevenue         = findViewById(R.id.tv_revenue);
+        textViewVoteAverage     = findViewById(R.id.tv_vote_average);
+        textViewGenres          = findViewById(R.id.tv_genres);
         // Warnings UI View references.
-        textViewWarningNoData = findViewById(R.id.tv_warning_no_data);
-        imageViewWarningNoData = findViewById(R.id.iv_warning_no_data);
+        textViewWarningNoData   = findViewById(R.id.tv_warning_no_data);
+        imageViewWarningNoData  = findViewById(R.id.iv_warning_no_data);
 
         // RecyclerView for the list of companies
-        recyclerViewCompanies = findViewById(R.id.rv_companies);
+        recyclerViewCompanies   = findViewById(R.id.rv_companies);
         companyListAdapter = new CompanyListAdapter(companies);
         recyclerViewCompanies.setAdapter(companyListAdapter);
         recyclerViewCompanies.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
@@ -255,6 +256,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         collapsingToolbar.setTitle(movieOriginalTitle);
 
         checkConnectionAndStartLoader();
+        showDetails();
 
     } // Close onCreate
 
@@ -273,7 +275,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         // Check for internet connection before start the loader
         if (!NetworkUtils.isDeviceConnected(this)) {
             warningConnection(SHOW);
-            progressBarStatus(HIDE);
+            progressBarStatus(INVISIBLE);
         } else {
             warningConnection(HIDE);
             progressBarStatus(SHOW);
@@ -284,6 +286,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             getSupportLoaderManager().initLoader(MOVIE_REVIEWS_LOADER_ID, null, this);
         }
     }
+
+    /* === TABS SETUP === */
 
     private void setupTabs() {
         /* Movie Details Tabs Navigation - start */
@@ -338,7 +342,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         /* Movie Details Tabs Navigation - end */
     }
 
-    /* === LOADER CALLBACKS === */
+    /* === LOADER CALLBACKS METHODS === */
 
     /**
      * Instantiate and return a new Loader for the given ID.
@@ -403,10 +407,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 movieData = (Movie) data;
                 // Get the movie returned from the loader and add to a global movie instance.
                 // So it can be accessed from another methods.
-                if (!isMovieValid(movieData)) {
+                if (isMovieValid(movieData)) {
                     warningDetails(HIDE);
                     warningConnection(HIDE);
-                    showDetails();
                     // Updates the UI with details of the movie
                     updateUI(movieData);
                     // if the movie bookmark is on the database update the floating Bookmark Button icon
@@ -430,8 +433,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                     warningDetails(SHOW);
                 }
 
-                progressBarStatus(HIDE);
+                showDetails();
+                progressBarStatus(INVISIBLE);
                 break;
+
             case MOVIE_VIDEOS_LOADER_ID:
 
                 movieVideoList = (List<MovieVideo>) data;
@@ -441,7 +446,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                     warningVideos(SHOW);
                     doToast(getString(R.string.no_videos_available_for_this_movie));
                 } else {
-                    progressBarStatus(HIDE);
+                    progressBarStatus(INVISIBLE);
                     warningConnection(HIDE);
                     warningReviews(HIDE);
                 }
@@ -452,18 +457,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 if (movieVideosList.size() == 0) warningVideos(SHOW);
                 else warningVideos(HIDE);
 
-                progressBarStatus(HIDE);
+                showDetails();
+                progressBarStatus(INVISIBLE);
                 break;
+
             case MOVIE_REVIEWS_LOADER_ID:
                 movieReviewList = (List<MovieReview>) data;
-
                 // When the onCreateLoader finish its job, it will pass the data do this method.
-                if (movieReviewList == null || movieReviewList.isEmpty()) {
-                    // If there is no movie to show give a warning to the user in the UI.
-                    warningReviews(SHOW);
-                } else {
-                    warningReviews(HIDE);
-                }
+                // If there is no movie to show give a warning to the user in the UI.
+                if (movieReviewList == null || movieReviewList.isEmpty()) warningReviews(SHOW);
+                else warningReviews(HIDE);
 
                 movieReviewsList.clear();
                 movieReviewsAdapter.notifyDataSetChanged();
@@ -472,21 +475,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 if (movieReviewsList.size() == 0) warningReviews(SHOW);
                 else warningReviews(HIDE);
 
-                warningConnection(HIDE);
-                progressBarStatus(HIDE);
+                showDetails();
+                progressBarStatus(INVISIBLE);
                 break;
         }
+        showDetails();
 
-    }
-
-    /**
-     * Check uf the movie returned from the Loader is valid
-     *
-     * @param movie is the {@link Movie} object with details.
-     * @return return true is the movie is
-     */
-    private boolean isMovieValid(Movie movie) {
-        return movie == null;
     }
 
     /**
@@ -497,6 +491,16 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
      */
     @Override
     public void onLoaderReset(@NonNull Loader loader) {
+    }
+
+    /**
+     * Check uf the movie returned from the Loader is valid
+     *
+     * @param movie is the {@link Movie} object with details.
+     * @return return true is the movie is
+     */
+    private boolean isMovieValid(Movie movie) {
+        return movie != null;
     }
 
 
@@ -532,7 +536,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         textViewReleaseDate.setText(formatedDate);
 
         textViewTitle.setText(movie.getMovieTitle());
-        textViewOriginalLanguage.setText(movie.getMovieSpokenLanguage());
+        textViewOriginalLang.setText(movie.getMovieSpokenLanguage());
 
         String taglineWithQuotes = movie.getMovieTagline();
         textViewTagline.setText(taglineWithQuotes);
@@ -548,13 +552,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
         textViewGenres.setText(movie.getMovieGenres());
 
-        progressBar.setVisibility(View.INVISIBLE);
+        progressBarStatus(INVISIBLE);
 
     }// Closes updateUI method
 
 
-    /* SQLite Database management methods */
-                                                                                                    // TODO solve it!!!####################################################################################
+    /* === SQLITE DATABASE MANAGEMENT METHODS === */
+
     private boolean saveBookmark(byte[] imageInBytesArray) {
 
         sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
@@ -620,7 +624,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     }
 
 
-    /* Helper methods */
+    /* === HELPER METHODS === */
 
     public byte[] convertImageViewToBytes(ImageView imageView) {
         /* Get ImageView to Bitmap from Greg Giacovelli
@@ -647,71 +651,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             intent.setType("text/plain");
             startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_to)));
         }
-    }
-
-    private void warningConnection(int VISIBILITY) {
-        textViewWarningNoData.setVisibility(VISIBILITY);
-        imageViewWarningNoData.setVisibility(VISIBILITY);
-        if (VISIBILITY == SHOW) {
-            setContentVisibility(HIDE);
-            doToast(getString(R.string.warning_you_are_not_connected));
-        } else {
-            setContentVisibility(SHOW);
-        }
-    }
-
-    private void setContentVisibility(int VISIBILITY) {
-        floatingBookmarkButton.setVisibility(VISIBILITY);
-        floatingShareButton.setVisibility(VISIBILITY);
-        imageViewMoviePoster.setVisibility(VISIBILITY);
-        linearLayoutFullContent.setVisibility(VISIBILITY);
-    }
-
-    private void warningDetails(int VISIBILITY) {
-        textViewWarningNoData.setText(getResources().getText(R.string.warning_no_details));
-        textViewWarningNoData.setVisibility(VISIBILITY);
-        imageViewWarningNoData.setImageResource(R.drawable.ic_details);
-        imageViewWarningNoData.setVisibility(VISIBILITY);
-        if (VISIBILITY == HIDE) {
-            linearLayoutSectionDetails.setVisibility(SHOW);
-        } else {
-            linearLayoutSectionDetails.setVisibility(HIDE);
-        }
-    }
-
-    private void warningVideos(int VISIBILITY) {
-        textViewWarningNoData.setText(getResources().getText(R.string.warning_no_videos));
-        textViewWarningNoData.setVisibility(VISIBILITY);
-        imageViewWarningNoData.setImageResource(R.drawable.ic_movie);
-        imageViewWarningNoData.setVisibility(VISIBILITY);
-        if (VISIBILITY == HIDE) {
-            linearLayoutSectionVideos.setVisibility(SHOW);
-        } else {
-            linearLayoutSectionVideos.setVisibility(HIDE);
-        }
-    }
-
-    private void warningReviews(int VISIBILITY) {
-        textViewWarningNoData.setText(getResources().getText(R.string.warning_no_reviews));
-        textViewWarningNoData.setVisibility(VISIBILITY);
-        imageViewWarningNoData.setImageResource(R.drawable.ic_reviews);
-        imageViewWarningNoData.setVisibility(VISIBILITY);
-    }
-
-    private void warningCompanies(int VISIBILITY) {
-        textViewWarningNoData.setText(getResources().getText(R.string.warning_no_companies));
-        textViewWarningNoData.setVisibility(VISIBILITY);
-        imageViewWarningNoData.setImageResource(R.drawable.ic_companies);
-        imageViewWarningNoData.setVisibility(VISIBILITY);
-
-        if (VISIBILITY == HIDE) recyclerViewCompanies.setVisibility(SHOW);
-        else recyclerViewCompanies.setVisibility(HIDE);
-    }
-
-    private void progressBarStatus(int VISIBILITY) {
-        if (VISIBILITY == SHOW) progressBar.setIndeterminate(true);
-        else progressBar.setIndeterminate(false);
-        progressBar.setVisibility(VISIBILITY);
     }
 
     /**
@@ -751,7 +690,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     }
 
 
-    /* Lifecycle methods */
+    /* === Lifecycle methods === */
 
     @Override
     protected void onStart() {
@@ -794,6 +733,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         Log.d("===>>> onRestart", " called");
     }
 
+
+    /* === UI HIDE/SHOW CONTENTS === */
+
     private void showDetails() {
         linearLayoutSectionDetails.setVisibility(View.VISIBLE);
         linearLayoutSectionVideos.setVisibility(View.GONE);
@@ -820,5 +762,76 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         linearLayoutSectionVideos.setVisibility(View.GONE);
         linearLayoutSectionReviews.setVisibility(View.GONE);
         linearLayoutSectionCompanies.setVisibility(View.VISIBLE);
+    }
+
+    /* === UI HIDE/SHOW WARNING === */
+
+    private void warningConnection(int VISIBILITY) {
+        textViewWarningNoData.setVisibility(VISIBILITY);
+        imageViewWarningNoData.setVisibility(VISIBILITY);
+        if (VISIBILITY == SHOW) {
+            setContentVisibility(HIDE);
+            doToast(getString(R.string.warning_you_are_not_connected));
+        } else {
+            setContentVisibility(SHOW);
+        }
+    }
+
+    private void setContentVisibility(int VISIBILITY) {
+        floatingBookmarkButton.setVisibility(VISIBILITY);
+        floatingShareButton.setVisibility(VISIBILITY);
+        imageViewMoviePoster.setVisibility(VISIBILITY);
+        linearLayoutFullContent.setVisibility(VISIBILITY);
+    }
+
+    private void warningDetails(int VISIBILITY) {
+        textViewWarningNoData.setText(getResources().getText(R.string.warning_no_details));
+        textViewWarningNoData.setVisibility(VISIBILITY);
+        imageViewWarningNoData.setImageResource(R.drawable.ic_details);
+        imageViewWarningNoData.setVisibility(VISIBILITY);
+        if (VISIBILITY == HIDE) {
+            linearLayoutSectionDetails.setVisibility(SHOW);
+        } else {
+            linearLayoutSectionDetails.setVisibility(HIDE);
+        }
+    }
+
+    private void warningVideos(int VISIBILITY) {
+        textViewWarningNoData.setText(getResources().getText(R.string.warning_no_videos));
+        textViewWarningNoData.setVisibility(VISIBILITY);
+        imageViewWarningNoData.setImageResource(R.drawable.ic_movie);
+        imageViewWarningNoData.setVisibility(VISIBILITY);
+
+        if (VISIBILITY == HIDE) linearLayoutSectionVideos.setVisibility(SHOW);
+        else linearLayoutSectionVideos.setVisibility(HIDE);
+
+        if (VISIBILITY == HIDE) recyclerViewVideos.setVisibility(SHOW);
+        else recyclerViewVideos.setVisibility(HIDE);
+    }
+
+    private void warningReviews(int VISIBILITY) {
+        textViewWarningNoData.setText(getResources().getText(R.string.warning_no_reviews));
+        textViewWarningNoData.setVisibility(VISIBILITY);
+        imageViewWarningNoData.setImageResource(R.drawable.ic_reviews);
+        imageViewWarningNoData.setVisibility(VISIBILITY);
+    }
+
+    private void warningCompanies(int VISIBILITY) {
+        textViewWarningNoData.setText(getResources().getText(R.string.warning_no_companies));
+        textViewWarningNoData.setVisibility(VISIBILITY);
+        imageViewWarningNoData.setImageResource(R.drawable.ic_companies);
+        imageViewWarningNoData.setVisibility(VISIBILITY);
+
+        if (VISIBILITY == HIDE) linearLayoutSectionCompanies.setVisibility(SHOW);
+        else linearLayoutSectionCompanies.setVisibility(HIDE);
+
+        if (VISIBILITY == HIDE) recyclerViewCompanies.setVisibility(SHOW);
+        else recyclerViewCompanies.setVisibility(HIDE);
+    }
+
+    private void progressBarStatus(int VISIBILITY) {
+        if (VISIBILITY == SHOW) progressBar.setIndeterminate(true);
+        else progressBar.setIndeterminate(false);
+        progressBar.setVisibility(VISIBILITY);
     }
 }
