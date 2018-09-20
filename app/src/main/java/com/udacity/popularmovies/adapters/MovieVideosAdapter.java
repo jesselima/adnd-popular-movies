@@ -71,16 +71,6 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
         holder.itemView.setTag(videoID);
         final Uri uriWebPage = Uri.parse(ApiConfig.getBaseVideoUrlYoutube() + videoID);
 
-        holder.buttonViewOnWeb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, uriWebPage);
-                if (intent.resolveActivity(mContext.getPackageManager()) != null) {
-                    mContext.startActivity(intent);
-                }
-            }
-        });
-
         holder.iconPlayVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -142,7 +132,6 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
         private final TextView videoSite;
         private final TextView videoSize;
         private final ImageView videoThumbnailUrl;
-        private final Button buttonViewOnWeb;
         private final Button buttonShareUrl;
         private final ImageView iconPlayVideo;
 
@@ -155,7 +144,6 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
             videoSize = itemView.findViewById(R.id.tv_video_size);
             videoThumbnailUrl = itemView.findViewById(R.id.iv_movie_video_poster);
 
-            buttonViewOnWeb = itemView.findViewById(R.id.bt_see_on_youtube);
             buttonShareUrl = itemView.findViewById(R.id.bt_share_youtube_url);
             iconPlayVideo = itemView.findViewById(R.id.iv_movie_video_play_icon);
         }
