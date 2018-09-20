@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.android.youtube.player.YouTubeStandalonePlayer;
 import com.squareup.picasso.Picasso;
+import com.udacity.popularmovies.BuildConfig;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.models.MovieVideo;
@@ -32,6 +33,7 @@ import java.util.List;
 public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.MovieVideoViewHolder> {
 
     private static final String LOG_TAG = MovieVideosAdapter.class.getSimpleName();
+    private static final String YOUTUBE_KEY = BuildConfig.YOUTUBE_KEY;
 
     private final ArrayList<MovieVideo> movieVideoList;
     private final Context mContext;
@@ -110,7 +112,7 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
 
         Intent intent = YouTubeStandalonePlayer.createVideosIntent(
                 (Activity) mContext,            /* Activity/Application  */
-                ApiConfig.getYoutubeApiKey(),   /* API KEY */
+                YOUTUBE_KEY,   /* API KEY */
                 videoIds,                       /* List of videoIds */
                 index,                          /* startIndex */
                 1,                          /* timeMillis */

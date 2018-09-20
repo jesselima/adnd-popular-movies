@@ -108,13 +108,6 @@ public final class ApiConfig {
     private static final String BASE_MOVIE_DETAILS_URL  = "https://api.themoviedb.org/3/movie/";
     private static final String BASE_VIDEO_URL_YOUTUBE  = "https://www.youtube.com/watch?v=";
 
-    // TODO: Set you YOUTUBE API KEY HERE IF NEEDED
-    private static final String YOUTUBE_API_KEY = "YOUTUBE_API_KEY";
-
-    public static String getYoutubeApiKey() {
-        return YOUTUBE_API_KEY;
-    }
-
     public static String getBaseMovieApiUrlV3() {
         return BASE_URL_V3_DISCOVER;
     }
@@ -241,6 +234,5 @@ public final class ApiConfig {
         public static final String ORIGIN_COUNTRY   = "origin_country";
 
     }
-
 
 }
