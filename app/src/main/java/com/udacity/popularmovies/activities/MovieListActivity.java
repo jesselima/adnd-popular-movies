@@ -1,18 +1,22 @@
 package com.udacity.popularmovies.activities;
 
 
-import android.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
+
 import android.content.Intent;
-import android.content.Loader;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,14 +53,18 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     // Movie List Loader ID
     private static final int MOVIE_LOADER_ID = 1;
     private static Bundle bundleRecyclerView;
-    private final ArrayList<Movie> movieList = new ArrayList<>();
+    private ArrayList<Movie> movieList = new ArrayList<>();
     // Implementation for save state
     private final String KEY_RECYCLER_STATE = "recycler_state";
     // Global variable to be used with system language abbreviation in two letters
     private final String loadApiLanguage = UrlParamValue.LANGUAGE_DEFAULT;
+    // This object is updated to true when user do a search. Then the loader will use a search query string
+    private boolean isDoingSearch = false;
+    // This object is updated with a string when the user runs a search
+    private String queryTerm = "";
     // Page value for pagination control
     private int page = 1;
-    // Sort by default value
+    // Sort by default value. The first list off
     private String sortBy = UrlParamValue.POPULAR;
     // Global toast object to avoid toast objects queue
     private Toast toast;
@@ -159,7 +167,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     /*** Methods for BottonNavigation control ***/
     private void restartLoader() {
         showLoadingIndicator();
-        getLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
+        getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
     }
 
     // When clicked, restart the loader with the current page - 1. So the loader will make another
@@ -199,19 +207,26 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
      * @return a new MovieListLoader object. This loader will receive the request URL and
      * make this request to the server in a background thread.
      */
+    @NonNull
     @Override
     public Loader<List<Movie>> onCreateLoader(int id, Bundle bundle) {
         Log.d(LOG_TAG, "onCreateLoader Started...");
 
-        Uri getBaseMovieListUrl = Uri.parse(ApiConfig.getBaseUrlV3Default() + sortBy);
-        Uri.Builder uriBuilder = getBaseMovieListUrl.buildUpon();
-
-        uriBuilder.appendQueryParameter(UrlParamKey.API_KEY, API_KEY);
-        uriBuilder.appendQueryParameter(UrlParamKey.LANGUAGE, loadApiLanguage);
-        uriBuilder.appendQueryParameter(UrlParamKey.INCLUDE_ADULT, UrlParamValue.INCLUDE_ADULT_FALSE);
-        uriBuilder.appendQueryParameter(UrlParamKey.PAGE, String.valueOf(page));
-
-        return new MovieListLoader(this, uriBuilder.toString());
+        if (isDoingSearch) {
+            Uri getBaseSearchUrl = Uri.parse(ApiConfig.getBaseUrlSearch());
+            Uri.Builder uriBuilder = getBaseSearchUrl.buildUpon();
+            uriBuilder.appendQueryParameter(UrlParamKey.API_KEY, API_KEY);
+            uriBuilder.appendQueryParameter(UrlParamKey.QUERY, queryTerm);
+            return new MovieListLoader(this, uriBuilder.toString());
+        }else {
+            Uri getBaseMovieListUrl = Uri.parse(ApiConfig.getBaseUrlV3Default() + sortBy);
+            Uri.Builder uriBuilder = getBaseMovieListUrl.buildUpon();
+            uriBuilder.appendQueryParameter(UrlParamKey.API_KEY, API_KEY);
+            uriBuilder.appendQueryParameter(UrlParamKey.LANGUAGE, loadApiLanguage);
+            uriBuilder.appendQueryParameter(UrlParamKey.INCLUDE_ADULT, UrlParamValue.INCLUDE_ADULT_FALSE);
+            uriBuilder.appendQueryParameter(UrlParamKey.PAGE, String.valueOf(page));
+            return new MovieListLoader(this, uriBuilder.toString());
+        }
     }
 
     /**
@@ -367,22 +382,43 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             // Is device is connected Shows loading indicator and Kick off the loader
             hideNoResultsWarning();
             showLoadingIndicator();
-            android.app.LoaderManager loaderManager = getLoaderManager();
-            loaderManager.initLoader(MOVIE_LOADER_ID, null, this);
+            getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings, menu);
-        return true;
+        getMenuInflater().inflate(R.menu.movie_list_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem); // Cast is required
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                doToast(query);
+                searchView.clearFocus();
+                isDoingSearch = true;
+                queryTerm = query;
+                restartLoader();
+                // Updates the search flag back to false.
+                isDoingSearch = false;
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.settings:
-                Toast.makeText(this, "Settings clicked!", Toast.LENGTH_SHORT).show();
+            case R.id.preferences:
+                Toast.makeText(this, "Preferences clicked!", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }

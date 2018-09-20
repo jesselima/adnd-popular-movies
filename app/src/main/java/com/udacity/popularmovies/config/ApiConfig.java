@@ -107,6 +107,7 @@ public final class ApiConfig {
     private static final String SECURE_BASE_IMAGE_URL   = "https://image.tmdb.org/t/p/";
     private static final String BASE_MOVIE_DETAILS_URL  = "https://api.themoviedb.org/3/movie/";
     private static final String BASE_VIDEO_URL_YOUTUBE  = "https://www.youtube.com/watch?v=";
+    private static final String BASE_URL_SEARCH         = "https://api.themoviedb.org/3/search/movie";
 
     public static String getBaseMovieApiUrlV3() {
         return BASE_URL_V3_DISCOVER;
@@ -132,6 +133,10 @@ public final class ApiConfig {
         return BASE_VIDEO_URL_YOUTUBE;
     }
 
+    public static String getBaseUrlSearch() {
+        return BASE_URL_SEARCH;
+    }
+
     /* URL CONSTANT PARAMS KEYS */
     @SuppressWarnings("unused")
     public static final class UrlParamKey {
@@ -143,6 +148,7 @@ public final class ApiConfig {
         public static final String PAGE             = "page";
         public static final String WITH_GENRES      = "with_genres";
         public static final String YEAR             = "year";
+        public static final String QUERY            = "query";
 
         // API backdrop_sizes constants
         public static final String IMAGE_BACKDROP_W300      = W45;
