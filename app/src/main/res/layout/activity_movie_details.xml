@@ -114,9 +114,6 @@
                             android:textStyle="bold"/>
                     </LinearLayout>
 
-
-
-
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
@@ -125,102 +122,107 @@
                         android:layout_weight="7"
                         android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/tv_release_date"
-                            android:layout_width="wrap_content"
+                        <RelativeLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textSize="28sp"
-                            tools:text="2018"/>
+                            tools:ignore="UselessParent">
 
-                        <TextView
-                            android:id="@+id/tv_runtime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="16sp"
-                            android:textStyle="bold|italic"
-                            tools:text="147"/>
-
-                        <LinearLayout
-                            style="@style/DetailsItemLayout">
+                            <TextView
+                                android:id="@+id/tv_release_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="28sp"
+                                tools:text="2018"/>
+                            <TextView
+                                android:id="@+id/tv_runtime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/tv_release_date"
+                                android:textSize="16sp"
+                                android:textStyle="bold|italic"
+                                tools:text="147"/>
                             <RatingBar
+                                android:id="@+id/rating_start"
                                 style="?android:attr/ratingBarStyleSmall"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_below="@id/tv_runtime"
                                 android:numStars="1"
                                 android:rating="1"
                                 android:stepSize="1"/>
                             <TextView
                                 android:id="@+id/tv_vote_average"
                                 style="@style/DetailItemValueStyle"
+                                android:layout_toEndOf="@id/rating_start"
+                                android:layout_below="@id/tv_runtime"
                                 tools:text="8.3"/>
                             <TextView
+                                android:id="@+id/slash"
                                 style="@style/DetailItemLabelStyle"
+                                android:layout_toEndOf="@id/tv_vote_average"
+                                android:layout_below="@id/tv_runtime"
                                 android:text="@string/slash"/>
                             <TextView
                                 android:id="@+id/tv_vote_count"
                                 style="@style/DetailItemValueStyle"
+                                android:layout_toEndOf="@id/slash"
+                                android:layout_below="@id/tv_runtime"
                                 tools:text="692"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            style="@style/DetailsItemLayoutVertical">
                             <TextView
+                                android:id="@+id/original_title_label"
                                 style="@style/DetailItemLabelStyle"
+                                android:layout_below="@id/tv_vote_count"
                                 android:text="@string/original_title_label"/>
                             <TextView
                                 android:id="@+id/tv_title"
+                                android:layout_below="@id/original_title_label"
                                 style="@style/DetailItemValueStyle"
                                 tools:text="Black Panther"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            style="@style/DetailsItemLayoutVertical">
                             <TextView
+                                android:id="@+id/spoken_languages_label"
                                 style="@style/DetailItemLabelStyle"
+                                android:layout_below="@+id/tv_title"
                                 android:text="@string/spoken_languages_label"/>
                             <TextView
                                 android:id="@+id/tv_original_language"
                                 style="@style/DetailItemValueStyle"
+                                android:layout_below="@id/spoken_languages_label"
                                 tools:text="English"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            style="@style/DetailsItemLayout">
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-                                <TextView
-                                    style="@style/DetailItemLabelStyle"
-                                    android:text="@string/popularity_label"/>
-                                <TextView
-                                    android:id="@+id/tv_popularity"
-                                    style="@style/DetailItemValueStyle"
-                                    tools:text="198.543"/>
-                            </LinearLayout>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            style="@style/DetailsItemLayout">
                             <TextView
+                                android:id="@+id/popularity_label"
+                                style="@style/DetailItemLabelStyle"
+                                android:layout_below="@id/tv_original_language"
+                                android:text="@string/popularity_label"/>
+                            <TextView
+                                android:id="@+id/tv_popularity"
+                                android:layout_below="@id/tv_original_language"
+                                android:layout_toEndOf="@id/popularity_label"
+                                style="@style/DetailItemValueStyle"
+                                tools:text="198.543"/>
+                            <TextView
+                                android:id="@+id/budget_label"
+                                android:layout_below="@+id/tv_popularity"
                                 style="@style/DetailItemLabelStyle"
                                 android:text="@string/budget_label"/>
                             <TextView
                                 android:id="@+id/tv_buget"
+                                android:layout_below="@id/tv_popularity"
+                                android:layout_toEndOf="@id/budget_label"
                                 style="@style/DetailItemValueStyle"
                                 tools:text="$1.780,000.00"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            style="@style/DetailsItemLayout">
                             <TextView
+                                android:id="@+id/revenue_label"
+                                android:layout_below="@+id/tv_buget"
                                 style="@style/DetailItemLabelStyle"
                                 android:text="@string/revenue_label"/>
                             <TextView
                                 android:id="@+id/tv_revenue"
+                                android:layout_below="@+id/tv_buget"
+                                android:layout_toEndOf="@id/revenue_label"
                                 style="@style/DetailItemValueStyle"
                                 tools:text="$3,298,111.86"/>
-                        </LinearLayout>
+                        </RelativeLayout>
+
                     </LinearLayout>
                 </LinearLayout>
 
@@ -272,9 +274,10 @@
             <!-- SECTION VIDEOS START -->
             <LinearLayout
                 android:id="@+id/section_videos"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
+                android:visibility="visible"
+                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
@@ -285,7 +288,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_movies_videos_details"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/default_layout_margin"
                     android:layout_marginRight="@dimen/default_layout_margin"
@@ -332,15 +335,11 @@
 
                 <include layout="@layout/divider_header"/>
 
-                <android.support.v7.widget.CardView
-                    style="@style/CardViewStyle">
-
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rv_companies"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="@dimen/default_layout_margin"/>
-                </android.support.v7.widget.CardView>
 
             </LinearLayout>
             <!-- SECTION COMPANIES END -->
