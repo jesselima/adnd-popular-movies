@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +26,17 @@ import com.udacity.popularmovies.utils.NetworkUtils;
 import java.text.DecimalFormat;
 
 
-public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.BookmarkViewHolder>{
+public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.BookmarkViewHolder> {
 
     private Cursor cursor;
-    private Context context;
+    private final Context context;
 
-    public BookmarkAdapter (Context contextInput) {
+    public BookmarkAdapter(Context contextInput) {
         this.context = contextInput;
+    }
+
+    private static Bitmap convertImageBytesToBitmap(byte[] imageBytes) {
+        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }
 
     @NonNull
@@ -133,6 +136,11 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
         }
     }
 
+    private String formatNumber(int numberToBeFormated) {
+        DecimalFormat myFormatter = new DecimalFormat("$###,###,###.##");
+        return myFormatter.format(numberToBeFormated);
+    }
+
     class BookmarkViewHolder extends RecyclerView.ViewHolder {
 
         private final Button buttonMovieHomepage;
@@ -152,7 +160,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
         private final TextView textViewRevenue;
         private final ImageView imageViewMoviePoster;
 
-        public BookmarkViewHolder(View itemView) {
+        BookmarkViewHolder(View itemView) {
             super(itemView);
 
             buttonMovieDetails = itemView.findViewById(R.id.bt_item_list_details_db);
@@ -172,14 +180,5 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
             textViewRevenue = itemView.findViewById(R.id.tv_revenue_db);
             imageViewMoviePoster = itemView.findViewById(R.id.iv_movie_poster_db);
         }
-    }
-
-    private static Bitmap convertImageBytesToBitmap(byte[] imageBytes) {
-        return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
-    }
-
-    private String formatNumber(int numberToBeFormated) {
-        DecimalFormat myFormatter = new DecimalFormat("$###,###,###.##");
-        return myFormatter.format(numberToBeFormated);
     }
 }

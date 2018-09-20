@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-
-
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
@@ -15,7 +13,6 @@
         android:fitsSystemWindows="true"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <!-- CollapsingToolbarLayout TEXT SHADOW==> app:expandedTitleTextAppearance="@style/TextAppearance.Design.CollapsingToolbar.Expanded.Shadow" -->
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
@@ -61,387 +58,315 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:id="@+id/nested_scroll_content"
+            android:id="@+id/section_full_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingTop="8dp">
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:paddingTop="8dp"
+            android:orientation="vertical">
 
+            <ProgressBar
+                android:id="@+id/indeterminateBar"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+
+            <!-- SECTION INFO START -->
             <LinearLayout
-                android:id="@+id/section_full_content"
+                android:id="@+id/section_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="visible"
                 android:orientation="vertical">
 
-                <ProgressBar
-                    android:id="@+id/indeterminateBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp"
-                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+                <TextView
+                    style="@style/textDetailsHeader"
+                    android:text="@string/details"/>
+
+                <include layout="@layout/divider_header"/>
 
                 <LinearLayout
-                    android:id="@+id/container_additional_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="vertical">
+                    android:layout_marginLeft="@dimen/default_layout_margin"
+                    android:layout_marginRight="@dimen/default_layout_margin"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
-                    <!-- SECTION INFO START -->
                     <LinearLayout
-                        android:id="@+id/section_info"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:visibility="visible"
+                        android:layout_marginTop="4dp"
+                        android:layout_weight="6"
+                        android:orientation="vertical">
+                        <ImageView
+                            android:id="@+id/iv_movie_poster"
+                            android:layout_width="154dp"
+                            android:layout_height="231dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="4dp"
+                            android:background="@android:drawable/dialog_holo_light_frame"
+                            android:elevation="2dp"
+                            android:contentDescription="@string/movie_poster"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/poster_image_place_holder"
+                            android:textSize="30sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/small_layout_margin"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="7"
                         android:orientation="vertical">
 
-                        <TextView
+                        <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/default_layout_margin"
-                            android:layout_marginRight="@dimen/default_layout_margin"
-                            android:layout_marginTop="@dimen/small_layout_margin"
-                            android:gravity="start"
-                            android:text="@string/details"
-                            android:textAllCaps="true"
+                            tools:ignore="UselessParent">
+
+                            <TextView
+                                android:id="@+id/tv_release_date"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="28sp"
+                                tools:text="2018"/>
+                            <TextView
+                                android:id="@+id/tv_runtime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/tv_release_date"
+                                android:textSize="16sp"
+                                android:textStyle="bold|italic"
+                                tools:text="147"/>
+                            <RatingBar
+                                android:id="@+id/rating_start"
+                                style="?android:attr/ratingBarStyleSmall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/tv_runtime"
+                                android:numStars="1"
+                                android:rating="1"
+                                android:stepSize="1"/>
+                            <TextView
+                                android:id="@+id/tv_vote_average"
+                                style="@style/DetailItemValueStyle"
+                                android:layout_toEndOf="@id/rating_start"
+                                android:layout_below="@id/tv_runtime"
+                                tools:text="8.3"/>
+                            <TextView
+                                android:id="@+id/slash"
+                                style="@style/DetailItemLabelStyle"
+                                android:layout_toEndOf="@id/tv_vote_average"
+                                android:layout_below="@id/tv_runtime"
+                                android:text="@string/slash"/>
+                            <TextView
+                                android:id="@+id/tv_vote_count"
+                                style="@style/DetailItemValueStyle"
+                                android:layout_toEndOf="@id/slash"
+                                android:layout_below="@id/tv_runtime"
+                                tools:text="692"/>
+                            <TextView
+                                android:id="@+id/original_title_label"
+                                style="@style/DetailItemLabelStyle"
+                                android:layout_below="@id/tv_vote_count"
+                                android:text="@string/original_title_label"/>
+                            <TextView
+                                android:id="@+id/tv_title"
+                                android:layout_below="@id/original_title_label"
+                                style="@style/DetailItemValueStyle"
+                                tools:text="Black Panther"/>
+                            <TextView
+                                android:id="@+id/spoken_languages_label"
+                                style="@style/DetailItemLabelStyle"
+                                android:layout_below="@+id/tv_title"
+                                android:text="@string/spoken_languages_label"/>
+                            <TextView
+                                android:id="@+id/tv_original_language"
+                                style="@style/DetailItemValueStyle"
+                                android:layout_below="@id/spoken_languages_label"
+                                tools:text="English"/>
+                            <TextView
+                                android:id="@+id/popularity_label"
+                                style="@style/DetailItemLabelStyle"
+                                android:layout_below="@id/tv_original_language"
+                                android:text="@string/popularity_label"/>
+                            <TextView
+                                android:id="@+id/tv_popularity"
+                                android:layout_below="@id/tv_original_language"
+                                android:layout_toEndOf="@id/popularity_label"
+                                style="@style/DetailItemValueStyle"
+                                tools:text="198.543"/>
+                            <TextView
+                                android:id="@+id/budget_label"
+                                android:layout_below="@+id/tv_popularity"
+                                style="@style/DetailItemLabelStyle"
+                                android:text="@string/budget_label"/>
+                            <TextView
+                                android:id="@+id/tv_buget"
+                                android:layout_below="@id/tv_popularity"
+                                android:layout_toEndOf="@id/budget_label"
+                                style="@style/DetailItemValueStyle"
+                                tools:text="$1.780,000.00"/>
+                            <TextView
+                                android:id="@+id/revenue_label"
+                                android:layout_below="@+id/tv_buget"
+                                style="@style/DetailItemLabelStyle"
+                                android:text="@string/revenue_label"/>
+                            <TextView
+                                android:id="@+id/tv_revenue"
+                                android:layout_below="@+id/tv_buget"
+                                android:layout_toEndOf="@id/revenue_label"
+                                style="@style/DetailItemValueStyle"
+                                tools:text="$3,298,111.86"/>
+                        </RelativeLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_genres"
+                    style="@style/textInfoAccent"
+                    tools:text="Avventura | Fantascienza | Fantasy | Azione"/>
+
+                <android.support.v7.widget.CardView
+                    style="@style/CardViewStyle">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/default_layout_margin">
+                        <TextView
+                            android:id="@+id/tv_tagline"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:gravity="center"
                             android:textSize="20sp"
-                            android:textStyle="bold"/>
-
-                        <include layout="@layout/divider_header"/>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/default_layout_margin"
-                            android:layout_marginRight="@dimen/default_layout_margin"
-                            android:baselineAligned="false"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:layout_weight="6"
-                                android:orientation="vertical">
-                                <ImageView
-                                    android:id="@+id/iv_movie_poster"
-                                    android:layout_width="154dp"
-                                    android:layout_height="231dp"
-                                    android:layout_gravity="center"
-                                    android:layout_marginTop="4dp"
-                                    android:background="@android:drawable/dialog_holo_light_frame"
-                                    android:elevation="2dp"
-                                    android:contentDescription="@string/movie_poster"
-                                    android:scaleType="centerCrop"
-                                    android:src="@drawable/poster_image_place_holder"
-                                    android:textSize="30sp"
-                                    android:textStyle="bold"/>
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/small_layout_margin"
-                                android:layout_marginStart="8dp"
-                                android:layout_weight="7"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/tv_release_date"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="28sp"
-                                    tools:text="2018"/>
-
-                                <TextView
-                                    android:id="@+id/tv_runtime"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textSize="16sp"
-                                    android:textStyle="bold|italic"
-                                    tools:text="147"/>
-
-                                <LinearLayout
-                                    style="@style/DetailsItemLayout">
-                                    <RatingBar
-                                        style="?android:attr/ratingBarStyleSmall"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:numStars="1"
-                                        android:rating="1"
-                                        android:stepSize="1"/>
-                                    <TextView
-                                        android:id="@+id/tv_vote_average"
-                                        style="@style/DetailItemValueStyle"
-                                        tools:text="8.3"/>
-                                    <TextView
-                                        style="@style/DetailItemLabelStyle"
-                                        android:text="@string/slash"/>
-                                    <TextView
-                                        android:id="@+id/tv_vote_count"
-                                        style="@style/DetailItemValueStyle"
-                                        tools:text="692"/>
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    style="@style/DetailsItemLayoutVertical">
-                                    <TextView
-                                        style="@style/DetailItemLabelStyle"
-                                        android:text="@string/original_title_label"/>
-                                    <TextView
-                                        android:id="@+id/tv_title"
-                                        style="@style/DetailItemValueStyle"
-                                        tools:text="Black Panther"/>
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    style="@style/DetailsItemLayoutVertical">
-                                    <TextView
-                                        style="@style/DetailItemLabelStyle"
-                                        android:text="@string/spoken_languages_label"/>
-                                    <TextView
-                                        android:id="@+id/tv_original_language"
-                                        style="@style/DetailItemValueStyle"
-                                        tools:text="English"/>
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    style="@style/DetailsItemLayout">
-                                    <LinearLayout
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:orientation="horizontal">
-                                        <TextView
-                                            style="@style/DetailItemLabelStyle"
-                                            android:text="@string/popularity_label"/>
-                                        <TextView
-                                            android:id="@+id/tv_popularity"
-                                            style="@style/DetailItemValueStyle"
-                                            tools:text="198.543"/>
-                                    </LinearLayout>
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    style="@style/DetailsItemLayout">
-                                    <TextView
-                                        style="@style/DetailItemLabelStyle"
-                                        android:text="@string/budget_label"/>
-                                    <TextView
-                                        android:id="@+id/tv_buget"
-                                        style="@style/DetailItemValueStyle"
-                                        tools:text="$1.780,000.00"/>
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    style="@style/DetailsItemLayout">
-                                    <TextView
-                                        style="@style/DetailItemLabelStyle"
-                                        android:text="@string/revenue_label"/>
-                                    <TextView
-                                        android:id="@+id/tv_revenue"
-                                        style="@style/DetailItemValueStyle"
-                                        tools:text="$3,298,111.86"/>
-                                </LinearLayout>
-                            </LinearLayout>
-                        </LinearLayout>
-
+                            android:textStyle="italic|bold"
+                            tools:text="Some Missions Are Not A Choice"/>
                         <TextView
-                            android:id="@+id/tv_genres"
+                            android:id="@+id/tv_overview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:textSize="16sp"
+                            tools:text="Overview"/>
+
+                        <Button
+                            android:id="@+id/bt_home_page"
+                            style="@style/Base.Widget.AppCompat.Button.Borderless"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:paddingLeft="@dimen/medium_layout_margin"
-                            android:paddingRight="@dimen/medium_layout_margin"
-                            android:layout_marginLeft="@dimen/default_layout_margin"
-                            android:layout_marginRight="@dimen/default_layout_margin"
-                            android:layout_marginTop="@dimen/default_layout_margin"
-                            android:padding="4dp"
+                            android:text="@string/homepage"
                             android:textColor="@color/colorAccent"
-                            tools:text="Avventura, Fantascienza, Fantasy, Azione"/>
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/card_margin"
-                            android:layout_marginRight="@dimen/card_margin"
-                            android:layout_marginTop="@dimen/card_margin"
-                            android:layout_marginBottom="@dimen/medium_layout_margin"
-                            app:cardCornerRadius="3dp"
-                            app:cardElevation="4dp">
-
-                            <LinearLayout
-                                style="@style/Widget.CardContent"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-                                <TextView
-                                    android:id="@+id/tv_tagline"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="8dp"
-                                    android:gravity="center"
-                                    android:textSize="20sp"
-                                    android:textStyle="italic|bold"
-                                    tools:text="Some Missions Are Not A Choice"/>
-                                <TextView
-                                    android:id="@+id/tv_overview"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="4dp"
-                                    android:textSize="16sp"
-                                    tools:text="Overview"/>
-
-                                <Button
-                                    android:id="@+id/bt_home_page"
-                                    style="@style/Base.Widget.AppCompat.Button.Borderless"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:text="@string/homepage"
-                                    android:textColor="@color/colorAccent"
-                                    android:textSize="16sp"/>
-
-                            </LinearLayout>
-                        </android.support.v7.widget.CardView>
+                            android:textSize="16sp"/>
 
                     </LinearLayout>
-                    <!-- SECTION INFO END-->
-
-                    <!-- SECTION VIDEOS START -->
-                    <LinearLayout
-                        android:id="@+id/section_videos"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/default_layout_margin"
-                            android:layout_marginRight="@dimen/default_layout_margin"
-                            android:layout_marginTop="@dimen/small_layout_margin"
-                            android:gravity="start"
-                            android:text="@string/videos"
-                            android:textAllCaps="true"
-                            android:textSize="20sp"
-                            android:textStyle="bold"/>
-
-                        <include layout="@layout/divider_header"/>
-
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/rv_movies_videos_details"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/default_layout_margin"
-                            android:layout_marginRight="@dimen/default_layout_margin"/>
-                    </LinearLayout>
-                    <!-- SECTION VIDEOS END -->
-
-                    <!-- SECTION REVIEWS START -->
-                    <LinearLayout
-                        android:id="@+id/section_reviews"
-                        android:visibility="gone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/default_layout_margin"
-                            android:layout_marginRight="@dimen/default_layout_margin"
-                            android:layout_marginTop="@dimen/small_layout_margin"
-                            android:gravity="start"
-                            android:text="@string/reviews"
-                            android:textAllCaps="true"
-                            android:textSize="20sp"
-                            android:textStyle="bold"/>
-
-                        <include layout="@layout/divider_header"/>
-
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/rv_movies_reviews_details"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="@dimen/default_layout_margin"
-                            android:layout_marginRight="@dimen/default_layout_margin"/>
-
-                    </LinearLayout>
-                    <!-- SECTION REVIEWS END -->
-
-                    <!-- SECTION COMPANIES START -->
-                    <LinearLayout
-                        android:id="@+id/section_companies"
-                        android:visibility="gone"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/default_layout_margin"
-                            android:layout_marginRight="@dimen/default_layout_margin"
-                            android:layout_marginTop="@dimen/small_layout_margin"
-                            android:gravity="start"
-                            android:text="@string/production_companies"
-                            android:textAllCaps="true"
-                            android:textSize="20sp"
-                            android:textStyle="bold"/>
-
-                        <include layout="@layout/divider_header"/>
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/card_margin"
-                            android:layout_marginRight="@dimen/card_margin"
-                            android:layout_marginTop="@dimen/card_margin"
-                            android:layout_marginBottom="@dimen/medium_layout_margin"
-                            app:cardCornerRadius="3dp"
-                            app:cardElevation="4dp">
-
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/rv_companies"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginTop="@dimen/default_layout_margin"
-                                android:layout_marginLeft="@dimen/default_layout_margin"
-                                android:layout_marginRight="@dimen/default_layout_margin"/>
-                        </android.support.v7.widget.CardView>
-
-                    </LinearLayout>
-                    <!-- SECTION COMPANIES END -->
-
-                    <include layout="@layout/divider"/>
-
-                </LinearLayout>
+                </android.support.v7.widget.CardView>
             </LinearLayout>
-            <!-- SECTION FULL CONTENT END-->
+            <!-- SECTION INFO END-->
 
-            <!-- UI Warnings -->
+            <!-- SECTION VIDEOS START -->
+            <LinearLayout
+                android:id="@+id/section_videos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/textDetailsHeader"
+                    android:text="@string/videos"/>
+
+                <include layout="@layout/divider_header"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_movies_videos_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/default_layout_margin"
+                    android:layout_marginRight="@dimen/default_layout_margin"
+                    android:layout_marginBottom="@dimen/very_large_layout_margin"/>
+            </LinearLayout>
+            <!-- SECTION VIDEOS END -->
+
+            <!-- SECTION REVIEWS START -->
+            <LinearLayout
+                android:id="@+id/section_reviews"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/textDetailsHeader"
+                    android:text="@string/reviews"/>
+
+                <include layout="@layout/divider_header"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_movies_reviews_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/default_layout_margin"
+                    android:layout_marginRight="@dimen/default_layout_margin"
+                    android:layout_marginBottom="@dimen/very_large_layout_margin"/>
+
+            </LinearLayout>
+            <!-- SECTION REVIEWS END -->
+
+            <!-- SECTION COMPANIES START -->
+            <LinearLayout
+                android:id="@+id/section_companies"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/textDetailsHeader"
+                    android:text="@string/production_companies"/>
+
+                <include layout="@layout/divider_header"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_companies"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/default_layout_margin"/>
+
+            </LinearLayout>
+            <!-- SECTION COMPANIES END -->
+
+            <!-- UI WARNINGS -->
             <ImageView
                 android:id="@+id/iv_warning_no_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/very_large_layout_margin"
                 android:layout_gravity="center"
+                android:visibility="gone"
                 android:contentDescription="@string/no_info_available"
-                android:src="@drawable/ic_details"
-                android:visibility="gone"/>
+                android:src="@drawable/ic_details"/>
             <TextView
                 android:id="@+id/tv_warning_no_data"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                 android:text="@string/movie_details_could_not_be_loaded"
-                android:textColor="@color/colorWarning"
+                android:textColor="@color/colorMediumGrey"
                 android:visibility="gone"/>
 
             <ImageView
-                android:id="@+id/iv_warning_no_connection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -449,15 +374,15 @@
                 android:contentDescription="@string/no_internet_connection"
                 android:src="@drawable/ic_no_connection"
                 android:visibility="gone"/>
+
             <TextView
-                android:id="@+id/tv_warning_no_connection"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:layout_marginTop="20dp"
                 android:text="@string/no_internet_connection"
-                android:textColor="@color/colorWarning"
+                android:textColor="@color/colorMediumGrey"
                 android:visibility="gone"/>
 
             <include layout="@layout/tmdb_branding"
@@ -469,9 +394,11 @@
                 android:gravity="bottom"/>
 
         </LinearLayout>
-        <!-- Nested Scroll Only Child End-->
-    </android.support.v4.widget.NestedScrollView>
 
+    </android.support.v4.widget.NestedScrollView>
+    <!-- Nested Scroll Only Child End-->
+
+    <!-- TABS START - Used to switch between Details, Videos, Reviews and Companies layouts-->
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
@@ -482,7 +409,9 @@
         android:elevation="5dp"
         android:background="@color/colorLightGrey">
     </android.support.design.widget.TabLayout>
+    <!-- TABS END -->
 
+    <!-- FLOATING BUTTONS START -->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/float_share_button"
         android:layout_width="wrap_content"
@@ -506,5 +435,6 @@
         android:src="@drawable/ic_bookmark_unsaved"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|right|end" />
+    <!-- FLOATING BUTTONS END -->
 
 </android.support.design.widget.CoordinatorLayout>

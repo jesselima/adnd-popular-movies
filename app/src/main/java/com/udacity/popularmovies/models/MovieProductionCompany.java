@@ -13,13 +13,6 @@ public class MovieProductionCompany {
     public MovieProductionCompany() {
     }
 
-    public MovieProductionCompany(int companyId, String companyLogoPath, String companyName, String companyCountry) {
-        this.companyId = companyId;
-        this.companyLogoPath = companyLogoPath;
-        this.companyName = companyName;
-        this.companyCountry = companyCountry;
-    }
-
     public int getCompanyId() {
         return companyId;
     }
@@ -44,10 +37,6 @@ public class MovieProductionCompany {
         this.companyName = companyName;
     }
 
-    public String getCompanyCountry() {
-        return companyCountry;
-    }
-
     public void setCompanyCountry(String companyCountry) {
         this.companyCountry = companyCountry;
     }
@@ -55,9 +44,9 @@ public class MovieProductionCompany {
     @Override
     public String toString() {
         return "\n" + "MovieProductionCompany {" + "\n" +
-                "companyId: " + companyId + ",\n" +
-                "companyLogoPath: '" + companyLogoPath + '\'' + ",\n" +
-                "companyName: '" + companyName + '\'' + ",\n" +
+                "companyId: "       + companyId + ",\n" +
+                "companyLogoPath: '"+ companyLogoPath + '\'' + ",\n" +
+                "companyName: '"    + companyName + '\'' + ",\n" +
                 "companyCountry: '" + companyCountry + '\'' + "\n" +
                 '}';
     }

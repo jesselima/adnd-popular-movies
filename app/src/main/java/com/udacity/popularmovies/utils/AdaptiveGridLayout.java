@@ -6,13 +6,12 @@ import android.util.DisplayMetrics;
 /**
  * This class get the device display width and returns the width divided by 185. The result is used
  * to add/remove more columns on the grid of posters.
- *
+ * <p>
  * SOURCE: https://stackoverflow.com/questions/33575731/gridlayoutmanager-how-to-auto-fit-columns
  */
 public class AdaptiveGridLayout {
 
     /**
-     *
      * @param context of the application
      * @return the width divide by 185.
      */

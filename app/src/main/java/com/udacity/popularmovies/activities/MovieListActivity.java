@@ -32,6 +32,7 @@ import com.udacity.popularmovies.loaders.MovieListLoader;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.AdaptiveGridLayout;
 import com.udacity.popularmovies.utils.BottomNavigationBehavior;
+import com.udacity.popularmovies.utils.BottomNavigationViewHelper;
 import com.udacity.popularmovies.utils.LanguageUtils;
 import com.udacity.popularmovies.utils.NetworkUtils;
 
@@ -52,7 +53,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     // Implementation for save state
     private final String KEY_RECYCLER_STATE = "recycler_state";
     // Global variable to be used with system language abbreviation in two letters
-    private String loadApiLanguage = UrlParamValue.LANGUAGE_DEFAULT;
+    private final String loadApiLanguage = UrlParamValue.LANGUAGE_DEFAULT;
     // Page value for pagination control
     private int page = 1;
     // Sort by default value
@@ -75,6 +76,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
         // Set and handle actions on BottonNavigation
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

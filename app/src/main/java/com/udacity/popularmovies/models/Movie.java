@@ -1,37 +1,37 @@
 package com.udacity.popularmovies.models;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Movie {
 
-    private int movieId;
-    private String moviePosterPath;
+    private int     movieId;
+    private String  moviePosterPath;
 
     // Rubric requirement
-    private String movieOriginalTitle;
-    private String movieOverview;
-    private String movieReleaseDate;
-    private double movieVoteAverage;
+    private String  movieOriginalTitle;
+    private String  movieOverview;
+    private String  movieReleaseDate;
+    private double  movieVoteAverage;
 
     // Additional info
-    private int movieMdbId;
-    private String movieTitle;
-    private String movieOriginalLanguage;
-    private int movieVoteCount;
-    private String movieBackdropPath;
-    private double moviePopularity;
-    private String movieTagline;
-    private int movieBuget;
-    private int movieRevenue;
-    private int movieRunTime;
-    private String movieGenres;
+    private int     movieMdbId;
+    private String  movieTitle;
+    private String  movieOriginalLanguage;
+    private int     movieVoteCount;
+    private String  movieBackdropPath;
+    private double  moviePopularity;
+    private String  movieTagline;
+    private int     movieBuget;
+    private int     movieRevenue;
+    private int     movieRunTime;
+    private String  movieGenres;
     private List<MovieProductionCompany> companiesArrayList;
-    private String movieHomepage;
+    private String  movieHomepage;
 
     // Empty constructor
-    public Movie() {}
+    public Movie() {
+    }
 
     // Constructor to use in posters movie list object
     public Movie(int movieId, String moviePosterPath, String movieOriginalTitle, String movieReleaseDate, double movieVoteAverage) {
@@ -40,29 +40,6 @@ public class Movie {
         this.movieOriginalTitle = movieOriginalTitle;
         this.movieReleaseDate = movieReleaseDate;
         this.movieVoteAverage = movieVoteAverage;
-    }
-
-    // Constructor for movie details object.
-    public Movie(int movieId, String moviePosterPath, String movieOriginalTitle, String movieOverview, String movieReleaseDate, double movieVoteAverage, int movieMdbId, String movieTitle, String movieOriginalLanguage, int movieVoteCount, String movieBackdropPath, double moviePopularity, String movieTagline, int movieBuget, int movieRevenue, int movieRunTime, String movieGenres, ArrayList<MovieProductionCompany> companiesArrayList, String movieHomepage) {
-        this.movieId = movieId;
-        this.moviePosterPath = moviePosterPath;
-        this.movieOriginalTitle = movieOriginalTitle;
-        this.movieOverview = movieOverview;
-        this.movieReleaseDate = movieReleaseDate;
-        this.movieVoteAverage = movieVoteAverage;
-        this.movieMdbId = movieMdbId;
-        this.movieTitle = movieTitle;
-        this.movieOriginalLanguage = movieOriginalLanguage;
-        this.movieVoteCount = movieVoteCount;
-        this.movieBackdropPath = movieBackdropPath;
-        this.moviePopularity = moviePopularity;
-        this.movieTagline = movieTagline;
-        this.movieBuget = movieBuget;
-        this.movieRevenue = movieRevenue;
-        this.movieRunTime = movieRunTime;
-        this.movieGenres = movieGenres;
-        this.companiesArrayList = companiesArrayList;
-        this.movieHomepage = movieHomepage;
     }
 
     public int getMovieId() {
@@ -113,9 +90,11 @@ public class Movie {
         this.movieVoteAverage = movieVoteAverage;
     }
 
-    public int getMovieMdbId() {
-        return movieMdbId;
-    }
+// --Commented out by Inspection START (19/09/18 16:38):
+//    public int getMovieMdbId() {
+//        return movieMdbId;
+//    }
+// --Commented out by Inspection STOP (19/09/18 16:38)
 
     public void setMovieMdbId(int movieMdbId) {
         this.movieMdbId = movieMdbId;
@@ -220,25 +199,25 @@ public class Movie {
     @Override
     public String toString() {
         return "Movie{" +
-                "movieId=" + movieId +
-                ", moviePosterPath='" + moviePosterPath + '\'' +
-                ", movieOriginalTitle='" + movieOriginalTitle + '\'' +
-                ", movieOverview='" + movieOverview + '\'' +
-                ", movieReleaseDate='" + movieReleaseDate + '\'' +
-                ", movieVoteAverage=" + movieVoteAverage +
-                ", movieMdbId=" + movieMdbId +
-                ", movieTitle='" + movieTitle + '\'' +
+                "movieId="                  + movieId +
+                ", moviePosterPath='"       + moviePosterPath + '\'' +
+                ", movieOriginalTitle='"    + movieOriginalTitle + '\'' +
+                ", movieOverview='"         + movieOverview + '\'' +
+                ", movieReleaseDate='"      + movieReleaseDate + '\'' +
+                ", movieVoteAverage="       + movieVoteAverage +
+                ", movieMdbId="             + movieMdbId +
+                ", movieTitle='"            + movieTitle + '\'' +
                 ", movieOriginalLanguage='" + movieOriginalLanguage + '\'' +
-                ", movieVoteCount=" + movieVoteCount +
-                ", movieBackdropPath='" + movieBackdropPath + '\'' +
-                ", moviePopularity=" + moviePopularity +
-                ", movieTagline='" + movieTagline + '\'' +
-                ", movieBuget=" + movieBuget +
-                ", movieRevenue=" + movieRevenue +
-                ", movieRunTime=" + movieRunTime +
-                ", movieGenres='" + movieGenres + '\'' +
-                ", companiesArrayList=" + companiesArrayList +
-                ", movieHomepage='" + movieHomepage + '\'' +
+                ", movieVoteCount="         + movieVoteCount +
+                ", movieBackdropPath='"     + movieBackdropPath + '\'' +
+                ", moviePopularity="        + moviePopularity +
+                ", movieTagline='"          + movieTagline + '\'' +
+                ", movieBuget="             + movieBuget +
+                ", movieRevenue="           + movieRevenue +
+                ", movieRunTime="           + movieRunTime +
+                ", movieGenres='"           + movieGenres + '\'' +
+                ", companiesArrayList="     + companiesArrayList +
+                ", movieHomepage='"         + movieHomepage + '\'' +
                 '}';
     }
 }

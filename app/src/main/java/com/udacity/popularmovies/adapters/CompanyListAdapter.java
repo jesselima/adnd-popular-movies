@@ -1,6 +1,5 @@
 package com.udacity.popularmovies.adapters;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -25,30 +24,28 @@ import java.util.ArrayList;
  * to be displayed to the user.
  * Official Documentation: https://developer.android.com/reference/android/support/v7/widget/RecyclerView.Adapter
  */
-public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.CompanyViewHolder>{
+public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.CompanyViewHolder> {
 
     @SuppressWarnings("unused")
     private static final String LOG_TAG = CompanyListAdapter.class.getSimpleName();
 
     private final ArrayList<MovieProductionCompany> companies;
-    private final Context context;
 
     /**
      * Constructs a new {@link CompanyListAdapter}.
      *
-     * @param context  of the app
      * @param companies is the list of companies, which is the data source of the adapter
      */
-    public CompanyListAdapter(Context context, ArrayList<MovieProductionCompany> companies) {
-        this.context = context;
+    public CompanyListAdapter(ArrayList<MovieProductionCompany> companies) {
         this.companies = companies;
     }
 
     /**
      * Inflates the layout for each company item and return that view.
+     *
      * @param viewType The view type of the new View.
-     * @param parent  The ViewGroup into which the new View will be added after it is bound to an
-     *                adapter position. It's the ViewGroup object used by the Inflater.
+     * @param parent   The ViewGroup into which the new View will be added after it is bound to an
+     *                 adapter position. It's the ViewGroup object used by the Inflater.
      * @return a company item view object represents the inflated layout filled with
      * data for each item(company) in the list on the UI
      * <p>
@@ -66,8 +63,8 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
      * Called by RecyclerView to display the data at the specified position.
      *
      * @param position The position of the item within the adapter's data set.
-     * @param holder The ViewGroup object used by the Inflater. The ViewHolder which should be updated
-     *              to represent the contents of the item at the given position in the data set.
+     * @param holder   The ViewGroup object used by the Inflater. The ViewHolder which should be updated
+     *                 to represent the contents of the item at the given position in the data set.
      */
     @Override
     public void onBindViewHolder(@NonNull CompanyListAdapter.CompanyViewHolder holder, final int position) {

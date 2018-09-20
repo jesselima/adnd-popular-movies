@@ -18,13 +18,15 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
     </style>
 
-    <style name="Widget.CardContent" parent="android:Widget">
-        <item name="android:padding">16dp</item>
-        <item name="android:orientation">vertical</item>
+    <style name="CardViewStyle" parent="CardView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">@dimen/card_margin</item>
+        <item name="cardCornerRadius">3dp</item>
+        <item name="cardElevation">4dp</item>
     </style>
 
     <!-- Author Credit: https://stackoverflow.com/questions/31542878/android-collapsingtoolbarlayout-title-background/31838291?noredirect=1#comment54917873_31838291 -->
-
     <style name="DetailsItemLayout">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
@@ -49,19 +51,44 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textSize">14sp</item>
         <item name="android:layout_marginBottom">4dp</item>
-        <!--<item name="android:textColor">@color/colorTextDefault</item>-->
     </style>
 
-    <style name="FullscreenTheme" parent="AppTheme">
-        <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
-        <item name="android:windowActionBarOverlay">true</item>
-        <item name="android:windowBackground">@null</item>
-        <item name="metaButtonBarStyle">?android:attr/buttonBarStyle</item>
-        <item name="metaButtonBarButtonStyle">?android:attr/buttonBarButtonStyle</item>
+    <!-- -->
+    <style name="textDetailsHeader">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/default_layout_margin</item>
+        <item name="android:layout_marginRight">@dimen/default_layout_margin</item>
+        <item name="android:layout_marginTop">@dimen/small_layout_margin</item>
+        <item name="android:gravity">start</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
+    <style name="textInfoAccent">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:paddingTop">@dimen/small_layout_margin</item>
+        <item name="android:paddingBottom">@dimen/small_layout_margin</item>
+        <item name="android:paddingLeft">@dimen/default_layout_margin</item>
+        <item name="android:paddingRight">@dimen/default_layout_margin</item>
+        <item name="android:layout_marginLeft">@dimen/default_layout_margin</item>
+        <item name="android:layout_marginRight">@dimen/default_layout_margin</item>
+        <item name="android:layout_marginTop">@dimen/default_layout_margin</item>
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
+
+    <style name="textVideoInfo">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginLeft">@dimen/small_layout_margin</item>
+        <item name="android:layout_marginRight">@dimen/small_layout_margin</item>
+    </style>
+
+
 
 </resources>

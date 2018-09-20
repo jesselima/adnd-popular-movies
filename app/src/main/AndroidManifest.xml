@@ -53,7 +53,7 @@
         <provider
             android:name=".localdatabase.BookmarkContentProvider"
             android:authorities="com.udacity.popularmovies"
-            android:exported="true" />
+            android:exported="false" />
 
     </application>
 

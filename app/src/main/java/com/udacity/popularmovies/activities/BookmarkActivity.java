@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -35,20 +36,14 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
     private final static String LOG_TAG = BookmarkActivity.class.getSimpleName();
     private static final int LOADER_ID_MOVIE_BOOKMARKS_LIST = 3;
-    Toast toast;
-
-
+    private Toast toast;
+    private Button buttonNavigateToMovies;
     private SQLiteDatabase sqLiteDatabase;
-    private BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
-
+    private final BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
     private TextView textViewNoBookmarks, textViewNavigateToBookmarks;
     private ImageView imageViewNoBookmarks;
-    Button buttonNavigateToMovies;
-
     private RecyclerView recyclerViewBookmark;
     private BookmarkAdapter bookmarkAdapter;
-
-    Cursor mCursorData = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +52,13 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
         sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
 
-        textViewNoBookmarks = findViewById(R.id.text_view_no_bookmarks);
+        textViewNoBookmarks         = findViewById(R.id.text_view_no_bookmarks);
         textViewNavigateToBookmarks = findViewById(R.id.text_view_navigate_to_bookmarks);
-        imageViewNoBookmarks = findViewById(R.id.image_view_no_bookmarks);
-        buttonNavigateToMovies = findViewById(R.id.bt_navigate_to_movies);
+        imageViewNoBookmarks        = findViewById(R.id.image_view_no_bookmarks);
+        buttonNavigateToMovies      = findViewById(R.id.bt_navigate_to_movies);
+        recyclerViewBookmark        = findViewById(R.id.recycler_view_bookmark);
 
-        recyclerViewBookmark = findViewById(R.id.recycler_view_bookmark);
         recyclerViewBookmark.setLayoutManager(new LinearLayoutManager(this));
-
         bookmarkAdapter = new BookmarkAdapter(this);
         bookmarkAdapter.notifyDataSetChanged();
         recyclerViewBookmark.setAdapter(bookmarkAdapter);
@@ -94,7 +88,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         });
 
         // Start the Loader Callbacks to query the list of movie bookmarks asynchronously
-         getSupportLoaderManager().initLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
+        getSupportLoaderManager().initLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
 
     } // Close onCreate
 
@@ -117,7 +111,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
             protected void onStartLoading() {
                 if (mCursorData != null) {
                     deliverResult(mCursorData);
-                }else {
+                } else {
                     forceLoad();
                 }
             }
@@ -132,7 +126,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                             null,
                             null,
                             BookmarkContract.BookmarkEntry.COLUMN_TIMESTAMP + " DESC");
-                }catch (Exception e) {
+                } catch (Exception e) {
                     Log.e(LOG_TAG, "Fail to load data");
                     e.printStackTrace();
                     return null;
@@ -149,10 +143,9 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
-        mCursorData = data;
         if (data.getCount() < 1) {
             showNoBookmarkWarning();
-        }else {
+        } else {
             hideNoBookmarkWarning();
         }
         bookmarkAdapter.swapCursor(data);
@@ -175,23 +168,26 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     /* === DATABASE MANIPULATION === */
 
     private boolean deleteBookmark(long id) {
-        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
 
-        boolean isBookmarkDeleted = getContentResolver().delete(
-                BookmarkEntry.CONTENT_URI,
-                BookmarkContract.BookmarkEntry._ID + "=" + id,
+        String stringId = Long.toString(id);
+        Uri uri = BookmarkEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(stringId).build();
+
+        Log.v("DELETE URI: ", uri.toString());
+
+        return getContentResolver().delete(
+                uri,
+                BookmarkEntry._ID + "=" + id,
                 null
         ) > 0;
-
-        sqLiteDatabase.close();
-        return isBookmarkDeleted;
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     private boolean deleteAllBookmarks() {
         int rowsDeleted = getContentResolver().delete(
-                                                BookmarkEntry.CONTENT_URI,
-                                                null,
-                                                null);
+                BookmarkEntry.CONTENT_URI,
+                null,
+                null);
 
         if (rowsDeleted > 0) {
             doToast(rowsDeleted + getResources().getString(R.string.number_of_deleted_bookmarks));
@@ -212,10 +208,12 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-                if (!deleteBookmark(movieApiId)) {
+                if (deleteBookmark(movieApiId)) {
+                    doToast(getString(R.string.deleted));
+                    restartLoaderBookmarks();
+                }else {
                     doToast(getString(R.string.warning_could_not_be_deleted));
                 }
-                restartLoaderBookmarks();
 
                 if (bookmarkAdapter.getItemCount() == 0) {
                     showNoBookmarkWarning();
@@ -229,6 +227,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                 if (dialog != null) {
                     dialog.dismiss();
                     restartLoaderBookmarks();
+                    doToast(getString(R.string.canceled));
                 }
             }
         });
@@ -296,7 +295,6 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
     /**

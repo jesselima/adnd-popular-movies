@@ -13,19 +13,21 @@ import android.support.annotation.Nullable;
 
 import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
 
+import java.util.Objects;
+
 /**
  * Created by jesse on 08/09/18.
  * This is a part of the project adnd-popular-movies.
  */
 public class BookmarkContentProvider extends ContentProvider {
 
-    public static final int BOOKMARKS = 100;
-    public static final int BOOKMARK_WITH_ID = 101;
+    private static final int BOOKMARKS = 100;
+    private static final int BOOKMARK_WITH_ID = 101;
 
     /* This way UriMatcher can be accessed throughout all the provider code, and don't forget to set it equal to the return value */
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
-    public static UriMatcher buildUriMatcher() {
+    private static UriMatcher buildUriMatcher() {
         // NO_MATCH construct a empty matcher
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
@@ -78,7 +80,7 @@ public class BookmarkContentProvider extends ContentProvider {
 
         // Set notification changes. It tells the cursor what content URI it was created for.
         // This way, if anything changes in the URI, the cursor will know.
-        returnCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        returnCursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri);
 
         // Return a cursor with data (this cursor might be empty or full)
         return returnCursor;
@@ -120,7 +122,7 @@ public class BookmarkContentProvider extends ContentProvider {
         }
 
         // Notify the resolver if the uri has been changed
-        getContext().getContentResolver().notifyChange(uri, null);
+        Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
 
         return returnUri;
     }
@@ -138,15 +140,18 @@ public class BookmarkContentProvider extends ContentProvider {
                 rowsDeleted = db.delete(BookmarkEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             case BOOKMARK_WITH_ID:
+
+                String id = uri.getPathSegments().get(1);
+                // Use selections/selectionArgs to filter for this ID
                 selection = BookmarkEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri))};
+                selectionArgs = new String[] { id };
                 rowsDeleted = db.delete(BookmarkEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:
                 throw new IllegalArgumentException("Delete not supported for " + uri);
         }
         if (rowsDeleted > 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
+            Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
         }
 
         return rowsDeleted;
