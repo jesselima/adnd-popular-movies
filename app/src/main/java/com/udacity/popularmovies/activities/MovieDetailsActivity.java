@@ -561,8 +561,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
     private boolean saveBookmark(byte[] imageInBytesArray) {
 
-        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
-
         ContentValues contentValues = new ContentValues();
         contentValues.put(BookmarkEntry.COLUMN_API_ID, movieData.getMovieId());
         contentValues.put(BookmarkEntry.COLUMN_ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
@@ -583,12 +581,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         Uri uri = getContentResolver().insert(BookmarkEntry.CONTENT_URI, contentValues);
 
         // Return TRUE if the uri returned uri is not null.
-        if (uri != null) {
-            sqLiteDatabase.close();
-            return true;
-        }
-        sqLiteDatabase.close();
-        return false;
+        return uri != null;
     }
 
     private boolean deleteBookmark(long id) {
@@ -605,22 +598,18 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
     private boolean checkBookmarkOnDatabase() {
 
-        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
+        String stringId = Integer.toString(movieData.getMovieId());
+        Uri uri = BookmarkEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(stringId).build();
 
-        Cursor cursor = sqLiteDatabase.query(
-                BookmarkEntry.TABLE_NAME,   // table
-                new String[]{BookmarkEntry.COLUMN_API_ID, BookmarkEntry.COLUMN_ORIGINAL_TITLE},  // columns
-                BookmarkEntry.COLUMN_API_ID + "=?",   // selection
-                new String[]{String.valueOf(movieData.getMovieId())},   // selectionArgs
-                null,      // groupBy
-                null,       // having
-                null);     // orderBy
+        Cursor cursor = getContentResolver().query(
+                BookmarkEntry.CONTENT_URI,
+                null,                                           // selection (colunms).
+                BookmarkEntry.COLUMN_API_ID + "=?",             // selection
+                new String[]{String.valueOf(movieData.getMovieId())},    // selectionArgs
+                null);
+        return cursor.getCount() > 0;
 
-        boolean isOnDatabase = cursor.getCount() > 0;
-        cursor.close();
-        sqLiteDatabase.close();
-
-        return isOnDatabase;
     }
 
 
