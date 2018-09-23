@@ -53,7 +53,12 @@ public class BookmarkContentProvider extends ContentProvider {
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+    public Cursor query(
+            @NonNull  Uri       uri,
+            @Nullable String[]  projection,
+            @Nullable String    selection,
+            @Nullable String[]  selectionArgs,
+            @Nullable String    sortOrder) {
 
         // gaining access to read our underlying database
         final SQLiteDatabase db = bookmarkDbHelper.getReadableDatabase();
@@ -158,7 +163,10 @@ public class BookmarkContentProvider extends ContentProvider {
     }
 
     @Override
-    public int update(@NonNull Uri uri, @Nullable ContentValues contentValues, @Nullable String s, @Nullable String[] strings) {
+    public int update(@NonNull Uri uri,
+                      @Nullable ContentValues contentValues,
+                      @Nullable String selection,
+                      @Nullable String[] selectionArgs) {
         return 0;
     }
 }

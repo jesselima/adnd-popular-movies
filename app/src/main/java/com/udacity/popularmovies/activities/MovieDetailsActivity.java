@@ -3,9 +3,9 @@ package com.udacity.popularmovies.activities;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -38,7 +38,6 @@ import com.udacity.popularmovies.loaders.MovieLoader;
 import com.udacity.popularmovies.loaders.ReviewListLoader;
 import com.udacity.popularmovies.loaders.VideoListLoader;
 import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
-import com.udacity.popularmovies.localdatabase.BookmarkDbHelper;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.models.MovieProductionCompany;
 import com.udacity.popularmovies.models.MovieReview;
@@ -60,17 +59,17 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
     private static final String LOG_TAG = MovieDetailsActivity.class.getSimpleName();
     // The Loader ID to be used by the LoaderManager
-    private static final int MOVIE_DETAILS_LOADER_ID    = 100;
-    private static final int MOVIE_VIDEOS_LOADER_ID     = 200;
-    private static final int MOVIE_REVIEWS_LOADER_ID    = 300;
+    private static final int MOVIE_DETAILS_LOADER_ID = 100;
+    private static final int MOVIE_VIDEOS_LOADER_ID = 200;
+    private static final int MOVIE_REVIEWS_LOADER_ID = 300;
 
-    private static final int TAB_DETAILS    = 0;
-    private static final int TAB_VIDEOS     = 1;
-    private static final int TAB_REVIEWS    = 2;
-    private static final int TAB_COMPANIES  = 3;
+    private static final int TAB_DETAILS = 0;
+    private static final int TAB_VIDEOS = 1;
+    private static final int TAB_REVIEWS = 2;
+    private static final int TAB_COMPANIES = 3;
 
-    private final int HIDE      = View.GONE;
-    private final int SHOW      = View.VISIBLE;
+    private final int HIDE = View.GONE;
+    private final int SHOW = View.VISIBLE;
     private final int INVISIBLE = View.INVISIBLE;
 
     private String loadApiLanguage = ApiConfig.UrlParamValue.LANGUAGE_DEFAULT;
@@ -97,9 +96,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private TextView textViewBuget;
     private TextView textViewRevenue;
     private TextView textViewGenres;
-
-    private SQLiteDatabase sqLiteDatabase;
-    private BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
 
     private FloatingActionButton floatingBookmarkButton = null;
     private FloatingActionButton floatingShareButton = null;
@@ -128,6 +124,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private TextView textViewWarningNoData;
     private ImageView imageViewWarningNoData;
     private Toast toast;
+    private boolean isBookmarkOnDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,19 +132,19 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         setContentView(R.layout.activity_movie_details);
         Log.d("===>>> onCreate", " called");
 
-        tabLayout = findViewById(R.id.tab_layout);
-        linearLayoutSectionDetails = findViewById(R.id.section_info);
-        linearLayoutSectionVideos = findViewById(R.id.section_videos);
-        linearLayoutSectionReviews = findViewById(R.id.section_reviews);
-        linearLayoutSectionCompanies = findViewById(R.id.section_companies);
-        linearLayoutFullContent = findViewById(R.id.section_full_content);
-
+        // Get the movie ID and Title from the clicked item on the RecyclerView item.
+        getIncomingIntent();
         progressBar = findViewById(R.id.indeterminateBar);
         progressBarStatus(SHOW);
 
-        // Get the movie ID and Title from the clicked item on the RecyclerView item.
-        getIncomingIntent();
+        tabLayout = findViewById(R.id.tab_layout);
         setupTabs();
+
+        linearLayoutSectionDetails      = findViewById(R.id.section_info);
+        linearLayoutSectionVideos       = findViewById(R.id.section_videos);
+        linearLayoutSectionReviews      = findViewById(R.id.section_reviews);
+        linearLayoutSectionCompanies    = findViewById(R.id.section_companies);
+        linearLayoutFullContent         = findViewById(R.id.section_full_content);
 
         // UI REFERENCES
         imageViewMoviePoster    = findViewById(R.id.iv_movie_poster);
@@ -218,15 +215,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         floatingBookmarkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (checkBookmarkOnDatabase()) {
+                if (isBookmarkOnDatabase) {
                     // if the Movie is already bookmarked, remove it from the database and update icon status to unsaved icon
-                    deleteBookmark(movieData.getMovieId());
-                    floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
-                    doToast(getResources().getString(R.string.movie_removed));
+                    new DeleteBookmarkAsyncTask().execute(movieData.getMovieId());
                 } else {
-                    saveBookmark(convertImageViewToBytes(imageViewMoviePoster));
-                    floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
-                    doToast(getResources().getString(R.string.movie_saved));
+                    new SaveBookmarkAsyncTask().execute();
                 }
             }
         });
@@ -257,6 +250,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
         checkConnectionAndStartLoader();
         showDetails();
+        new CheckBookmarkAsyncTask().execute();
 
     } // Close onCreate
 
@@ -413,11 +407,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                     // Updates the UI with details of the movie
                     updateUI(movieData);
                     // if the movie bookmark is on the database update the floating Bookmark Button icon
-                    if (checkBookmarkOnDatabase()) {
-                        floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
-                    } else {
-                        floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
-                    }
+//                    if (checkBookmarkOnDatabase()) {
+//                        floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
+//                    } else {
+//                        floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);TODO REMOVE IT!!!
+//                    }
+                    new CheckBookmarkAsyncTask().execute();
 
                     movieHomepageUrl = movieData.getMovieHomepage();
                     // Clear the companies list before add new data. It's avoid memory leaks.
@@ -559,68 +554,119 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
     /* === SQLITE DATABASE MANAGEMENT METHODS === */
 
-    private boolean saveBookmark(byte[] imageInBytesArray) {
+    private class SaveBookmarkAsyncTask extends AsyncTask<Void, Void, Uri> {
 
-        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
-
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(BookmarkEntry.COLUMN_API_ID, movieData.getMovieId());
-        contentValues.put(BookmarkEntry.COLUMN_ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
-        contentValues.put(BookmarkEntry.COLUMN_RELEASE_DATE, movieData.getMovieReleaseDate());
-        contentValues.put(BookmarkEntry.COLUMN_RUNTIME, movieData.getMovieRunTime());
-        contentValues.put(BookmarkEntry.COLUMN_GENRES, movieData.getMovieGenres());
-        contentValues.put(BookmarkEntry.COLUMN_HOMEPAGE, movieData.getMovieHomepage());
-        contentValues.put(BookmarkEntry.COLUMN_TAGLINE, movieData.getMovieTagline());
-        contentValues.put(BookmarkEntry.COLUMN_OVERVIEW, movieData.getMovieOverview());
-        contentValues.put(BookmarkEntry.COLUMN_SPOKEN_LANGUAGES, movieData.getMovieSpokenLanguage());
-        contentValues.put(BookmarkEntry.COLUMN_VOTE_AVERAGE, movieData.getMovieVoteAverage());
-        contentValues.put(BookmarkEntry.COLUMN_VOTE_COUNT, movieData.getMovieVoteCount());
-        contentValues.put(BookmarkEntry.COLUMN_POPULARITY, movieData.getMoviePopularity());
-        contentValues.put(BookmarkEntry.COLUMN_BUDGET, movieData.getMovieBuget());
-        contentValues.put(BookmarkEntry.COLUMN_REVENUE, movieData.getMovieRevenue());
-        contentValues.put(BookmarkEntry.COLUMN_HOMEPAGE, movieData.getMovieHomepage());
-        contentValues.put(BookmarkEntry.COLUMN_MOVIE_IMAGE, imageInBytesArray);
-        Uri uri = getContentResolver().insert(BookmarkEntry.CONTENT_URI, contentValues);
-
-        // Return TRUE if the uri returned uri is not null.
-        if (uri != null) {
-            sqLiteDatabase.close();
-            return true;
+        @Override
+        protected void onPreExecute() {
+            progressBarStatus(SHOW);
+            super.onPreExecute();
         }
-        sqLiteDatabase.close();
-        return false;
+
+        @Override
+        protected Uri doInBackground(Void... voids) {
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(BookmarkEntry.COLUMN_API_ID,          movieData.getMovieId());
+            contentValues.put(BookmarkEntry.COLUMN_ORIGINAL_TITLE,  movieData.getMovieOriginalTitle());
+            contentValues.put(BookmarkEntry.COLUMN_RELEASE_DATE,    movieData.getMovieReleaseDate());
+            contentValues.put(BookmarkEntry.COLUMN_RUNTIME,         movieData.getMovieRunTime());
+            contentValues.put(BookmarkEntry.COLUMN_GENRES,          movieData.getMovieGenres());
+            contentValues.put(BookmarkEntry.COLUMN_HOMEPAGE,        movieData.getMovieHomepage());
+            contentValues.put(BookmarkEntry.COLUMN_TAGLINE,         movieData.getMovieTagline());
+            contentValues.put(BookmarkEntry.COLUMN_OVERVIEW,        movieData.getMovieOverview());
+            contentValues.put(BookmarkEntry.COLUMN_SPOKEN_LANGUAGES, movieData.getMovieSpokenLanguage());
+            contentValues.put(BookmarkEntry.COLUMN_VOTE_AVERAGE,    movieData.getMovieVoteAverage());
+            contentValues.put(BookmarkEntry.COLUMN_VOTE_COUNT,      movieData.getMovieVoteCount());
+            contentValues.put(BookmarkEntry.COLUMN_POPULARITY,      movieData.getMoviePopularity());
+            contentValues.put(BookmarkEntry.COLUMN_BUDGET,          movieData.getMovieBuget());
+            contentValues.put(BookmarkEntry.COLUMN_REVENUE,         movieData.getMovieRevenue());
+            contentValues.put(BookmarkEntry.COLUMN_HOMEPAGE,        movieData.getMovieHomepage());
+            contentValues.put(BookmarkEntry.COLUMN_MOVIE_IMAGE,     convertImageViewToBytes(imageViewMoviePoster));
+
+            return getContentResolver().insert(BookmarkEntry.CONTENT_URI, contentValues);
+        }
+
+        @Override
+        protected void onPostExecute(Uri uri) {
+            if (uri != null) {
+                floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
+                doToast(getResources().getString(R.string.movie_saved));
+            } else {
+                doToast(getResources().getString(R.string.warning_could_not_be_saved));
+                floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
+            }
+            progressBarStatus(INVISIBLE);
+        }
     }
 
-    private boolean deleteBookmark(long id) {
+    private class DeleteBookmarkAsyncTask extends AsyncTask<Integer, Void, Integer> {
 
-        // Converts the Long Movie Id to String
-        String stringId = Long.toString(id);
-        // Delete a single row of data using a ContentResolver
-        return getContentResolver().delete(
-                BookmarkEntry.CONTENT_URI,
-                BookmarkEntry.COLUMN_API_ID + "=?",
-                new String[]{stringId}
-        ) > 0;
+        @Override
+        protected void onPreExecute() {
+            progressBarStatus(SHOW);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... integers) {
+
+            long id = integers[0];
+            String stringId = Long.toString(id);
+
+            return getContentResolver().delete(
+                    BookmarkEntry.CONTENT_URI,
+                    BookmarkEntry.COLUMN_API_ID + "=?",
+                    new String[]{stringId}
+            );
+        }
+
+        @Override
+        protected void onPostExecute(Integer rowsDeleted) {
+            if (rowsDeleted > 0) {
+                floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
+                doToast(getResources().getString(R.string.movie_removed));
+            } else {
+                doToast(getResources().getString(R.string.warning_could_not_be_removed));
+                floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
+            }
+            progressBarStatus(INVISIBLE);
+        }
     }
 
-    private boolean checkBookmarkOnDatabase() {
+    private class CheckBookmarkAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
-        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
+        @Override
+        protected void onPreExecute() {
+            progressBarStatus(SHOW);
+            super.onPreExecute();
+        }
 
-        Cursor cursor = sqLiteDatabase.query(
-                BookmarkEntry.TABLE_NAME,   // table
-                new String[]{BookmarkEntry.COLUMN_API_ID, BookmarkEntry.COLUMN_ORIGINAL_TITLE},  // columns
-                BookmarkEntry.COLUMN_API_ID + "=?",   // selection
-                new String[]{String.valueOf(movieData.getMovieId())},   // selectionArgs
-                null,      // groupBy
-                null,       // having
-                null);     // orderBy
+        @Override
+        protected Boolean doInBackground(Void... voids) {
 
-        boolean isOnDatabase = cursor.getCount() > 0;
-        cursor.close();
-        sqLiteDatabase.close();
+            String stringId = Integer.toString(movieData.getMovieId());
+            Uri uri = BookmarkEntry.CONTENT_URI;
+            uri = uri.buildUpon().appendPath(stringId).build();
 
-        return isOnDatabase;
+            Cursor cursor = getContentResolver().query(
+                    BookmarkEntry.CONTENT_URI,
+                    null,                                         // projection (colunms).
+                    BookmarkEntry.COLUMN_API_ID + "=?",            // selection
+                    new String[]{String.valueOf(movieData.getMovieId())},   // selectionArgs
+                    null);                                         // sortOrder
+            return cursor.getCount() > 0;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isOnDatabase) {
+            isBookmarkOnDatabase = isOnDatabase;
+            if (isOnDatabase) {
+                floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
+            } else {
+                floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
+            }
+            progressBarStatus(INVISIBLE);
+        }
     }
 
 
