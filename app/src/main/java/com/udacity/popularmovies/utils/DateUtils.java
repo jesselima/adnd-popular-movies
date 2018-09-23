@@ -1,5 +1,8 @@
 package com.udacity.popularmovies.utils;
 
+import android.content.Context;
+import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,6 +11,10 @@ import java.util.Locale;
 
 @SuppressWarnings("unused")
 public final class DateUtils {
+
+    private final static String LOG_TAG = DateUtils.class.getSimpleName();
+
+    Context context;
 
     /**
      * Allows others classes instantiates a empty DateUtils object.
@@ -27,6 +34,9 @@ public final class DateUtils {
         Date date;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
+        if (dateString == null) {
+            Log.d(LOG_TAG, "Invalid date");
+        }
         try {
             date = dateFormat.parse(dateString);
             dateStringFormated = formatDate(date);

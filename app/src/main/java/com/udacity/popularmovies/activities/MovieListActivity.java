@@ -49,7 +49,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     private static final String LOG_TAG = MovieListActivity.class.getSimpleName();
 
     // Movie List Loader ID
-    private static final int MOVIE_LOADER_ID = 1;
+    private static final int MOVIE_LOADER_ID = 100;
     private static Bundle bundleRecyclerView;
     private ArrayList<Movie> movieList = new ArrayList<>();
     // Implementation for save state
@@ -68,9 +68,13 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     private Toast toast;
     // Vie objects to control UI warnings
     private TextView tvNetworkStatus;
+    private ImageView ivNetworkStatus;
     private ImageView imageViewNoMovies;
     private TextView textViewNoImageWarning;
     private ProgressBar loadingIndicator;
+    private static final int HIDE = View.GONE;
+    private static final int SHOW = View.VISIBLE;
+    private static final int INVISIBLE = View.INVISIBLE;
     // Objects ro set and control RecyclerView and the list of movie data
     private RecyclerView recyclerView;
     private MovieListAdapter movieListAdapter;
@@ -136,10 +140,12 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
         layoutParams.setBehavior(new BottomNavigationBehavior());
 
-        loadingIndicator = findViewById(R.id.loading_indicator);
         imageViewNoMovies = findViewById(R.id.iv_no_movies_placeholder);
         textViewNoImageWarning = findViewById(R.id.tv_warning_no_movies);
         tvNetworkStatus = findViewById(R.id.tv_network_status);
+        ivNetworkStatus = findViewById(R.id.iv_warning_no_connection_list);
+        loadingIndicator = findViewById(R.id.loading_indicator);
+        loadingIndicator.setIndeterminate(true);
 
         // Setup the adapter adapter and RecyclerView to receive data.
         movieListAdapter = new MovieListAdapter(this, movieList);
@@ -168,7 +174,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
     /*** Methods for BottonNavigation control ***/
     private void restartLoader() {
-        showLoadingIndicator();
+        progressBarStatus(SHOW);
         getSupportLoaderManager().restartLoader(MOVIE_LOADER_ID, null, this);
     }
 
@@ -176,8 +182,8 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     // request to load the previous 20 movies. If the current page is == 1 toast a warning to the user
     private void paginationBackward() {
         movieList.clear();
-        hideNoResultsWarning();
-        hideConnectionWarning();
+        noResultsWarning(HIDE);
+        connectionWarning(HIDE);
         // The validation if the user is already at page 1 is done in the switch on the
         // BottonNavigationMenu because this method should even called if the current page == 1.
         page--;
@@ -190,8 +196,8 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     // request to load the next 20 movies. If the current.
     private void paginationForward() {
         movieList.clear();
-        hideNoResultsWarning();
-        hideConnectionWarning();
+        noResultsWarning(HIDE);
+        connectionWarning(HIDE);
         page++;
         restartLoader();
         doToast(String.valueOf("Page " + page));
@@ -241,20 +247,21 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
         // When the onCreateLoader finish its job, it will pass the data do this method.
         if (movies == null || movies.isEmpty()) {
-            showNoResultsWarning();
+            noResultsWarning(SHOW);
             // If there is no movie to show give a warning to the user in the UI.
             if (NetworkUtils.isDeviceConnected(this)) {
-                hideConnectionWarning();
-                showNoResultsWarning();
+                connectionWarning(HIDE);
+                noResultsWarning(SHOW);
             } else {
-                showConnectionWarning();
+                noResultsWarning(HIDE);
+                connectionWarning(SHOW);
             }
         } else {
             // If the movie list has data, hide the loading indicator, hide connection warnings (if needed)
             // and hide no results UI warnings.
-            hideLoadingIndicator();
-            hideConnectionWarning();
-            hideNoResultsWarning();
+            progressBarStatus(HIDE);
+            connectionWarning(HIDE);
+            noResultsWarning(HIDE);
             // Clear the previous list of movies to avoid memory leaks.
             movieList.clear();
             // Add the movies returned from the loader to the movie list
@@ -274,90 +281,8 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     public void onLoaderReset(@NonNull Loader loader) {
     }
 
-    /**
-     * Check internet connection when activity is started.
-     */
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (NetworkUtils.isDeviceConnected(this)) {
-            hideConnectionWarning();
-        } else {
-            showConnectionWarning();
-        }
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        bundleRecyclerView = new Bundle();
-        Parcelable parcelable = recyclerView.getLayoutManager().onSaveInstanceState();
-        bundleRecyclerView.putParcelable(KEY_RECYCLER_STATE, parcelable);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Check internet connection when activity is resumed.
-        if (NetworkUtils.isDeviceConnected(this)) {
-            hideConnectionWarning();
-        } else {
-            showConnectionWarning();
-        }
-        // Check is there is a saved state.
-        if (bundleRecyclerView != null) {
-            Parcelable parcelable = bundleRecyclerView.getParcelable(KEY_RECYCLER_STATE);
-            recyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
-        }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        // Check internet connection when activity is resumed.
-        if (NetworkUtils.isDeviceConnected(this)) {
-            hideConnectionWarning();
-            hideNoResultsWarning();
-        } else {
-            showConnectionWarning();
-        }
-    }
-
-    /**
-     * HELPER METHODS FOR UI WARNINGS - SHOW/HIDE WARNINGS FOR LOADING, INTERNET CONNECTION AND
-     * NO RESULTS RETURNED FROM THE SERVER.
-     */
-
-    private void showLoadingIndicator() {
-        loadingIndicator.setIndeterminate(true);
-        loadingIndicator.setVisibility(View.VISIBLE);
-    }
-
-    private void hideLoadingIndicator() {
-        loadingIndicator.setVisibility(View.GONE);
-        loadingIndicator.setIndeterminate(false);
-    }
-
-    private void showNoResultsWarning() {
-        imageViewNoMovies.setVisibility(View.VISIBLE);
-        textViewNoImageWarning.setVisibility(View.VISIBLE);
-    }
-
-    private void hideNoResultsWarning() {
-        imageViewNoMovies.setVisibility(View.GONE);
-        textViewNoImageWarning.setVisibility(View.GONE);
-    }
-
-    private void showConnectionWarning() {
-        recyclerView.setVisibility(View.GONE);
-        tvNetworkStatus.setVisibility(View.VISIBLE);
-        hideNoResultsWarning();
-    }
-
-    private void hideConnectionWarning() {
-        recyclerView.setVisibility(View.VISIBLE);
-        tvNetworkStatus.setVisibility(View.GONE);
-    }
+    /* === HELPER METHODS === */
 
     /**
      * This method makes the reuse of toast object to avoid toasts queue
@@ -376,13 +301,13 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         // Check internet connection before start the loader
         if (!NetworkUtils.isDeviceConnected(this)) {
             // If device is not connected show connections warnings on the screen.
-            hideLoadingIndicator();
-            hideNoResultsWarning();
-            showConnectionWarning();
+            progressBarStatus(HIDE);
+            noResultsWarning(HIDE);
+            connectionWarning(SHOW);
         } else {
-            // Is device is connected Shows loading indicator and Kick off the loader
-            hideNoResultsWarning();
-            showLoadingIndicator();
+            connectionWarning(HIDE);
+            noResultsWarning(HIDE);
+            progressBarStatus(SHOW);
             getSupportLoaderManager().initLoader(MOVIE_LOADER_ID, null, this);
         }
     }
@@ -423,4 +348,80 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    /**
+     * UI HIDE/SHOW WARNING
+     * HELPER METHODS FOR UI WARNINGS - SHOW/HIDE WARNINGS FOR LOADING, INTERNET CONNECTION AND
+     * NO RESULTS RETURNED FROM THE SERVER.
+     */
+
+    private void progressBarStatus(int VISIBILITY) {
+        loadingIndicator.setVisibility(VISIBILITY);
+    }
+
+    private void noResultsWarning(int VISIBILITY) {
+        imageViewNoMovies.setVisibility(VISIBILITY);
+        textViewNoImageWarning.setVisibility(VISIBILITY);
+        if (VISIBILITY == SHOW) progressBarStatus(HIDE);
+    }
+
+    private void connectionWarning(int VISIBILITY) {
+        tvNetworkStatus.setVisibility(VISIBILITY);
+        ivNetworkStatus.setVisibility(VISIBILITY);
+        if (VISIBILITY == SHOW) recyclerView.setVisibility(HIDE);
+        else recyclerView.setVisibility(SHOW);
+    }
+
+
+    /**
+     * LIFECYCLE METHODS
+     */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (NetworkUtils.isDeviceConnected(this)) {
+            connectionWarning(HIDE);
+        } else {
+            connectionWarning(SHOW);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        bundleRecyclerView = new Bundle();
+        Parcelable parcelable = recyclerView.getLayoutManager().onSaveInstanceState();
+        bundleRecyclerView.putParcelable(KEY_RECYCLER_STATE, parcelable);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Check internet connection when activity is resumed.
+        if (NetworkUtils.isDeviceConnected(this)) {
+            connectionWarning(HIDE);
+        } else {
+            connectionWarning(SHOW);
+        }
+        // Check is there is a saved state.
+        if (bundleRecyclerView != null) {
+            Parcelable parcelable = bundleRecyclerView.getParcelable(KEY_RECYCLER_STATE);
+            recyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        // Check internet connection when activity is resumed.
+        if (NetworkUtils.isDeviceConnected(this)) {
+            connectionWarning(HIDE);
+            noResultsWarning(HIDE);
+        } else {
+            connectionWarning(SHOW);
+        }
+    }
+
 }

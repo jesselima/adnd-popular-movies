@@ -68,9 +68,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private static final int TAB_REVIEWS = 2;
     private static final int TAB_COMPANIES = 3;
 
-    private final int HIDE = View.GONE;
-    private final int SHOW = View.VISIBLE;
-    private final int INVISIBLE = View.INVISIBLE;
+    private static final int HIDE = View.GONE;
+    private static final int SHOW = View.VISIBLE;
+    private static final int INVISIBLE = View.INVISIBLE;
 
     private String loadApiLanguage = ApiConfig.UrlParamValue.LANGUAGE_DEFAULT;
     private int page = 1;
@@ -407,25 +407,25 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                     // Updates the UI with details of the movie
                     updateUI(movieData);
                     // if the movie bookmark is on the database update the floating Bookmark Button icon
-//                    if (checkBookmarkOnDatabase()) {
-//                        floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
-//                    } else {
-//                        floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);TODO REMOVE IT!!!
-//                    }
                     new CheckBookmarkAsyncTask().execute();
 
                     movieHomepageUrl = movieData.getMovieHomepage();
                     // Clear the companies list before add new data. It's avoid memory leaks.
                     companies.clear();
                     // Add new data to the list.
-                    companies.addAll(movieData.getCompaniesArrayList());
-                    companyListAdapter.notifyDataSetChanged();
+                    if (movieData.getCompaniesArrayList() == null) {
+                        recyclerViewCompanies.setVisibility(HIDE);
+                    }else {
+                        companies.addAll(movieData.getCompaniesArrayList());
+                        companyListAdapter.notifyDataSetChanged();
+                    }
 
                     if (companies.size() == 0) warningCompanies(SHOW);
                     else warningCompanies(HIDE);
 
                 } else {
                     warningDetails(SHOW);
+                    linearLayoutFullContent.setVisibility(HIDE);
                 }
 
                 showDetails();
@@ -492,9 +492,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
      * Check uf the movie returned from the Loader is valid
      *
      * @param movie is the {@link Movie} object with details.
-     * @return return true is the movie is
+     * @return return true is the movie object is not null.
      */
     private boolean isMovieValid(Movie movie) {
+        // Avoid error with when movie has no release date available and replace with "-"
+        if (movie.getMovieReleaseDate() == null) movie.setMovieReleaseDate("-");
+        // return true ir the movie object is not null.
         return movie != null;
     }
 
@@ -591,6 +594,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             if (uri != null) {
                 floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
                 doToast(getResources().getString(R.string.movie_saved));
+                isBookmarkOnDatabase = true;
             } else {
                 doToast(getResources().getString(R.string.warning_could_not_be_saved));
                 floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
@@ -625,6 +629,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             if (rowsDeleted > 0) {
                 floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
                 doToast(getResources().getString(R.string.movie_removed));
+                isBookmarkOnDatabase = false;
             } else {
                 doToast(getResources().getString(R.string.warning_could_not_be_removed));
                 floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
@@ -736,50 +741,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     }
 
 
-    /* === Lifecycle methods === */
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.d("===>>> onStart", " called");
-        if (NetworkUtils.isDeviceConnected(this)) {
-            warningConnection(HIDE);
-        } else {
-            warningConnection(SHOW);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("===>>> onPause", " called");
-        if (NetworkUtils.isDeviceConnected(this)) {
-            warningConnection(HIDE);
-        } else {
-            warningConnection(SHOW);
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("===>>> onResume", " called");
-        // Check internet connection when activity is resumed.
-        if (NetworkUtils.isDeviceConnected(this)) {
-            warningConnection(HIDE);
-            getSupportLoaderManager().restartLoader(MOVIE_DETAILS_LOADER_ID, null, this);
-        } else {
-            warningConnection(SHOW);
-        }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d("===>>> onRestart", " called");
-    }
-
-
     /* === UI HIDE/SHOW CONTENTS === */
 
     private void showDetails() {
@@ -879,5 +840,49 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         if (VISIBILITY == SHOW) progressBar.setIndeterminate(true);
         else progressBar.setIndeterminate(false);
         progressBar.setVisibility(VISIBILITY);
+    }
+
+
+    /* === Lifecycle methods === */
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("===>>> onStart", " called");
+        if (NetworkUtils.isDeviceConnected(this)) {
+            warningConnection(HIDE);
+        } else {
+            warningConnection(SHOW);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("===>>> onPause", " called");
+        if (NetworkUtils.isDeviceConnected(this)) {
+            warningConnection(HIDE);
+        } else {
+            warningConnection(SHOW);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("===>>> onResume", " called");
+        // Check internet connection when activity is resumed.
+        if (NetworkUtils.isDeviceConnected(this)) {
+            warningConnection(HIDE);
+            getSupportLoaderManager().restartLoader(MOVIE_DETAILS_LOADER_ID, null, this);
+        } else {
+            warningConnection(SHOW);
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("===>>> onRestart", " called");
     }
 }

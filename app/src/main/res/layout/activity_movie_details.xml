@@ -354,6 +354,7 @@
                 android:visibility="gone"
                 android:contentDescription="@string/no_info_available"
                 android:src="@drawable/ic_details"/>
+
             <TextView
                 android:id="@+id/tv_warning_no_data"
                 android:layout_width="match_parent"
@@ -367,23 +368,13 @@
                 android:visibility="gone"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/very_large_layout_margin"
-                android:contentDescription="@string/no_internet_connection"
-                android:src="@drawable/ic_no_connection"
-                android:visibility="gone"/>
+                android:id="@+id/iv_warning_no_connection_details"
+                style="@style/ImageNoConnection"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="16sp"
-                android:layout_marginTop="20dp"
-                android:text="@string/no_internet_connection"
-                android:textColor="@color/colorMediumGrey"
-                android:visibility="gone"/>
+                android:id="@+id/tv_warning_no_connection_details"
+                style="@style/ImageNoConnection"
+                android:text="@string/no_internet_connection"/>
 
             <include layout="@layout/tmdb_branding"
                 android:layout_marginBottom="100dp"
