@@ -212,7 +212,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                     doToast(getString(R.string.deleted));
                     restartLoaderBookmarks();
                 }else {
-                    doToast(getString(R.string.warning_could_not_be_deleted));
+                    doToast(getString(R.string.warning_could_not_be_removed));
                 }
 
                 if (bookmarkAdapter.getItemCount() == 0) {
