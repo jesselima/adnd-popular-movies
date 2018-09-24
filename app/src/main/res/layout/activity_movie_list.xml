@@ -24,7 +24,7 @@
     <ImageView
         android:id="@+id/iv_no_movies_placeholder"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:contentDescription="@string/no_movies_found_image"
         android:src="@drawable/film_strip_2"
@@ -32,14 +32,13 @@
 
     <TextView
         android:id="@+id/tv_warning_no_movies"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="170dp"
         android:text="@string/warning_no_movies_found"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:visibility="gone"/>
+        style="@style/textDefaultWarning"
+        android:layout_marginTop="150dp"/>
+
+    <ImageView
+        android:id="@+id/iv_warning_no_connection_list"
+        style="@style/ImageNoConnection"/>
 
     <ProgressBar
         android:id="@+id/loading_indicator"

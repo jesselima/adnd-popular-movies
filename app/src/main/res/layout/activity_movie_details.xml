@@ -99,19 +99,56 @@
                         android:layout_marginTop="4dp"
                         android:layout_weight="6"
                         android:orientation="vertical">
-                        <ImageView
-                            android:id="@+id/iv_movie_poster"
-                            android:layout_width="154dp"
-                            android:layout_height="231dp"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="4dp"
-                            android:background="@android:drawable/dialog_holo_light_frame"
-                            android:elevation="2dp"
-                            android:contentDescription="@string/movie_poster"
-                            android:scaleType="centerCrop"
-                            android:src="@drawable/poster_image_place_holder"
-                            android:textSize="30sp"
-                            android:textStyle="bold"/>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/default_layout_margin">
+
+                            <ImageView
+                                android:id="@+id/iv_movie_poster"
+                                android:layout_width="154dp"
+                                android:layout_height="231dp"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="4dp"
+                                android:background="@android:drawable/dialog_holo_light_frame"
+                                android:elevation="5dp"
+                                android:contentDescription="@string/movie_poster"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/poster_image_place_holder"
+                                android:textSize="30sp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:id="@+id/tv_label_watched"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="14sp"
+                                android:background="@color/colorAccent"
+                                android:paddingEnd="4dp"
+                                android:paddingStart="4dp"
+                                android:elevation="5dp"
+                                android:textAllCaps="true"
+                                android:textStyle="bold"
+                                android:layout_centerHorizontal="true"
+                                android:layout_marginStart="@dimen/small_layout_margin"
+                                android:visibility="gone"
+                                android:textColor="@color/colorLightGrey"
+                                android:text="@string/watched_flag"/>
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_marginEnd="@dimen/medium_layout_margin"
+                                android:elevation="5dp"
+                                android:visibility="gone"
+                                android:layout_marginTop="@dimen/default_layout_margin"
+                                android:src="@drawable/ic_bookmarked"/>
+
+                        </RelativeLayout>
+
                     </LinearLayout>
 
                     <LinearLayout
@@ -354,6 +391,7 @@
                 android:visibility="gone"
                 android:contentDescription="@string/no_info_available"
                 android:src="@drawable/ic_details"/>
+
             <TextView
                 android:id="@+id/tv_warning_no_data"
                 android:layout_width="match_parent"
@@ -367,23 +405,13 @@
                 android:visibility="gone"/>
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/very_large_layout_margin"
-                android:contentDescription="@string/no_internet_connection"
-                android:src="@drawable/ic_no_connection"
-                android:visibility="gone"/>
+                android:id="@+id/iv_warning_no_connection_details"
+                style="@style/ImageNoConnection"/>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="16sp"
-                android:layout_marginTop="20dp"
-                android:text="@string/no_internet_connection"
-                android:textColor="@color/colorMediumGrey"
-                android:visibility="gone"/>
+                android:id="@+id/tv_warning_no_connection_details"
+                style="@style/ImageNoConnection"
+                android:text="@string/no_internet_connection"/>
 
             <include layout="@layout/tmdb_branding"
                 android:layout_marginBottom="100dp"
@@ -418,7 +446,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
-        android:background="@android:drawable/dialog_holo_light_frame"
         android:elevation="2dp"
         android:focusable="true"
         android:src="@drawable/ic_share"
@@ -433,6 +460,17 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_bookmark_unsaved"
+        app:layout_anchor="@id/appbar"
+        app:layout_anchorGravity="bottom|right|end" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/float_is_watched"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="145dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_watched_not"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|right|end" />
     <!-- FLOATING BUTTONS END -->

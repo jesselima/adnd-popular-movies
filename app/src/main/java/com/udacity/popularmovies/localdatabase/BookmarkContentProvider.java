@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
 
@@ -24,7 +25,10 @@ public class BookmarkContentProvider extends ContentProvider {
     private static final int BOOKMARKS = 100;
     private static final int BOOKMARK_WITH_ID = 101;
 
-    /* This way UriMatcher can be accessed throughout all the provider code, and don't forget to set it equal to the return value */
+    /*
+    *  This way UriMatcher can be accessed throughout all the provider code,
+    *  and don't forget to set it equal to the return value
+    */
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
     private static UriMatcher buildUriMatcher() {
@@ -33,9 +37,11 @@ public class BookmarkContentProvider extends ContentProvider {
 
         // Add matches with addUri(String authority, String path, int code):
         // Directory
-        uriMatcher.addURI(BookmarkContract.AUTHORITY, BookmarkContract.PATH_MOVIES_BOOKMARKS, BOOKMARKS);
+        uriMatcher.addURI(BookmarkContract.AUTHORITY,
+                BookmarkContract.PATH_MOVIES_BOOKMARKS, BOOKMARKS);
         // Single item
-        uriMatcher.addURI(BookmarkContract.AUTHORITY, BookmarkContract.PATH_MOVIES_BOOKMARKS + "/#", BOOKMARK_WITH_ID);
+        uriMatcher.addURI(BookmarkContract.AUTHORITY,
+                BookmarkContract.PATH_MOVIES_BOOKMARKS + "/#", BOOKMARK_WITH_ID);
 
         return uriMatcher;
     }
@@ -167,6 +173,31 @@ public class BookmarkContentProvider extends ContentProvider {
                       @Nullable ContentValues contentValues,
                       @Nullable String selection,
                       @Nullable String[] selectionArgs) {
-        return 0;
+
+        final SQLiteDatabase db = bookmarkDbHelper.getWritableDatabase();
+        int rowsUpdated;
+
+        int match = sUriMatcher.match(uri);
+
+        switch (match) {
+            case BOOKMARK_WITH_ID:
+
+                String id = uri.getPathSegments().get(1);
+                // Use selections/selectionArgs to filter for this ID
+                selection = BookmarkEntry.COLUMN_API_ID + "=?";
+                selectionArgs = new String[] { id };
+
+                rowsUpdated = db.update(BookmarkEntry.TABLE_NAME,
+                        contentValues,
+                        selection,
+                        selectionArgs);
+
+                break;
+
+            default:
+                throw new IllegalArgumentException("Delete not supported for " + uri);
+        }
+
+        return rowsUpdated;
     }
 }
