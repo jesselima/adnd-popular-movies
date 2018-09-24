@@ -220,7 +220,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             @Override
             public void onClick(View view) {
                 // If the Bookmarks
-                if (!isBookmarkOnDatabase /*&& !isMovieWatched*/) {
+                if (!isBookmarkOnDatabase && !isMovieWatched) {
                     new SaveBookmarkAsyncTask().execute();
                 }
                 new UpdateBookmarkAsyncTask().execute(movieData.getMovieId());
@@ -582,9 +582,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
         @Override
         protected Uri doInBackground(Void... voids) {
-            int watched;
-            if (isMovieWatched) watched = 0;
-            else  watched = 1;
+            int watched = 0;
 
             ContentValues contentValues = new ContentValues();
             contentValues.put(BookmarkEntry.COLUMN_API_ID,          movieData.getMovieId());
