@@ -40,6 +40,7 @@ public class BookmarkContract {
         public static final String COLUMN_POPULARITY        = JsonKey.POPULARITY;
         public static final String COLUMN_BUDGET            = JsonKey.BUDGET;
         public static final String COLUMN_REVENUE           = JsonKey.REVENUE;
+        public static final String COLUMN_IS_WATCHED        = "watched";
         public static final String COLUMN_MOVIE_IMAGE       = ApiConfig.UrlParamKey.IMAGE_POSTER_W185;
         public static final String COLUMN_TIMESTAMP         = "saved_date";
 

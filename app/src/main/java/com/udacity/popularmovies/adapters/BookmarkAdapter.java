@@ -68,6 +68,10 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
         int revenue = cursor.getInt(cursor.getColumnIndex(BookmarkContract.BookmarkEntry.COLUMN_REVENUE));
         byte[] movieBytesImage = cursor.getBlob(cursor.getColumnIndex(BookmarkContract.BookmarkEntry.COLUMN_MOVIE_IMAGE));
 
+        int watched = cursor.getInt(cursor.getColumnIndex(BookmarkContract.BookmarkEntry.COLUMN_IS_WATCHED));
+        if (watched == 0) holder.textViewIsWatched.setVisibility(View.INVISIBLE);
+        else holder.textViewIsWatched.setVisibility(View.VISIBLE);
+
         holder.textViewOriginalTitle.setText(originalTitle);
         holder.textViewReleaseDate.setText(releaseDate);
         holder.textViewRuntime.setText(String.valueOf(runtime));
@@ -159,6 +163,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
         private final TextView textViewBudget;
         private final TextView textViewRevenue;
         private final ImageView imageViewMoviePoster;
+        private final TextView textViewIsWatched;
 
         BookmarkViewHolder(View itemView) {
             super(itemView);
@@ -179,6 +184,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
             textViewBudget = itemView.findViewById(R.id.tv_budget_db);
             textViewRevenue = itemView.findViewById(R.id.tv_revenue_db);
             imageViewMoviePoster = itemView.findViewById(R.id.iv_movie_poster_db);
+            textViewIsWatched = itemView.findViewById(R.id.tv_label_watched_bookmark);
         }
     }
 }

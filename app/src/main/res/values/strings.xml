@@ -80,5 +80,8 @@
     <string name="movie_video_play_button">Movie Video Play Button</string>
     <string name="deleted">Deleted</string>
     <string name="canceled">Canceled</string>
+    <string name="watched">Movie is set as watched</string>
+    <string name="not_watched">Movie is set as not watched</string>
     <string name="search">Search</string>
+    <string name="watched_flag">WATCHED</string>
 </resources>

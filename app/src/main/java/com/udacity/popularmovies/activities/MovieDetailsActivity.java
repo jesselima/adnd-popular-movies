@@ -20,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -97,6 +98,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private TextView textViewRevenue;
     private TextView textViewGenres;
 
+    private FloatingActionButton floatingIsWatchedButton = null;
     private FloatingActionButton floatingBookmarkButton = null;
     private FloatingActionButton floatingShareButton = null;
 
@@ -125,6 +127,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private ImageView imageViewWarningNoData;
     private Toast toast;
     private boolean isBookmarkOnDatabase;
+    private boolean isMovieWatched;
+    private TextView textViewLabelWatched;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +168,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         // Warnings UI View references.
         textViewWarningNoData   = findViewById(R.id.tv_warning_no_data);
         imageViewWarningNoData  = findViewById(R.id.iv_warning_no_data);
+        textViewLabelWatched    = findViewById(R.id.tv_label_watched);
 
         // RecyclerView for the list of companies
         recyclerViewCompanies   = findViewById(R.id.rv_companies);
@@ -210,6 +215,17 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             }
         });
 
+        floatingIsWatchedButton = findViewById(R.id.float_is_watched);
+        floatingIsWatchedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // If the Bookmarks
+                if (!isBookmarkOnDatabase /*&& !isMovieWatched*/) {
+                    new SaveBookmarkAsyncTask().execute();
+                }
+                new UpdateBookmarkAsyncTask().execute(movieData.getMovieId());
+            }
+        });
 
         floatingBookmarkButton = findViewById(R.id.float_save_bookmark);
         floatingBookmarkButton.setOnClickListener(new View.OnClickListener() {
@@ -250,7 +266,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
         checkConnectionAndStartLoader();
         showDetails();
-        new CheckBookmarkAsyncTask().execute();
 
     } // Close onCreate
 
@@ -285,10 +300,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
     private void setupTabs() {
         /* Movie Details Tabs Navigation - start */
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_details)/*.setText(R.string.details)*/);
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_movie)/*.setText(R.string.videos)*/);
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_reviews)/*.setText(R.string.reviews)*/);
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_companies)/*.setText(R.string.companies)*/);
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_details));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_movie));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_reviews));
+        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_companies));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -567,6 +582,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
         @Override
         protected Uri doInBackground(Void... voids) {
+            int watched;
+            if (isMovieWatched) watched = 0;
+            else  watched = 1;
 
             ContentValues contentValues = new ContentValues();
             contentValues.put(BookmarkEntry.COLUMN_API_ID,          movieData.getMovieId());
@@ -583,6 +601,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             contentValues.put(BookmarkEntry.COLUMN_POPULARITY,      movieData.getMoviePopularity());
             contentValues.put(BookmarkEntry.COLUMN_BUDGET,          movieData.getMovieBuget());
             contentValues.put(BookmarkEntry.COLUMN_REVENUE,         movieData.getMovieRevenue());
+            contentValues.put(BookmarkEntry.COLUMN_IS_WATCHED,      watched);
             contentValues.put(BookmarkEntry.COLUMN_HOMEPAGE,        movieData.getMovieHomepage());
             contentValues.put(BookmarkEntry.COLUMN_MOVIE_IMAGE,     convertImageViewToBytes(imageViewMoviePoster));
 
@@ -593,7 +612,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         protected void onPostExecute(Uri uri) {
             if (uri != null) {
                 floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
-                doToast(getResources().getString(R.string.movie_saved));
+                Toast.makeText(MovieDetailsActivity.this, getResources().getString(R.string.movie_saved), Toast.LENGTH_SHORT).show();
                 isBookmarkOnDatabase = true;
             } else {
                 doToast(getResources().getString(R.string.warning_could_not_be_saved));
@@ -628,17 +647,19 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         protected void onPostExecute(Integer rowsDeleted) {
             if (rowsDeleted > 0) {
                 floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
+                floatingIsWatchedButton.setImageResource(R.drawable.ic_watched_not);
+                textViewLabelWatched.setVisibility(HIDE);
                 doToast(getResources().getString(R.string.movie_removed));
                 isBookmarkOnDatabase = false;
+                isMovieWatched = false;
             } else {
                 doToast(getResources().getString(R.string.warning_could_not_be_removed));
-                floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
             }
             progressBarStatus(INVISIBLE);
         }
     }
 
-    private class CheckBookmarkAsyncTask extends AsyncTask<Void, Void, Boolean> {
+    private class CheckBookmarkAsyncTask extends AsyncTask<Void, Void, Cursor> {
 
         @Override
         protected void onPreExecute() {
@@ -647,33 +668,101 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         }
 
         @Override
-        protected Boolean doInBackground(Void... voids) {
-
-            String stringId = Integer.toString(movieData.getMovieId());
+        protected Cursor doInBackground(Void... voids) {
+            String stringId = String.valueOf(movieData.getMovieId());
             Uri uri = BookmarkEntry.CONTENT_URI;
             uri = uri.buildUpon().appendPath(stringId).build();
 
             Cursor cursor = getContentResolver().query(
                     BookmarkEntry.CONTENT_URI,
-                    null,                                         // projection (colunms).
+                    new String[]{BookmarkEntry.COLUMN_IS_WATCHED},          // projection (colunms).
                     BookmarkEntry.COLUMN_API_ID + "=?",            // selection
                     new String[]{String.valueOf(movieData.getMovieId())},   // selectionArgs
                     null);                                         // sortOrder
-            return cursor.getCount() > 0;
+            return cursor;
         }
 
         @Override
-        protected void onPostExecute(Boolean isOnDatabase) {
-            isBookmarkOnDatabase = isOnDatabase;
-            if (isOnDatabase) {
+        protected void onPostExecute(Cursor cursor) {
+
+            isBookmarkOnDatabase = cursor.getCount() > 0;
+            if (isBookmarkOnDatabase) {
                 floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_saved);
             } else {
                 floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
+            }
+
+            if (cursor.moveToFirst()) {
+                int WATCHED = cursor.getInt(cursor.getColumnIndex(BookmarkEntry.COLUMN_IS_WATCHED));
+                if (WATCHED == 0) {
+                    isMovieWatched = false;
+                    floatingIsWatchedButton.setImageResource(R.drawable.ic_watched_not);
+                    animateTextFadeOut(textViewLabelWatched);
+                }if (WATCHED == 1){
+                    isMovieWatched = true;
+                    floatingIsWatchedButton.setImageResource(R.drawable.ic_watched_yes);
+                    animateTextFadeIn(textViewLabelWatched);
+                }
             }
             progressBarStatus(INVISIBLE);
         }
     }
 
+    private class UpdateBookmarkAsyncTask extends AsyncTask<Integer, Void, Integer> {
+
+        @Override
+        protected void onPreExecute() {
+            progressBarStatus(SHOW);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Integer doInBackground(Integer... integers) {
+
+            int NOT_WATCHED = 0;
+            int IS_WATCHED = 1;
+            // Default value is Not Watched == 0
+            int WATCHED_STATUS = 0;
+
+            if (isMovieWatched) WATCHED_STATUS = NOT_WATCHED;
+            else  WATCHED_STATUS = IS_WATCHED;
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(BookmarkEntry.COLUMN_IS_WATCHED,   WATCHED_STATUS);
+
+            long id = integers[0];
+            String stringId = Integer.toString(movieData.getMovieId());
+            Uri uri = BookmarkEntry.CONTENT_URI;
+            uri = uri.buildUpon().appendPath(stringId).build();
+
+            return getContentResolver()
+                    .update(
+                        uri,
+                        contentValues,
+                        null,
+                        null
+            );
+        }
+
+        @Override
+        protected void onPostExecute(Integer rowsUpdated) {
+
+            if (rowsUpdated > 0) {
+                if (isMovieWatched){
+                    floatingIsWatchedButton.setImageResource(R.drawable.ic_watched_not);
+                    doToast(getResources().getString(R.string.not_watched));
+                    animateTextFadeOut(textViewLabelWatched);
+                    isMovieWatched = false;
+                }else {
+                    floatingIsWatchedButton.setImageResource(R.drawable.ic_watched_yes);
+                    Toast.makeText(MovieDetailsActivity.this, getResources().getString(R.string.watched), Toast.LENGTH_SHORT).show();
+                    animateTextFadeIn(textViewLabelWatched);
+                    isMovieWatched = true;
+                }
+            }
+            progressBarStatus(INVISIBLE);
+        }
+    }
 
     /* === HELPER METHODS === */
 
@@ -740,6 +829,22 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         startActivity(intent);
     }
 
+    /**
+     * When called do a fade in effect on a TextView.
+     * @param textToFadeIn is any TextView object to be animated using fade effect.
+     */
+    private void animateTextFadeIn(TextView textToFadeIn) {
+        textToFadeIn.setVisibility(SHOW);
+        textToFadeIn.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_in_animation));
+    }
+    /**
+     * When called do a fade out effect on a TextView.
+     * @param textToFadeOut is any TextView object to be animated using fade effect.
+     */
+    private void animateTextFadeOut(TextView textToFadeOut) {
+        textToFadeOut.startAnimation(AnimationUtils.loadAnimation(this, R.anim.fade_out_animation));
+        textToFadeOut.setVisibility(HIDE);
+    }
 
     /* === UI HIDE/SHOW CONTENTS === */
 
@@ -850,6 +955,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         super.onStart();
         Log.d("===>>> onStart", " called");
         if (NetworkUtils.isDeviceConnected(this)) {
+            new CheckBookmarkAsyncTask().execute();
             warningConnection(HIDE);
         } else {
             warningConnection(SHOW);
