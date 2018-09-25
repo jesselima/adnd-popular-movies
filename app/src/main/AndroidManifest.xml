@@ -48,6 +48,7 @@
 
         <activity android:name=".activities.WebViewActivity"
             android:label="@string/movie_homepage"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:parentActivityName=".activities.MovieDetailsActivity"/>
 
         <!-- Bookmark Provider for Database access through ContentProvider class -->
