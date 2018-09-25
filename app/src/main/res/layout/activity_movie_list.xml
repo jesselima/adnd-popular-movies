@@ -80,8 +80,8 @@
         android:layout_gravity="bottom"
         app:itemBackground="@color/colorLightGrey"
         android:foreground="?attr/selectableItemBackground"
-        app:itemIconTint="@color/colorAccent"
-        app:itemTextColor="@color/colorPrimary"
+        app:itemIconTint="@color/bottom_nav_selector_icon_color"
+        app:itemTextColor="@color/bottom_nav_selector_text_color"
         android:fitsSystemWindows="true"
         app:menu="@menu/navigation_items" />
 

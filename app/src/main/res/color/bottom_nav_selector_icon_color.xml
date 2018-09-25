@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Code help from https://guides.codepath.com/android/Bottom-Navigation-Views -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:color="@color/colorAccent"/>
+    <item android:state_focused="true" android:color="@color/colorAccent"/>
+    <item android:state_checked="true" android:color="@color/colorAccent"/>
+    <item android:color="@color/colorMediumGrey"/>
+</selector>
