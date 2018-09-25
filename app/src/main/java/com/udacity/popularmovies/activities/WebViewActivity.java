@@ -25,6 +25,7 @@ public class WebViewActivity extends AppCompatActivity {
     private String originalTitle;
     private ProgressBar loadingIndicator;
     private WebView webView;
+    private Toolbar toolbar;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -70,11 +71,12 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     public void setToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar_web_view);
-        setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        toolbar = findViewById(R.id.toolbar_web_view);
         toolbar.setTitle(originalTitle);
         toolbar.setSubtitle(R.string.homepage);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+
     }
 
     @Override
@@ -118,6 +120,13 @@ public class WebViewActivity extends AppCompatActivity {
             loadingIndicator.setVisibility(View.GONE);
             webView.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        toolbar.setTitle(originalTitle);
+        toolbar.setSubtitle(R.string.homepage);
     }
 
 }
