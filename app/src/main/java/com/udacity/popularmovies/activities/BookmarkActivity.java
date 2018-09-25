@@ -10,12 +10,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
@@ -45,13 +48,29 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     private RecyclerView recyclerViewBookmark;
     private BookmarkAdapter bookmarkAdapter;
 
+
+    private String selection = null;
+    private String[] selectionArgs = null;
+    private final String[] selectionArgsUnwatched = new String[]{String.valueOf(0)};
+    private final String[] selectionArgsWatched = new String[]{String.valueOf(1)};
+
+    private TabLayout tabLayout;
+    private static final int TAB_ALL = 0;
+    private static final int TAB_WATCHED = 1;
+    private static final int TAB_UNWATCHED = 2;
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
 
+        toolbar = findViewById(R.id.toolbar_bookmarks);
+        setToolbar();
+
         sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
 
+        tabLayout                   = findViewById(R.id.tab_layout_bookmarks);
         textViewNoBookmarks         = findViewById(R.id.text_view_no_bookmarks);
         textViewNavigateToBookmarks = findViewById(R.id.text_view_navigate_to_bookmarks);
         imageViewNoBookmarks        = findViewById(R.id.image_view_no_bookmarks);
@@ -60,8 +79,12 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
         recyclerViewBookmark.setLayoutManager(new LinearLayoutManager(this));
         bookmarkAdapter = new BookmarkAdapter(this);
+        recyclerViewBookmark.setHasFixedSize(true);
         bookmarkAdapter.notifyDataSetChanged();
         recyclerViewBookmark.setAdapter(bookmarkAdapter);
+        // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
+        // Author: https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
+        ViewCompat.setNestedScrollingEnabled(recyclerViewBookmark, false);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -89,8 +112,64 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
         // Start the Loader Callbacks to query the list of movie bookmarks asynchronously
         getSupportLoaderManager().initLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
-
+        setupTabs();
     } // Close onCreate
+
+    public void setToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar_bookmarks);
+        toolbar.setTitle(R.string.bookmarks);
+        toolbar.setSubtitle(R.string.offline_database);
+        setSupportActionBar(toolbar);
+    }
+
+
+    /* === TABS SETUP === */
+
+    private void setupTabs() {
+        /* Movie Details Tabs Navigation - start */
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_all));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_watched));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_unwatched));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                int tabPosition = tab.getPosition();
+                switch (tabPosition) {
+                    case TAB_ALL:
+                        filterBookmarks(TAB_ALL);
+                        break;
+                    case TAB_WATCHED:
+                        filterBookmarks(TAB_WATCHED);
+                        break;
+                    case TAB_UNWATCHED:
+                        filterBookmarks(TAB_UNWATCHED);
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                int tabPosition = tab.getPosition();
+                switch (tabPosition) {
+                    case TAB_ALL:
+                        filterBookmarks(TAB_ALL);
+                        break;
+                    case TAB_WATCHED:
+                        filterBookmarks(TAB_WATCHED);
+                        break;
+                    case TAB_UNWATCHED:
+                        filterBookmarks(TAB_UNWATCHED);
+                        break;
+                }
+            }
+        });
+        /* Movie Details Tabs Navigation - end */
+    }
 
 
     /* === LOADER CALLBACKS === */
@@ -123,8 +202,8 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                     return getContentResolver().query(
                             BookmarkContract.BookmarkEntry.CONTENT_URI,
                             null,
-                            null,
-                            null,
+                            selection,
+                            selectionArgs,
                             BookmarkContract.BookmarkEntry.COLUMN_TIMESTAMP + " DESC");
                 } catch (Exception e) {
                     Log.e(LOG_TAG, "Fail to load data");
@@ -296,6 +375,26 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         return super.onOptionsItemSelected(item);
     }
 
+    private void filterBookmarks(int moviesToShow) {
+
+        selection = BookmarkEntry.COLUMN_IS_WATCHED + "=?";
+
+        switch (moviesToShow) {
+            case TAB_ALL:
+                selection = null;
+                selectionArgs = null;
+                restartLoaderBookmarks();
+                break;
+            case TAB_WATCHED:
+                selectionArgs = selectionArgsWatched;
+                restartLoaderBookmarks();
+                break;
+            case TAB_UNWATCHED:
+                selectionArgs = selectionArgsUnwatched;
+                restartLoaderBookmarks();
+                break;
+        }
+    }
 
     /**
      * When "Delete all entries is clicked this confirmation dialog pops up.

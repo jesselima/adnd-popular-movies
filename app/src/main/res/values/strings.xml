@@ -55,7 +55,7 @@
     <string name="share">SHARE</string>
     <string name="vertical_text_divider" translatable="false">|</string>
     <string name="movie_details">Movie Details</string>
-    <string name="bookmarks_offline">Bookmarks (offline)</string>
+    <string name="offline_database">Offline Database</string>
     <string name="checkout_this_movie">Checkout this movie…</string>
     <string name="movie_homepage">Movie Homepage</string>
     <string name="read_more">MORE…</string>
@@ -84,4 +84,13 @@
     <string name="not_watched">Movie is set as not watched</string>
     <string name="search">Search</string>
     <string name="watched_flag">WATCHED</string>
+    <string name="show_watched_only">Show Watched Only</string>
+    <string name="show_unwatched_only">Show Unwatched Only</string>
+    <string name="show_all_bookmarks">Show All Bookmarks</string>
+    <string name="showing_watched_only">Showing Watched Only</string>
+    <string name="showing_unwatched_only">Showing Unwatched Only</string>
+    <string name="showing_all_bookmarks">Showing All</string>
+    <string name="tab_all">ALL</string>
+    <string name="tab_watched">WATCHED</string>
+    <string name="tab_unwatched">UNWATCHED</string>
 </resources>

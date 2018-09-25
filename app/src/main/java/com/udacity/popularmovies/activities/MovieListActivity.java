@@ -200,7 +200,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         connectionWarning(HIDE);
         page++;
         restartLoader();
-        doToast(String.valueOf("Page " + page));
+        doToast(String.valueOf(getString(R.string.page) + page));
     }
 
     /* IMPLEMENTATION FOR LoaderCallbacks */
