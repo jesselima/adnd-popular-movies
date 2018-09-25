@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,7 +32,6 @@ import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.adapters.BookmarkAdapter;
 import com.udacity.popularmovies.localdatabase.BookmarkContract;
 import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
-import com.udacity.popularmovies.localdatabase.BookmarkDbHelper;
 
 import java.util.Objects;
 
@@ -41,26 +39,25 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
     private final static String LOG_TAG = BookmarkActivity.class.getSimpleName();
     private static final int LOADER_ID_MOVIE_BOOKMARKS_LIST = 3;
+
     private Toast toast;
     private Button buttonNavigateToMovies;
-    private SQLiteDatabase sqLiteDatabase;
-    private final BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
     private TextView textViewNoBookmarks, textViewNavigateToBookmarks;
     private ImageView imageViewNoBookmarks;
     private RecyclerView recyclerViewBookmark;
     private BookmarkAdapter bookmarkAdapter;
-
-
-    private String selection = null;
-    private String[] selectionArgs = null;
-    private final String[] selectionArgsUnwatched = new String[]{String.valueOf(0)};
-    private final String[] selectionArgsWatched = new String[]{String.valueOf(1)};
 
     private TabLayout tabLayout;
     private static final int TAB_ALL = 0;
     private static final int TAB_WATCHED = 1;
     private static final int TAB_UNWATCHED = 2;
     private Toolbar toolbar;
+
+    private boolean selectAll = true;
+    private boolean selectWatched = false;
+    private boolean selectUnwatched = false;
+    private static final int UNWATCHED = 0;
+    private static final int WATCHED = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,8 +66,6 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
         toolbar = findViewById(R.id.toolbar_bookmarks);
         setToolbar();
-
-        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
 
         tabLayout                   = findViewById(R.id.tab_layout_bookmarks);
         textViewNoBookmarks         = findViewById(R.id.text_view_no_bookmarks);
@@ -128,7 +123,6 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     /* === TABS SETUP === */
 
     private void setupTabs() {
-        /* Movie Details Tabs Navigation - start */
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_all));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_watched));
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_unwatched));
@@ -170,7 +164,6 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                 }
             }
         });
-        /* Movie Details Tabs Navigation - end */
     }
 
 
@@ -179,11 +172,9 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     @SuppressLint("StaticFieldLeak")
     @NonNull
     @Override
-    public Loader<Cursor> onCreateLoader(int id, @Nullable final Bundle loaderArgs) {
+    public Loader<Cursor> onCreateLoader(final int id, @Nullable final Bundle loaderArgs) {
 
-        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
-
-        return new AsyncTaskLoader<Cursor>(this) {
+         return new AsyncTaskLoader<Cursor>(this) {
 
             // Initialize a cursor object to receive the cursor data returned from the task
             Cursor mCursorData = null;
@@ -200,6 +191,21 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
             @Nullable
             @Override
             public Cursor loadInBackground() {
+
+                String selection = null;
+                String[] selectionArgs = null;
+
+                if (selectAll) {
+                    selection = null;
+                    selectionArgs = null;
+                }else if (selectWatched) {
+                    selection = BookmarkEntry.COLUMN_IS_WATCHED + "=?";
+                    selectionArgs = new String[]{String.valueOf(WATCHED)};
+                }else if (selectUnwatched){
+                    selection = BookmarkEntry.COLUMN_IS_WATCHED + "=?";
+                    selectionArgs = new String[]{String.valueOf(UNWATCHED)};
+                }
+
                 try {
                     return getContentResolver().query(
                             BookmarkContract.BookmarkEntry.CONTENT_URI,
@@ -222,6 +228,37 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         };
     }
 
+    /**
+     * This method will decide which filter must be run over the database when query bookmarks
+     * The flags "selectAll, selectWatched and selectUnwatched will be used inside loadInBackground
+     * (in onCreateLoader) to decide what selection and selectionArgs should be passed to the
+     * getContentResolver().query() method.
+     *
+     * @param moviesToShow is the value of the selected tab.
+     */
+    private void filterBookmarks(int moviesToShow) {
+        switch (moviesToShow) {
+            case TAB_ALL:
+                selectAll = true;
+                selectWatched = false;
+                selectUnwatched = false;
+                restartLoaderBookmarks();
+                break;
+            case TAB_WATCHED:
+                selectWatched = true;
+                selectUnwatched = false;
+                selectAll = false;
+                restartLoaderBookmarks();
+                break;
+            case TAB_UNWATCHED:
+                selectUnwatched = true;
+                selectWatched = false;
+                selectAll = false;
+                restartLoaderBookmarks();
+                break;
+        }
+    }
+
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         if (data.getCount() < 1) {
@@ -238,10 +275,6 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     }
 
     private void restartLoaderBookmarks() {
-        BookmarkDbHelper bookmarkDbHelper = new BookmarkDbHelper(this);
-        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
-        sqLiteDatabase.isOpen();
-        sqLiteDatabase = bookmarkDbHelper.getWritableDatabase();
         getSupportLoaderManager().restartLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
     }
 
@@ -375,27 +408,6 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void filterBookmarks(int moviesToShow) {
-
-        selection = BookmarkEntry.COLUMN_IS_WATCHED + "=?";
-
-        switch (moviesToShow) {
-            case TAB_ALL:
-                selection = null;
-                selectionArgs = null;
-                restartLoaderBookmarks();
-                break;
-            case TAB_WATCHED:
-                selectionArgs = selectionArgsWatched;
-                restartLoaderBookmarks();
-                break;
-            case TAB_UNWATCHED:
-                selectionArgs = selectionArgsUnwatched;
-                restartLoaderBookmarks();
-                break;
-        }
     }
 
     /**

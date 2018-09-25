@@ -32,8 +32,9 @@ public class WebViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
-
+        // Get the Movie Homepage url and title from the MovieDetailsActivity
         getIncomingIntent();
+        // Setup the toolbar with title and subtitle
         setToolbar();
 
         loadingIndicator = findViewById(R.id.loading_page_indicator);
@@ -60,6 +61,9 @@ public class WebViewActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Get the Intent Object sent from the MovieDetailsActivity
+     */
     private void getIncomingIntent() {
         if (getIntent().hasExtra(ApiConfig.JsonKey.HOMEPAGE)) {
             Bundle bundle = getIntent().getExtras();
@@ -70,6 +74,9 @@ public class WebViewActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Setup the toolbar with movie title and subtitle "homepage"
+     */
     public void setToolbar() {
         toolbar = findViewById(R.id.toolbar_web_view);
         toolbar.setTitle(originalTitle);
@@ -86,7 +93,9 @@ public class WebViewActivity extends AppCompatActivity {
     }
 
     /**
-     * This method handles the clicked item menu
+     * This method handles the clicked item menu.
+     * When clicked starts a Intent that will get the current movie homepage url look for the
+     * default browser on device to open this url.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -98,6 +107,12 @@ public class WebViewActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * When called must receive a String url and will open default browser on device or ask to the
+     * user about what application he wants to uses to open the URL.
+     *
+     * @param url is the url to be open in the browser.
+     */
     private void openWebPage(String url) {
         Uri uriWebPage = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, uriWebPage);
@@ -106,7 +121,12 @@ public class WebViewActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This class is used to control tasks when the url starts to load and when it finished.
+     *
+     */
     class LoadHomepageWebClient extends WebViewClient {
+        // Whe page loading starts the loading indicator is visible and the WebView hidden.
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             super.onPageStarted(view, url, favicon);
@@ -114,6 +134,7 @@ public class WebViewActivity extends AppCompatActivity {
             view.setVisibility(View.GONE);
         }
 
+        // Once the page finishes to load tha loading indicator is hidden and tha WebView is shown.
         @Override
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
@@ -125,8 +146,6 @@ public class WebViewActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        toolbar.setTitle(originalTitle);
-        toolbar.setSubtitle(R.string.homepage);
     }
 
 }
