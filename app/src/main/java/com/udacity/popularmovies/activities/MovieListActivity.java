@@ -11,10 +11,12 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -78,14 +80,18 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     // Objects ro set and control RecyclerView and the list of movie data
     private RecyclerView recyclerView;
     private MovieListAdapter movieListAdapter;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
 
+        toolbar = findViewById(R.id.toolbar_movie_list);
+        setToolbar();
+
         // Set and handle actions on BottonNavigation
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -151,6 +157,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         movieListAdapter = new MovieListAdapter(this, movieList);
         recyclerView = findViewById(R.id.rv_movies);
         recyclerView.setAdapter(movieListAdapter);
+        ViewCompat.setNestedScrollingEnabled(recyclerView, false);
         // Calculates the number of columns in the Grip according to screen width size.
         int numberOfColumns = AdaptiveGridLayout.calculateNoOfColumns(getApplicationContext());
 
@@ -171,6 +178,12 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         // Check if the device is connected ot internet and if so start the Loader.
         checkConnectionAndStartLoader();
     } // Closes onCreate
+
+    public void setToolbar() {
+        toolbar.setTitle(R.string.app_name);
+        toolbar.setSubtitle(R.string.the_movie_database);
+        setSupportActionBar(toolbar);
+    }
 
     /*** Methods for BottonNavigation control ***/
     private void restartLoader() {

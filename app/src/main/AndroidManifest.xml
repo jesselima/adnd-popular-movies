@@ -23,6 +23,7 @@
         <activity
             android:name=".activities.MovieListActivity"
             android:launchMode="singleTop"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

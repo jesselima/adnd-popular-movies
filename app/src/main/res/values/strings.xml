@@ -93,4 +93,5 @@
     <string name="tab_all">ALL</string>
     <string name="tab_watched">WATCHED</string>
     <string name="tab_unwatched">UNWATCHED</string>
+    <string name="the_movie_database" translatable="false">The Movie Database - TMDb</string>
 </resources>
