@@ -35,6 +35,8 @@ import com.udacity.popularmovies.localdatabase.BookmarkContract;
 import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
 import com.udacity.popularmovies.localdatabase.BookmarkDbHelper;
 
+import java.util.Objects;
+
 public class BookmarkActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private final static String LOG_TAG = BookmarkActivity.class.getSimpleName();
@@ -116,10 +118,10 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     } // Close onCreate
 
     public void setToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar_bookmarks);
         toolbar.setTitle(R.string.bookmarks);
         toolbar.setSubtitle(R.string.offline_database);
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }
 
 
