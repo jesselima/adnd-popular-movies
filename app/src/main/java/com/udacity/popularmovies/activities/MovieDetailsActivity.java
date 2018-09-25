@@ -823,7 +823,8 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
      */
     private void openWebPage(String urlHomepage) {
         Intent intent = new Intent(this, WebViewActivity.class);
-        intent.putExtra(ApiConfig.JsonKey.HOMEPAGE, urlHomepage);
+            intent.putExtra(ApiConfig.JsonKey.HOMEPAGE, urlHomepage);
+            intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, movieData.getMovieOriginalTitle());
         startActivity(intent);
     }
 

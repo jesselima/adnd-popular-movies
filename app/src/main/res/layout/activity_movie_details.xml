@@ -111,6 +111,7 @@
                                 android:layout_height="231dp"
                                 android:layout_gravity="center"
                                 android:layout_marginTop="4dp"
+                                android:layout_centerHorizontal="true"
                                 android:background="@android:drawable/dialog_holo_light_frame"
                                 android:elevation="5dp"
                                 android:contentDescription="@string/movie_poster"
@@ -314,7 +315,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="visible"
-                android:gravity="center"
                 android:orientation="vertical">
 
                 <TextView
