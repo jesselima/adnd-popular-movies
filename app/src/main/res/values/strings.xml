@@ -93,4 +93,15 @@
     <string name="tab_all">ALL</string>
     <string name="tab_watched">WATCHED</string>
     <string name="tab_unwatched">UNWATCHED</string>
+    <string name="the_movie_database" translatable="false">The Movie Database - TMDb</string>
+
+    <!-- USED BY PREFERENCES - START -->
+    <string name="settings">Settings</string>
+    <!-- Preference Adult Content -->
+    <string name="pref_show_adult_label">Adult content</string>
+    <string name="pref_show_adult_key" translatable="false">show_adult</string>
+    <string name="pref_show_adult_true" translatable="false">Shown</string>
+    <string name="pref_show_adult_false" translatable="false">Hidden</string>
+    <!-- USED BY PREFERENCES - END -->
+
 </resources>

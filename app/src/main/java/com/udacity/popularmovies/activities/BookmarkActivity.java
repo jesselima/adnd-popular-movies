@@ -64,6 +64,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
 
+        // References the toolbar view and call setToolbar {@link setupTabs}
         toolbar = findViewById(R.id.toolbar_bookmarks);
         setToolbar();
 
@@ -74,6 +75,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         buttonNavigateToMovies      = findViewById(R.id.bt_navigate_to_movies);
         recyclerViewBookmark        = findViewById(R.id.recycler_view_bookmark);
 
+        // Setup the RecyclerView for the list of Bookmarks from the database.
         recyclerViewBookmark.setLayoutManager(new LinearLayoutManager(this));
         bookmarkAdapter = new BookmarkAdapter(this);
         recyclerViewBookmark.setHasFixedSize(true);
@@ -83,6 +85,11 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         // Author: https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
         ViewCompat.setNestedScrollingEnabled(recyclerViewBookmark, false);
 
+        // Implements the delete bookmark function by swipe a bookmark card to the left of right.
+        // When user swipe the action will call the showDeleteConfirmationDialog method.
+        // in this dialog the user decides delete or cancel.
+        // if the bookmark is delete the recyclerViewBookmark will be notified by this change
+        // through the method attachToRecyclerView.
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
@@ -98,6 +105,8 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
             }
         }).attachToRecyclerView(recyclerViewBookmark);
 
+        // This button is show only when there is no bookmarks saved. So the user can click on it
+        // and go to MovieListActivity
         buttonNavigateToMovies = findViewById(R.id.bt_navigate_to_movies);
         buttonNavigateToMovies.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -286,8 +295,6 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         String stringId = Long.toString(id);
         Uri uri = BookmarkEntry.CONTENT_URI;
         uri = uri.buildUpon().appendPath(stringId).build();
-
-        Log.v("DELETE URI: ", uri.toString());
 
         return getContentResolver().delete(
                 uri,

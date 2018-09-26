@@ -7,7 +7,10 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="cardViewStyle">@style/CardView</item>
+        <!-- THIS LINE IS IMPORTANT DO AVOID INFLATE FRAGMENT ERROR -->
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="coordinatorLayoutStyle">@style/Widget.Support.CoordinatorLayout</item>
+
     </style>
 
     <style name="FooterText">
@@ -119,9 +122,6 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorLightGrey</item>
         <item name="android:background">@color/colorAccentAlpha200</item>
-
     </style>
-
-
 
 </resources>
