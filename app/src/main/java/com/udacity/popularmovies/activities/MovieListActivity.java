@@ -2,6 +2,7 @@ package com.udacity.popularmovies.activities;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -13,6 +14,7 @@ import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -43,7 +45,7 @@ import com.udacity.popularmovies.utils.NetworkUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MovieListActivity extends AppCompatActivity implements LoaderCallbacks<List<Movie>> {
+public class MovieListActivity extends AppCompatActivity implements LoaderCallbacks<List<Movie>>, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String API_KEY = BuildConfig.API_KEY;
 
@@ -81,6 +83,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     private RecyclerView recyclerView;
     private MovieListAdapter movieListAdapter;
     private Toolbar toolbar;
+    private boolean showAdultContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
         toolbar = findViewById(R.id.toolbar_movie_list);
         setToolbar();
+        setupSharedPreferences();
 
         // Set and handle actions on BottonNavigation
         final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
@@ -179,6 +183,45 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         checkConnectionAndStartLoader();
     } // Closes onCreate
 
+
+    private void setupSharedPreferences() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        showAdultContent = sharedPreferences.getBoolean(
+                getString(R.string.pref_show_adult_key),
+                getResources().getBoolean(R.bool.pref_show_adult_default)
+        );
+
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_show_adult_key))) {
+            showAdultContent = sharedPreferences.getBoolean(
+                    key,
+                    getResources().getBoolean(R.bool.pref_show_adult_default)
+            );
+            restartLoader();
+        }else {
+            showAdultContent = sharedPreferences.getBoolean(
+                    key,
+                    getResources().getBoolean(R.bool.pref_show_adult)
+            );
+            restartLoader();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Unregister VisualizerActivity as an OnPreferenceChangedListener to avoid any memory leaks.
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+
     public void setToolbar() {
         toolbar.setTitle(R.string.app_name);
         toolbar.setSubtitle(R.string.the_movie_database);
@@ -235,6 +278,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             Uri getBaseSearchUrl = Uri.parse(ApiConfig.getBaseUrlSearch());
             Uri.Builder uriBuilder = getBaseSearchUrl.buildUpon();
             uriBuilder.appendQueryParameter(UrlParamKey.API_KEY, API_KEY);
+            uriBuilder.appendQueryParameter(UrlParamKey.INCLUDE_ADULT, String.valueOf(showAdultContent));
             uriBuilder.appendQueryParameter(UrlParamKey.QUERY, queryTerm);
             return new MovieListLoader(this, uriBuilder.toString());
         }else {
@@ -242,7 +286,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             Uri.Builder uriBuilder = getBaseMovieListUrl.buildUpon();
             uriBuilder.appendQueryParameter(UrlParamKey.API_KEY, API_KEY);
             uriBuilder.appendQueryParameter(UrlParamKey.LANGUAGE, loadApiLanguage);
-            uriBuilder.appendQueryParameter(UrlParamKey.INCLUDE_ADULT, UrlParamValue.INCLUDE_ADULT_FALSE);
+            uriBuilder.appendQueryParameter(UrlParamKey.INCLUDE_ADULT, String.valueOf(showAdultContent));
             uriBuilder.appendQueryParameter(UrlParamKey.PAGE, String.valueOf(page));
             return new MovieListLoader(this, uriBuilder.toString());
         }
@@ -328,6 +372,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.movie_list_menu, menu);
+
         MenuItem searchItem = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem); // Cast is required
 
@@ -356,8 +401,10 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.preferences:
-                Toast.makeText(this, "Preferences clicked!", Toast.LENGTH_SHORT).show();
+            case R.id.action_settings:
+                Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+                startActivity(startSettingsActivity);
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

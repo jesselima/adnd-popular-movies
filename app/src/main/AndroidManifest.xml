@@ -52,6 +52,15 @@
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:parentActivityName=".activities.MovieDetailsActivity"/>
 
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/settings"
+            android:parentActivityName=".activities.MovieListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activities.MovieListActivity" />
+        </activity>
+
         <!-- Bookmark Provider for Database access through ContentProvider class -->
         <provider
             android:name=".localdatabase.BookmarkContentProvider"
