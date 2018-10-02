@@ -9,4 +9,5 @@
     <color name="colorWarning">#c90505</color>
     <color name="colorYouTube">#b71c1c</color>
     <color name="colorTextDefault">#000000</color>
+    <color name="colorAlpha0">#00ffffff</color>
 </resources>

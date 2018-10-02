@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -175,6 +176,36 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         });
     }
 
+    /**
+     * This method will decide which filter must be run over the database when query bookmarks
+     * The flags "selectAll, selectWatched and selectUnwatched will be used inside loadInBackground
+     * (in onCreateLoader) to decide what selection and selectionArgs should be passed to the
+     * getContentResolver().query() method.
+     *
+     * @param moviesToShow is the value of the selected tab.
+     */
+    private void filterBookmarks(int moviesToShow) {
+        switch (moviesToShow) {
+            case TAB_ALL:
+                selectAll = true;
+                selectWatched = false;
+                selectUnwatched = false;
+                restartLoaderBookmarks();
+                break;
+            case TAB_WATCHED:
+                selectWatched = true;
+                selectUnwatched = false;
+                selectAll = false;
+                restartLoaderBookmarks();
+                break;
+            case TAB_UNWATCHED:
+                selectUnwatched = true;
+                selectWatched = false;
+                selectAll = false;
+                restartLoaderBookmarks();
+                break;
+        }
+    }
 
     /* === LOADER CALLBACKS === */
 
@@ -237,37 +268,6 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         };
     }
 
-    /**
-     * This method will decide which filter must be run over the database when query bookmarks
-     * The flags "selectAll, selectWatched and selectUnwatched will be used inside loadInBackground
-     * (in onCreateLoader) to decide what selection and selectionArgs should be passed to the
-     * getContentResolver().query() method.
-     *
-     * @param moviesToShow is the value of the selected tab.
-     */
-    private void filterBookmarks(int moviesToShow) {
-        switch (moviesToShow) {
-            case TAB_ALL:
-                selectAll = true;
-                selectWatched = false;
-                selectUnwatched = false;
-                restartLoaderBookmarks();
-                break;
-            case TAB_WATCHED:
-                selectWatched = true;
-                selectUnwatched = false;
-                selectAll = false;
-                restartLoaderBookmarks();
-                break;
-            case TAB_UNWATCHED:
-                selectUnwatched = true;
-                selectWatched = false;
-                selectAll = false;
-                restartLoaderBookmarks();
-                break;
-        }
-    }
-
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         if (data.getCount() < 1) {
@@ -290,17 +290,36 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
     /* === DATABASE MANIPULATION === */
 
-    private boolean deleteBookmark(long id) {
+    private class DeleteBookmarkAsyncTask extends AsyncTask<Long, Void, Integer> {
 
-        String stringId = Long.toString(id);
-        Uri uri = BookmarkEntry.CONTENT_URI;
-        uri = uri.buildUpon().appendPath(stringId).build();
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
 
-        return getContentResolver().delete(
-                uri,
-                BookmarkEntry._ID + "=" + id,
-                null
-        ) > 0;
+        @Override
+        protected Integer doInBackground(Long... integers) {
+
+            long id = integers[0];
+            String stringId = Long.toString(id);
+
+            return getContentResolver().delete(
+                    BookmarkEntry.CONTENT_URI,
+                    BookmarkEntry.COLUMN_API_ID + "=?",
+                    new String[]{stringId}
+            );
+        }
+
+        @Override
+        protected void onPostExecute(Integer rowsDeleted) {
+            if (rowsDeleted > 0) {
+                doToast(getResources().getString(R.string.movie_removed));
+                restartLoaderBookmarks();
+            } else {
+                doToast(getResources().getString(R.string.warning_could_not_be_removed));
+                restartLoaderBookmarks();
+            }
+        }
     }
 
     @SuppressWarnings("UnusedReturnValue")
@@ -329,12 +348,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
-                if (deleteBookmark(movieApiId)) {
-                    doToast(getString(R.string.deleted));
-                    restartLoaderBookmarks();
-                }else {
-                    doToast(getString(R.string.warning_could_not_be_removed));
-                }
+                new DeleteBookmarkAsyncTask().execute(movieApiId);
 
                 if (bookmarkAdapter.getItemCount() == 0) {
                     showNoBookmarkWarning();
