@@ -88,7 +88,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
         holder.imageViewMoviePoster.setImageBitmap(convertImageBytesToBitmap(movieBytesImage));
 
         // "id" is the ID index in the database.
-        long idSQLite = cursor.getInt(cursor.getColumnIndex(BookmarkContract.BookmarkEntry._ID));
+        long idSQLite = cursor.getInt(cursor.getColumnIndex(BookmarkContract.BookmarkEntry.COLUMN_API_ID));
         holder.itemView.setTag(idSQLite);
 
         // Data for additional actions
