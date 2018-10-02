@@ -19,22 +19,22 @@
             android:id="@+id/toolbar_bookmarks"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|snap"
             android:background="@color/colorPrimary"
+            app:layout_scrollFlags="scroll|snap"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout_bookmarks"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
-            app:tabGravity="fill"
             android:layout_gravity="bottom"
             android:elevation="5dp"
-            app:tabSelectedTextColor="@color/colorAccent"
-            app:tabTextColor="@color/colorAccent"
+            android:visibility="visible"
+            app:tabBackground="@color/colorLightGrey"
+            app:tabGravity="fill"
             app:tabIndicatorColor="@color/colorAccent"
-            app:tabBackground="@color/colorLightGrey">
+            app:tabSelectedTextColor="@color/colorAccent"
+            app:tabTextColor="@color/colorAccent">
         </android.support.design.widget.TabLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -45,10 +45,9 @@
         android:padding="8dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_view_bookmark"
@@ -61,8 +60,9 @@
                 android:id="@+id/image_view_no_bookmarks"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_gravity="center"
-                android:layout_marginBottom="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="20dp"
                 android:contentDescription="@string/no_bookmarks_in_the_database"
                 android:src="@drawable/ic_bookmark_unsaved"
                 android:visibility="gone" />
@@ -71,7 +71,9 @@
                 android:id="@+id/text_view_no_bookmarks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_below="@id/image_view_no_bookmarks"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="100dp"
                 android:text="@string/you_do_not_have_any_bookmarks"
                 android:textColor="@color/colorMediumGrey"
                 android:textSize="16sp"
@@ -81,8 +83,9 @@
                 android:id="@+id/text_view_navigate_to_bookmarks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="30dp"
+                android:layout_below="@+id/text_view_no_bookmarks"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"
                 android:text="@string/navigate_to_bookmarks"
                 android:textColor="@color/colorMediumGrey"
                 android:textSize="16sp"
@@ -93,14 +96,15 @@
                 style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="70dp"
+                android:layout_below="@+id/text_view_navigate_to_bookmarks"
+                android:layout_marginTop="10dp"
+                android:layout_centerHorizontal="true"
                 android:text="@string/see_movies"
                 android:textColor="@color/colorAccent"
                 android:textSize="16sp"
                 android:visibility="gone"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </android.support.v4.widget.NestedScrollView>
 

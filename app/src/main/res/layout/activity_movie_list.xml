@@ -70,8 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="49dp"
-        android:progress="20"/>
+        android:layout_marginBottom="49dp"/>
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/bottom_navigation_view"

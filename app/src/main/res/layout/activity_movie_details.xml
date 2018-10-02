@@ -102,8 +102,7 @@
 
                         <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/default_layout_margin">
+                            android:layout_height="wrap_content">
 
                             <ImageView
                                 android:id="@+id/iv_movie_poster"
@@ -137,16 +136,40 @@
                                 android:textColor="@color/colorLightGrey"
                                 android:text="@string/watched_flag"/>
 
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_alignParentTop="true"
-                                android:layout_alignParentEnd="true"
-                                android:layout_marginEnd="@dimen/medium_layout_margin"
-                                android:elevation="5dp"
-                                android:visibility="gone"
-                                android:layout_marginTop="@dimen/default_layout_margin"
-                                android:src="@drawable/ic_bookmarked"/>
+                            <LinearLayout
+                                style="@style/DetailsItemLayout"
+                                android:layout_gravity="center"
+                                android:layout_below="@id/iv_movie_poster"
+                                android:layout_marginBottom="@dimen/small_layout_margin"
+                                android:layout_marginTop="4dp"
+                                android:background="@drawable/rounded_corner"
+                                android:layout_centerHorizontal="true"
+                                android:paddingEnd="4dp"
+                                android:paddingStart="4dp"
+                                android:paddingTop="4dp">
+                                <RatingBar
+                                    style="?android:attr/ratingBarStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:numStars="1"
+                                    android:rating="1"
+                                    android:stepSize="1"/>
+                                <TextView
+                                    android:id="@+id/tv_vote_average"
+                                    style="@style/DetailItemValueStyle"
+                                    android:textColor="@color/colorLightGrey"
+                                    tools:text="9.9"/>
+                                <TextView
+                                    style="@style/DetailItemLabelStyle"
+                                    android:text="@string/slash"
+                                    android:textColor="@color/colorLightGrey"/>
+                                <TextView
+                                    android:id="@+id/tv_vote_count"
+                                    style="@style/DetailItemValueStyle"
+                                    android:textColor="@color/colorLightGrey"
+                                    tools:text="9999999"/>
+                            </LinearLayout>
+
 
                         </RelativeLayout>
 
@@ -160,106 +183,93 @@
                         android:layout_weight="7"
                         android:orientation="vertical">
 
-                        <RelativeLayout
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            tools:ignore="UselessParent">
-
+                            android:layout_marginBottom="@dimen/medium_layout_margin">
                             <TextView
                                 android:id="@+id/tv_release_date"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="start"
+                                android:layout_marginStart="@dimen/medium_layout_margin"
+                                android:textColor="@color/colorAccent"
                                 android:textSize="28sp"
+                                android:textStyle="italic|bold"
                                 tools:text="2018"/>
                             <TextView
                                 android:id="@+id/tv_runtime"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@id/tv_release_date"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/colorAccent"
                                 android:textSize="16sp"
-                                android:textStyle="bold|italic"
+                                android:textStyle="italic|bold"
                                 tools:text="147"/>
-                            <RatingBar
-                                android:id="@+id/rating_start"
-                                style="?android:attr/ratingBarStyleSmall"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_below="@id/tv_runtime"
-                                android:numStars="1"
-                                android:rating="1"
-                                android:stepSize="1"/>
-                            <TextView
-                                android:id="@+id/tv_vote_average"
-                                style="@style/DetailItemValueStyle"
-                                android:layout_toEndOf="@id/rating_start"
-                                android:layout_below="@id/tv_runtime"
-                                tools:text="8.3"/>
-                            <TextView
-                                android:id="@+id/slash"
-                                style="@style/DetailItemLabelStyle"
-                                android:layout_toEndOf="@id/tv_vote_average"
-                                android:layout_below="@id/tv_runtime"
-                                android:text="@string/slash"/>
-                            <TextView
-                                android:id="@+id/tv_vote_count"
-                                style="@style/DetailItemValueStyle"
-                                android:layout_toEndOf="@id/slash"
-                                android:layout_below="@id/tv_runtime"
-                                tools:text="692"/>
-                            <TextView
-                                android:id="@+id/original_title_label"
-                                style="@style/DetailItemLabelStyle"
-                                android:layout_below="@id/tv_vote_count"
-                                android:text="@string/original_title_label"/>
-                            <TextView
-                                android:id="@+id/tv_title"
-                                android:layout_below="@id/original_title_label"
-                                style="@style/DetailItemValueStyle"
-                                tools:text="Black Panther"/>
-                            <TextView
-                                android:id="@+id/spoken_languages_label"
-                                style="@style/DetailItemLabelStyle"
-                                android:layout_below="@+id/tv_title"
-                                android:text="@string/spoken_languages_label"/>
-                            <TextView
-                                android:id="@+id/tv_original_language"
-                                style="@style/DetailItemValueStyle"
-                                android:layout_below="@id/spoken_languages_label"
-                                tools:text="English"/>
-                            <TextView
-                                android:id="@+id/popularity_label"
-                                style="@style/DetailItemLabelStyle"
-                                android:layout_below="@id/tv_original_language"
-                                android:text="@string/popularity_label"/>
-                            <TextView
-                                android:id="@+id/tv_popularity"
-                                android:layout_below="@id/tv_original_language"
-                                android:layout_toEndOf="@id/popularity_label"
-                                style="@style/DetailItemValueStyle"
-                                tools:text="198.543"/>
-                            <TextView
-                                android:id="@+id/budget_label"
-                                android:layout_below="@+id/tv_popularity"
-                                style="@style/DetailItemLabelStyle"
-                                android:text="@string/budget_label"/>
-                            <TextView
-                                android:id="@+id/tv_buget"
-                                android:layout_below="@id/tv_popularity"
-                                android:layout_toEndOf="@id/budget_label"
-                                style="@style/DetailItemValueStyle"
-                                tools:text="$1.780,000.00"/>
-                            <TextView
-                                android:id="@+id/revenue_label"
-                                android:layout_below="@+id/tv_buget"
-                                style="@style/DetailItemLabelStyle"
-                                android:text="@string/revenue_label"/>
-                            <TextView
-                                android:id="@+id/tv_revenue"
-                                android:layout_below="@+id/tv_buget"
-                                android:layout_toEndOf="@id/revenue_label"
-                                style="@style/DetailItemValueStyle"
-                                tools:text="$3,298,111.86"/>
-                        </RelativeLayout>
+                        </LinearLayout>
+
+                            <LinearLayout
+                                style="@style/DetailsItemLayoutVertical">
+                                <TextView
+                                    android:id="@+id/original_title_label"
+                                    style="@style/DetailItemLabelStyle"
+
+                                    android:text="@string/original_title_label"/>
+                                <TextView
+                                    android:id="@+id/tv_title"
+                                    style="@style/DetailItemValueStyle"
+                                    tools:text="Black Panther"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                style="@style/DetailsItemLayoutVertical">
+                                <TextView
+                                    android:id="@+id/spoken_languages_label"
+                                    style="@style/DetailItemLabelStyle"
+                                    android:text="@string/spoken_languages_label"/>
+                                <TextView
+                                    android:id="@+id/tv_original_language"
+                                    style="@style/DetailItemValueStyle"
+                                    tools:text="English"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                style="@style/DetailsItemLayoutVertical">
+                                <TextView
+                                    android:id="@+id/popularity_label"
+                                    style="@style/DetailItemLabelStyle"
+                                    android:text="@string/popularity_label"/>
+                                <TextView
+                                    android:id="@+id/tv_popularity"
+                                    style="@style/DetailItemValueStyle"
+                                    tools:text="198.543"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                style="@style/DetailsItemLayoutVertical">
+                                <TextView
+                                    android:id="@+id/budget_label"
+                                    style="@style/DetailItemLabelStyle"
+                                    android:text="@string/budget_label"/>
+                                <TextView
+                                    android:id="@+id/tv_buget"
+                                    style="@style/DetailItemValueStyle"
+                                    tools:text="$1.780,000.00"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                style="@style/DetailsItemLayoutVertical">
+                                <TextView
+                                    android:id="@+id/revenue_label"
+                                    style="@style/DetailItemLabelStyle"
+                                    android:text="@string/revenue_label"/>
+                                <TextView
+                                    android:id="@+id/tv_revenue"
+                                    style="@style/DetailItemValueStyle"
+                                    tools:text="$3,298,111.86"/>
+                            </LinearLayout>
 
                     </LinearLayout>
                 </LinearLayout>

@@ -1,4 +1,4 @@
-# adnd-popular-movies
+# Popular Movies App
 The Popular Movie App reads data from TheMovieDB API. This product uses the TMDb API but is not endorsed or certified by TMDb
 To discover API features go to official documentation https://www.themoviedb.org/documentation/api.
 
@@ -13,6 +13,8 @@ and follow the steps to register your key.
 To get a YOUTUBE V3 API key got to Google Cloud Platform APIs Credentials
 https://console.cloud.google.com/apis/credentials. A Google Account is required.
 
+### SETUP API KEYS
+
 Once you have the keys, create a file `gradle.properties` in the project root directory and paste them into the correspondent fields:
 
  `API_KEY = "PASTE_YOUR_TMDB_API_KEY_HERE"`
@@ -20,8 +22,8 @@ Once you have the keys, create a file `gradle.properties` in the project root di
  `YOUTUBE_KEY = "PASTE_YOUR_YOUTUBE_V3_API_KEY_HERE"`
 
 
-##### WARNINGS:
-* You sync or rebuild your project the allows the BuildConfig classes access the keys.
+##### Warnings:
+* You must sync or rebuild your project to allows the BuildConfig classes access the keys, so the app itself.
 * Make sure your file `gradle.properties` are properly set in gitignore.
 
 

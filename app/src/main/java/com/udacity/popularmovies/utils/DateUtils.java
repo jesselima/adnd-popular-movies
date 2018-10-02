@@ -14,6 +14,8 @@ public final class DateUtils {
 
     private final static String LOG_TAG = DateUtils.class.getSimpleName();
 
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+
     Context context;
 
     /**
@@ -32,7 +34,7 @@ public final class DateUtils {
     public static String simpleDateFormat(String dateString) {
         String dateStringFormated = null;
         Date date;
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
 
         if (dateString == null) {
             Log.d(LOG_TAG, "Invalid date");
