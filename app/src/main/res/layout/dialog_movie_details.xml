@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_dialog_bookmark"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="Overview"
+        android:textAllCaps="true"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:visibility="visible"/>
+    <TextView
+        android:id="@+id/dialog_tv_overview_db"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_layout_margin"
+        android:text="Overview... ..."
+        android:textSize="14sp"
+        android:visibility="visible"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/medium_layout_margin"
+        android:layout_marginLeft="@dimen/default_layout_margin"
+        android:layout_marginRight="@dimen/default_layout_margin"
+        android:layout_marginTop="@dimen/small_layout_margin"
+        android:background="@color/colorLightGrey"/>
+
+    <LinearLayout
+        style="@style/DialogDetailsItemLayout">
+        <TextView
+            style="@style/DialogItemLabelStyle"
+            android:text="@string/languages_label"/>
+        <TextView
+            android:id="@+id/dialog_tv_original_language_db"
+            style="@style/DialogItemValueStyle"
+            tools:text="English, Spanish"/>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/DialogDetailsItemLayout">
+        <TextView
+            style="@style/DialogItemLabelStyle"
+            android:text="@string/popularity_label"/>
+        <TextView
+            android:id="@+id/dialog_tv_popularity_db"
+            style="@style/DialogItemValueStyle"
+            tools:text="198.543"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/DialogDetailsItemLayout">
+        <TextView
+            style="@style/DialogItemLabelStyle"
+             android:text="@string/budget_label"/>
+        <TextView
+            android:id="@+id/dialog_tv_budget_db"
+            style="@style/DialogItemValueStyle"
+            tools:text="$1.780,000.00"/>
+    </LinearLayout>
+
+    <LinearLayout
+        style="@style/DialogDetailsItemLayout">
+        <TextView
+            style="@style/DialogItemLabelStyle"
+            android:text="@string/revenue_label"/>
+        <TextView
+            android:id="@+id/dialog_tv_revenue_db"
+            style="@style/DialogItemValueStyle"
+            tools:text="$3,298,111.86"/>
+    </LinearLayout>
+</LinearLayout>

@@ -28,7 +28,6 @@
     <string name="warning_check_internet_connection">Please, check your internet connection!</string>
     <string name="you_are_at_page_1">You are at page 1</string>
     <string name="page">Page\u0020</string>
-    <string name="more_details">MORE</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="you_do_not_have_any_bookmarks">Ops! No bookmarks here…</string>
     <string name="navigate_to_bookmarks">Let\'s add some bookmarks!</string>
@@ -103,5 +102,13 @@
     <string name="pref_show_adult_true" translatable="false">Shown</string>
     <string name="pref_show_adult_false" translatable="false">Hidden</string>
     <!-- USED BY PREFERENCES - END -->
-
+    <string name="close">Close</string>
+    <string name="more">MORE</string>
+    <string name="more_details">More details</string>
+    <string name="full_details">Full Details</string>
+    <string name="load_more">Load more</string>
+    <string name="_1" translatable="false">1</string>
+    <string name="page_1">Page 1</string>
+    <string name="no_bookmarks_to_show">No bookmarks to show</string>
+    <string name="no_more_bookmarks_to_show">No more bookmarks to show</string>
 </resources>
