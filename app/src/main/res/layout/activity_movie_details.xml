@@ -61,23 +61,23 @@
             android:id="@+id/section_full_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="visible"
+            android:orientation="vertical"
             android:paddingTop="8dp"
-            android:orientation="vertical">
+            android:visibility="visible">
 
             <ProgressBar
                 android:id="@+id/indeterminateBar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="8dp"
-                style="@style/Widget.AppCompat.ProgressBar.Horizontal"/>
+                android:layout_height="8dp"/>
 
             <!-- SECTION INFO START -->
             <LinearLayout
                 android:id="@+id/section_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="visible">
 
                 <TextView
                     style="@style/textDetailsHeader"
@@ -108,12 +108,12 @@
                                 android:id="@+id/iv_movie_poster"
                                 android:layout_width="154dp"
                                 android:layout_height="231dp"
+                                android:layout_centerHorizontal="true"
                                 android:layout_gravity="center"
                                 android:layout_marginTop="4dp"
-                                android:layout_centerHorizontal="true"
                                 android:background="@android:drawable/dialog_holo_light_frame"
-                                android:elevation="5dp"
                                 android:contentDescription="@string/movie_poster"
+                                android:elevation="5dp"
                                 android:scaleType="centerCrop"
                                 android:src="@drawable/poster_image_place_holder"
                                 android:textSize="30sp"
@@ -123,27 +123,27 @@
                                 android:id="@+id/tv_label_watched"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textSize="14sp"
-                                android:background="@color/colorAccent"
-                                android:paddingEnd="4dp"
-                                android:paddingStart="4dp"
-                                android:elevation="5dp"
-                                android:textAllCaps="true"
-                                android:textStyle="bold"
                                 android:layout_centerHorizontal="true"
                                 android:layout_marginStart="@dimen/small_layout_margin"
-                                android:visibility="gone"
+                                android:background="@color/colorAccent"
+                                android:elevation="5dp"
+                                android:paddingEnd="4dp"
+                                android:paddingStart="4dp"
+                                android:text="@string/watched_flag"
+                                android:textAllCaps="true"
                                 android:textColor="@color/colorLightGrey"
-                                android:text="@string/watched_flag"/>
+                                android:textSize="14sp"
+                                android:textStyle="bold"
+                                android:visibility="gone"/>
 
                             <LinearLayout
                                 style="@style/DetailsItemLayout"
-                                android:layout_gravity="center"
                                 android:layout_below="@id/iv_movie_poster"
+                                android:layout_centerHorizontal="true"
+                                android:layout_gravity="center"
                                 android:layout_marginBottom="@dimen/small_layout_margin"
                                 android:layout_marginTop="4dp"
                                 android:background="@drawable/rounded_corner"
-                                android:layout_centerHorizontal="true"
                                 android:paddingEnd="4dp"
                                 android:paddingStart="4dp"
                                 android:paddingTop="4dp">
@@ -157,16 +157,16 @@
                                 <TextView
                                     android:id="@+id/tv_vote_average"
                                     style="@style/DetailItemValueStyle"
-                                    android:textColor="@color/colorLightGrey"
+                                    android:textColor="@color/colorMediumGrey"
                                     tools:text="9.9"/>
                                 <TextView
                                     style="@style/DetailItemLabelStyle"
                                     android:text="@string/slash"
-                                    android:textColor="@color/colorLightGrey"/>
+                                    android:textColor="@color/colorMediumGrey"/>
                                 <TextView
                                     android:id="@+id/tv_vote_count"
                                     style="@style/DetailItemValueStyle"
-                                    android:textColor="@color/colorLightGrey"
+                                    android:textColor="@color/colorMediumGrey"
                                     tools:text="9999999"/>
                             </LinearLayout>
 
@@ -178,8 +178,8 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/small_layout_margin"
                         android:layout_marginStart="8dp"
+                        android:layout_marginTop="@dimen/small_layout_margin"
                         android:layout_weight="7"
                         android:orientation="vertical">
 
@@ -191,9 +191,9 @@
                                 android:id="@+id/tv_release_date"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/medium_layout_margin"
                                 android:layout_weight="1"
                                 android:gravity="start"
-                                android:layout_marginStart="@dimen/medium_layout_margin"
                                 android:textColor="@color/colorAccent"
                                 android:textSize="28sp"
                                 android:textStyle="italic|bold"
@@ -324,8 +324,8 @@
                 android:id="@+id/section_videos"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="visible">
 
                 <TextView
                     style="@style/textDetailsHeader"
@@ -337,19 +337,19 @@
                     android:id="@+id/rv_movies_videos_details"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/very_large_layout_margin"
                     android:layout_marginLeft="@dimen/default_layout_margin"
-                    android:layout_marginRight="@dimen/default_layout_margin"
-                    android:layout_marginBottom="@dimen/very_large_layout_margin"/>
+                    android:layout_marginRight="@dimen/default_layout_margin"/>
             </LinearLayout>
             <!-- SECTION VIDEOS END -->
 
             <!-- SECTION REVIEWS START -->
             <LinearLayout
                 android:id="@+id/section_reviews"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     style="@style/textDetailsHeader"
@@ -361,9 +361,9 @@
                     android:id="@+id/rv_movies_reviews_details"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/very_large_layout_margin"
                     android:layout_marginLeft="@dimen/default_layout_margin"
-                    android:layout_marginRight="@dimen/default_layout_margin"
-                    android:layout_marginBottom="@dimen/very_large_layout_margin"/>
+                    android:layout_marginRight="@dimen/default_layout_margin"/>
 
             </LinearLayout>
             <!-- SECTION REVIEWS END -->
@@ -371,10 +371,10 @@
             <!-- SECTION COMPANIES START -->
             <LinearLayout
                 android:id="@+id/section_companies"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     style="@style/textDetailsHeader"
@@ -396,22 +396,22 @@
                 android:id="@+id/iv_warning_no_data"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/very_large_layout_margin"
                 android:layout_gravity="center"
-                android:visibility="gone"
+                android:layout_marginTop="@dimen/very_large_layout_margin"
                 android:contentDescription="@string/no_info_available"
-                android:src="@drawable/ic_details"/>
+                android:src="@drawable/ic_details"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/tv_warning_no_data"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:textSize="16sp"
-                android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
                 android:text="@string/movie_details_could_not_be_loaded"
                 android:textColor="@color/colorMediumGrey"
+                android:textSize="16sp"
                 android:visibility="gone"/>
 
             <ImageView
@@ -424,11 +424,11 @@
                 android:text="@string/no_internet_connection"/>
 
             <include layout="@layout/tmdb_branding"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="100dp"
                 android:layout_marginLeft="@dimen/default_layout_margin"
                 android:layout_marginRight="@dimen/default_layout_margin"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:gravity="bottom"/>
 
         </LinearLayout>
@@ -441,11 +441,11 @@
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible"
-        app:tabGravity="fill"
         android:layout_gravity="bottom"
+        android:background="@color/colorLightGrey"
         android:elevation="5dp"
-        android:background="@color/colorLightGrey">
+        android:visibility="visible"
+        app:tabGravity="fill">
     </android.support.design.widget.TabLayout>
     <!-- TABS END -->
 

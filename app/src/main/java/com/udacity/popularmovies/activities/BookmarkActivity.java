@@ -5,11 +5,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -54,11 +54,15 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     private static final int TAB_UNWATCHED = 2;
     private Toolbar toolbar;
 
-    private boolean selectAll = true;
     private boolean selectWatched = false;
     private boolean selectUnwatched = false;
     private static final int UNWATCHED = 0;
     private static final int WATCHED = 1;
+
+    private int numberOfBookmarksInPage;
+    private int pagination = 0; // Must start from 0 and increase in 20 by 20.
+    private int pageCurrent = 1; // Activity will load the page 1 by default
+    private static final int pageSize = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,9 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         imageViewNoBookmarks        = findViewById(R.id.image_view_no_bookmarks);
         buttonNavigateToMovies      = findViewById(R.id.bt_navigate_to_movies);
         recyclerViewBookmark        = findViewById(R.id.recycler_view_bookmark);
+
+        FloatingActionButton floatingButtonLoadMore = findViewById(R.id.float_load_more);
+        FloatingActionButton floatingButtonLoadLess = findViewById(R.id.float_load_less);
 
         // Setup the RecyclerView for the list of Bookmarks from the database.
         recyclerViewBookmark.setLayoutManager(new LinearLayoutManager(this));
@@ -117,6 +124,38 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
             }
         });
 
+        floatingButtonLoadMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (numberOfBookmarksInPage == 0) {
+                    doToast(getString(R.string.no_bookmarks_to_show));
+                }else if (numberOfBookmarksInPage < 20) {
+                    doToast(getString(R.string.no_more_bookmarks_to_show));
+                }else {
+                    pagination = pageCurrent * pageSize;
+                    pageCurrent++;
+                    restartLoaderBookmarks();
+                }
+            }
+        });
+
+        floatingButtonLoadLess.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (numberOfBookmarksInPage == 0) {
+                    doToast(getString(R.string.no_bookmarks_to_show));
+                    return;
+                }
+                if (pageCurrent == 1) {
+                    doToast(getResources().getString(R.string.you_are_at_page_1));
+                } else {
+                    pagination = pagination - pageSize;
+                    pageCurrent--;
+                    restartLoaderBookmarks();
+                }
+            }
+        });
+
         // Start the Loader Callbacks to query the list of movie bookmarks asynchronously
         getSupportLoaderManager().initLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
         setupTabs();
@@ -143,20 +182,25 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                 int tabPosition = tab.getPosition();
                 switch (tabPosition) {
                     case TAB_ALL:
+                        pagination = 0;
+                        pageCurrent = 1;
                         filterBookmarks(TAB_ALL);
                         break;
                     case TAB_WATCHED:
+                        pagination = 0;
+                        pageCurrent = 1;
                         filterBookmarks(TAB_WATCHED);
                         break;
                     case TAB_UNWATCHED:
+                        pagination = 0;
+                        pageCurrent = 1;
                         filterBookmarks(TAB_UNWATCHED);
                         break;
                 }
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
+            public void onTabUnselected(TabLayout.Tab tab) { }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
@@ -187,7 +231,6 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     private void filterBookmarks(int moviesToShow) {
         switch (moviesToShow) {
             case TAB_ALL:
-                selectAll = true;
                 selectWatched = false;
                 selectUnwatched = false;
                 restartLoaderBookmarks();
@@ -195,13 +238,11 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
             case TAB_WATCHED:
                 selectWatched = true;
                 selectUnwatched = false;
-                selectAll = false;
                 restartLoaderBookmarks();
                 break;
             case TAB_UNWATCHED:
                 selectUnwatched = true;
                 selectWatched = false;
-                selectAll = false;
                 restartLoaderBookmarks();
                 break;
         }
@@ -232,17 +273,22 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
             @Override
             public Cursor loadInBackground() {
 
-                String selection = null;
+                String DEFAULT_PAGINATION_QUERY =
+                        BookmarkEntry._ID + " NOT IN (SELECT " +
+                                BookmarkEntry._ID + " FROM " +
+                                BookmarkEntry.TABLE_NAME + " ORDER BY " +
+                                BookmarkEntry.COLUMN_TIMESTAMP + " ASC LIMIT " +
+                                String.valueOf(pagination) + ") LIMIT " +
+                                String.valueOf(pageSize) +  ";";
+
+                String selection = DEFAULT_PAGINATION_QUERY;
                 String[] selectionArgs = null;
 
-                if (selectAll) {
-                    selection = null;
-                    selectionArgs = null;
-                }else if (selectWatched) {
-                    selection = BookmarkEntry.COLUMN_IS_WATCHED + "=?";
+               if (selectWatched) {
+                    selection = BookmarkEntry.COLUMN_IS_WATCHED + "=?" + " AND " + DEFAULT_PAGINATION_QUERY;
                     selectionArgs = new String[]{String.valueOf(WATCHED)};
                 }else if (selectUnwatched){
-                    selection = BookmarkEntry.COLUMN_IS_WATCHED + "=?";
+                    selection = BookmarkEntry.COLUMN_IS_WATCHED + "=?" + " AND " + DEFAULT_PAGINATION_QUERY;
                     selectionArgs = new String[]{String.valueOf(UNWATCHED)};
                 }
 
@@ -252,7 +298,8 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                             null,
                             selection,
                             selectionArgs,
-                            BookmarkContract.BookmarkEntry.COLUMN_TIMESTAMP + " DESC");
+                            BookmarkContract.BookmarkEntry.COLUMN_TIMESTAMP + " DESC",
+                            null);
                 } catch (Exception e) {
                     Log.e(LOG_TAG, "Fail to load data");
                     e.printStackTrace();
@@ -261,9 +308,17 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
             }
 
             @Override
-            public void deliverResult(Cursor data) {
-                mCursorData = data;
-                super.deliverResult(data);
+            public void deliverResult(Cursor cursor) {
+
+                mCursorData = cursor;
+
+                if (cursor != null) numberOfBookmarksInPage = cursor.getCount();
+
+                String currentPageWithLabel = getResources().getString(R.string.page) + String.valueOf(pageCurrent);
+                if (numberOfBookmarksInPage == 0)  doToast(getString(R.string.no_bookmarks_to_show));
+                else doToast(currentPageWithLabel);
+
+                super.deliverResult(cursor);
             }
         };
     }
@@ -271,7 +326,8 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         if (data.getCount() < 1) {
-            showNoBookmarkWarning();
+            if (numberOfBookmarksInPage < 20) return;
+            else showNoBookmarkWarning();
         } else {
             hideNoBookmarkWarning();
         }
