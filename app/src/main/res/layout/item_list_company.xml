@@ -9,11 +9,13 @@
 
         <ImageView
             android:id="@+id/iv_production_company"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="150dp"
+            android:layout_height="80dp"
             android:layout_marginTop="@dimen/medium_layout_margin"
             android:contentDescription="@string/production_companies"
             android:gravity="center"
+            android:scaleType="centerInside"
+            android:layout_gravity="center"
             android:src="@drawable/production_company_sample"/>
 
         <TextView

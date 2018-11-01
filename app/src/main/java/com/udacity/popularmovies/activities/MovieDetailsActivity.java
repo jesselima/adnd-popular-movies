@@ -15,6 +15,7 @@ import android.support.v4.app.LoaderManager.LoaderCallbacks;
 import android.support.v4.content.Loader;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -43,6 +44,7 @@ import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.models.MovieProductionCompany;
 import com.udacity.popularmovies.models.MovieReview;
 import com.udacity.popularmovies.models.MovieVideo;
+import com.udacity.popularmovies.utils.AdaptiveGridLayout;
 import com.udacity.popularmovies.utils.DateUtils;
 import com.udacity.popularmovies.utils.LanguageUtils;
 import com.udacity.popularmovies.utils.NetworkUtils;
@@ -130,6 +132,9 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private boolean isMovieWatched;
     private TextView textViewLabelWatched;
 
+    private int deviceWidth;
+    private final int SMALLEST_LAYOUT_WIDTH = 600;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -184,7 +189,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         recyclerViewVideos = findViewById(R.id.rv_movies_videos_details);
         movieVideosAdapter = new MovieVideosAdapter(this, movieVideosList);
         recyclerViewVideos.setAdapter(movieVideosAdapter);
-        recyclerViewVideos.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        recyclerViewVideos.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerViewVideos.setHasFixedSize(true);
         // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
         // Author: https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
@@ -265,7 +270,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         collapsingToolbar.setTitle(movieOriginalTitle);
 
         checkConnectionAndStartLoader();
-        showDetails();
+//        showDetails();
 
     } // Close onCreate
 
@@ -311,9 +316,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 int tabPosition = tab.getPosition();
                 switch (tabPosition) {
                     case TAB_DETAILS:
-                        showDetails();
+                        showAllMovieData();
+                        recyclerViewVideos.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
                         break;
                     case TAB_VIDEOS:
+                        int numberOfColumns = AdaptiveGridLayout.calculateNoOfColumnsForVideoGrid(getApplicationContext());
+                        // Sets the adapter that provides the data and the views to represent the data in this widget.
+                        recyclerViewVideos.setLayoutManager(new GridLayoutManager(getApplicationContext(), numberOfColumns));
                         showVideos();
                         break;
                     case TAB_REVIEWS:
@@ -443,7 +452,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                     linearLayoutFullContent.setVisibility(HIDE);
                 }
 
-                showDetails();
                 progressBarStatus(INVISIBLE);
                 break;
 
@@ -456,7 +464,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                     warningVideos(SHOW);
                     doToast(getString(R.string.no_videos_available_for_this_movie));
                 } else {
-                    progressBarStatus(INVISIBLE);
                     warningConnection(HIDE);
                     warningReviews(HIDE);
                 }
@@ -467,7 +474,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 if (movieVideosList.size() == 0) warningVideos(SHOW);
                 else warningVideos(HIDE);
 
-                showDetails();
                 progressBarStatus(INVISIBLE);
                 break;
 
@@ -485,11 +491,10 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 if (movieReviewsList.size() == 0) warningReviews(SHOW);
                 else warningReviews(HIDE);
 
-                showDetails();
                 progressBarStatus(INVISIBLE);
                 break;
         }
-        showDetails();
+        showAllMovieData();
 
     }
 
@@ -846,6 +851,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     }
 
     /* === UI HIDE/SHOW CONTENTS === */
+    private void showAllMovieData() {
+        linearLayoutSectionDetails.setVisibility(View.VISIBLE);
+        linearLayoutSectionVideos.setVisibility(View.VISIBLE);
+        linearLayoutSectionReviews.setVisibility(View.VISIBLE);
+        linearLayoutSectionCompanies.setVisibility(View.VISIBLE);
+    }
+
 
     private void showDetails() {
         linearLayoutSectionDetails.setVisibility(View.VISIBLE);

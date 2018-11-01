@@ -315,8 +315,10 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                 if (cursor != null) numberOfBookmarksInPage = cursor.getCount();
 
                 String currentPageWithLabel = getResources().getString(R.string.page) + String.valueOf(pageCurrent);
-                if (numberOfBookmarksInPage == 0)  doToast(getString(R.string.no_bookmarks_to_show));
-                else doToast(currentPageWithLabel);
+                if (numberOfBookmarksInPage == 0) {
+                    Toast.makeText(BookmarkActivity.this, R.string.no_bookmarks_to_show, Toast.LENGTH_SHORT).show();
+                    showNoBookmarkWarning();
+                } else doToast(currentPageWithLabel);
 
                 super.deliverResult(cursor);
             }
@@ -340,7 +342,8 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     }
 
     private void restartLoaderBookmarks() {
-        getSupportLoaderManager().restartLoader(LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
+        getSupportLoaderManager().restartLoader(
+                LOADER_ID_MOVIE_BOOKMARKS_LIST, null, this);
     }
 
 
@@ -386,7 +389,9 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                 null);
 
         if (rowsDeleted > 0) {
-            doToast(rowsDeleted + getResources().getString(R.string.number_of_deleted_bookmarks));
+            Toast.makeText(this, String.valueOf(rowsDeleted) +
+                    getResources().getString(R.string.number_of_deleted_bookmarks),
+                    Toast.LENGTH_SHORT).show();
             showNoBookmarkWarning();
         }
 

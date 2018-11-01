@@ -57,8 +57,7 @@ final class ReadJsonData {
                 double voteAverage = currentMovieResult.optDouble(JsonKey.VOTE_AVERAGE);
 
                 // Instantiate a Movie class object and add the JSON data as inputs parameters.
-                Movie movieItem = new Movie(movieId, fullPosterPathUrl, originalTitle, releaseDate, voteAverage);
-                movieList.add(movieItem);
+                movieList.add(new Movie(movieId, fullPosterPathUrl, originalTitle, releaseDate, voteAverage));
             }
 
         } catch (JSONException e) {
@@ -180,8 +179,7 @@ final class ReadJsonData {
                 String videoThumbnailUrl = "https://img.youtube.com/vi/" + videoKey + "/mqdefault.jpg";
 
                 // Instantiate a Movie class object and add the JSON data as inputs parameters.
-                MovieVideo movieVideoItem = new MovieVideo(videoKey, videoName, videoType, videoSite, videoSize, videoThumbnailUrl);
-                movieVideoList.add(movieVideoItem);
+                movieVideoList.add(new MovieVideo(videoKey, videoName, videoType, videoSite, videoSize, videoThumbnailUrl));
             }
 
         } catch (JSONException e) {
