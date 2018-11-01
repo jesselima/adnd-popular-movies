@@ -3,6 +3,7 @@ package com.udacity.popularmovies.activities;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -36,6 +37,7 @@ import com.udacity.popularmovies.adapters.CompanyListAdapter;
 import com.udacity.popularmovies.adapters.MovieReviewsAdapter;
 import com.udacity.popularmovies.adapters.MovieVideosAdapter;
 import com.udacity.popularmovies.config.ApiConfig;
+import com.udacity.popularmovies.databinding.ActivityMovieDetailsBinding;
 import com.udacity.popularmovies.loaders.MovieLoader;
 import com.udacity.popularmovies.loaders.ReviewListLoader;
 import com.udacity.popularmovies.loaders.VideoListLoader;
@@ -77,28 +79,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
     private String loadApiLanguage = ApiConfig.UrlParamValue.LANGUAGE_DEFAULT;
     private int page = 1;
-    private TabLayout tabLayout;
+//    private TabLayout tabLayout;
 
     private Movie movieData = new Movie();
     private int movieId;
     private String movieHomepageUrl;
     private String movieOriginalTitle = "";
-
-    // Object for UI references
-    private ImageView imageViewMoviePoster;
-    private ImageView imageViewMovieBackdrop;
-    private TextView textViewOverview;
-    private TextView textViewReleaseDate;
-    private TextView textViewRuntime;
-    private TextView textViewTitle;
-    private TextView textViewVoteAverage;
-    private TextView textViewOriginalLang;
-    private TextView textViewTagline;
-    private TextView textViewPopularity;
-    private TextView textViewVoteCount;
-    private TextView textViewBuget;
-    private TextView textViewRevenue;
-    private TextView textViewGenres;
 
     private FloatingActionButton floatingIsWatchedButton = null;
     private FloatingActionButton floatingBookmarkButton = null;
@@ -108,32 +94,19 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private CompanyListAdapter companyListAdapter;
 
     private final ArrayList<MovieVideo> movieVideosList = new ArrayList<>();
-    private RecyclerView recyclerViewVideos;
     private MovieVideosAdapter movieVideosAdapter;
     private List<MovieVideo> movieVideoList = new ArrayList<>();
 
     private final ArrayList<MovieReview> movieReviewsList = new ArrayList<>();
-    private RecyclerView recyclerViewReviews;
     private MovieReviewsAdapter movieReviewsAdapter;
     private List<MovieReview> movieReviewList = new ArrayList<>();
-    private RecyclerView recyclerViewCompanies;
 
-    private LinearLayout linearLayoutSectionDetails;
-    private LinearLayout linearLayoutSectionVideos;
-    private LinearLayout linearLayoutSectionReviews;
-    private LinearLayout linearLayoutSectionCompanies;
-    private LinearLayout linearLayoutFullContent;
-
-    private ProgressBar progressBar;
-    private TextView textViewWarningNoData;
-    private ImageView imageViewWarningNoData;
     private Toast toast;
     private boolean isBookmarkOnDatabase;
     private boolean isMovieWatched;
-    private TextView textViewLabelWatched;
 
     private int deviceWidth;
-    private final int SMALLEST_LAYOUT_WIDTH = 600;
+    ActivityMovieDetailsBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,73 +114,43 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         setContentView(R.layout.activity_movie_details);
         Log.d("===>>> onCreate", " called");
 
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details);
+
         // Get the movie ID and Title from the clicked item on the RecyclerView item.
         getIncomingIntent();
-        progressBar = findViewById(R.id.indeterminateBar);
         progressBarStatus(SHOW);
-
-        tabLayout = findViewById(R.id.tab_layout);
         setupTabs();
 
-        linearLayoutSectionDetails      = findViewById(R.id.section_info);
-        linearLayoutSectionVideos       = findViewById(R.id.section_videos);
-        linearLayoutSectionReviews      = findViewById(R.id.section_reviews);
-        linearLayoutSectionCompanies    = findViewById(R.id.section_companies);
-        linearLayoutFullContent         = findViewById(R.id.section_full_content);
-
-        // UI REFERENCES
-        imageViewMoviePoster    = findViewById(R.id.iv_movie_poster);
-        imageViewMovieBackdrop  = findViewById(R.id.iv_movie_backdrop);
-        textViewOverview        = findViewById(R.id.tv_overview);
-        textViewReleaseDate     = findViewById(R.id.tv_release_date);
-        textViewRuntime         = findViewById(R.id.tv_runtime);
-        textViewTitle           = findViewById(R.id.tv_title);
-        textViewOriginalLang    = findViewById(R.id.tv_original_language);
-        textViewTagline         = findViewById(R.id.tv_tagline);
-        textViewPopularity      = findViewById(R.id.tv_popularity);
-        textViewVoteCount       = findViewById(R.id.tv_vote_count);
-        textViewBuget           = findViewById(R.id.tv_buget);
-        textViewRevenue         = findViewById(R.id.tv_revenue);
-        textViewVoteAverage     = findViewById(R.id.tv_vote_average);
-        textViewGenres          = findViewById(R.id.tv_genres);
-        // Warnings UI View references.
-        textViewWarningNoData   = findViewById(R.id.tv_warning_no_data);
-        imageViewWarningNoData  = findViewById(R.id.iv_warning_no_data);
-        textViewLabelWatched    = findViewById(R.id.tv_label_watched);
 
         // RecyclerView for the list of companies
-        recyclerViewCompanies   = findViewById(R.id.rv_companies);
         companyListAdapter = new CompanyListAdapter(companies);
-        recyclerViewCompanies.setAdapter(companyListAdapter);
-        recyclerViewCompanies.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerViewCompanies.setHasFixedSize(true);
+        binding.rvCompanies.setAdapter(companyListAdapter);
+        binding.rvCompanies.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        binding.rvCompanies.setHasFixedSize(true);
         // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
         // https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
-        ViewCompat.setNestedScrollingEnabled(recyclerViewCompanies, false);
+        ViewCompat.setNestedScrollingEnabled(binding.rvCompanies, false);
 
         // RecyclerView for the list of movie videos
-        recyclerViewVideos = findViewById(R.id.rv_movies_videos_details);
         movieVideosAdapter = new MovieVideosAdapter(this, movieVideosList);
-        recyclerViewVideos.setAdapter(movieVideosAdapter);
-        recyclerViewVideos.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        recyclerViewVideos.setHasFixedSize(true);
+        binding.rvMoviesVideosDetails.setAdapter(movieVideosAdapter);
+        binding.rvMoviesVideosDetails.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        binding.rvMoviesVideosDetails.setHasFixedSize(true);
         // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
         // Author: https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
-        ViewCompat.setNestedScrollingEnabled(recyclerViewVideos, false);
+        ViewCompat.setNestedScrollingEnabled(binding.rvMoviesVideosDetails, false);
 
         // RecyclerView references and setups
-        recyclerViewReviews = findViewById(R.id.rv_movies_reviews_details);
         movieReviewsAdapter = new MovieReviewsAdapter(this, movieReviewsList);
-        recyclerViewReviews.setAdapter(movieReviewsAdapter);
-        recyclerViewReviews.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerViewReviews.setHasFixedSize(true);
+        binding.rvMoviesReviewsDetails.setAdapter(movieReviewsAdapter);
+        binding.rvMoviesReviewsDetails.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        binding.rvMoviesReviewsDetails.setHasFixedSize(true);
         // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
         // Author: https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
-        ViewCompat.setNestedScrollingEnabled(recyclerViewReviews, false);
+        ViewCompat.setNestedScrollingEnabled(binding.rvMoviesReviewsDetails, false);
 
         // Button inside Overview card that send user to the movie homepage in the browser if URL is not null
-        Button buttonHomepage = findViewById(R.id.bt_home_page);
-        buttonHomepage.setOnClickListener(new View.OnClickListener() {
+        binding.btHomePage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (movieData.getMovieHomepage().equals("null")) {
@@ -220,8 +163,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             }
         });
 
-        floatingIsWatchedButton = findViewById(R.id.float_is_watched);
-        floatingIsWatchedButton.setOnClickListener(new View.OnClickListener() {
+        binding.floatIsWatched.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // If the Bookmarks
@@ -232,8 +174,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             }
         });
 
-        floatingBookmarkButton = findViewById(R.id.float_save_bookmark);
-        floatingBookmarkButton.setOnClickListener(new View.OnClickListener() {
+        binding.floatSaveBookmark.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (isBookmarkOnDatabase) {
@@ -247,8 +188,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
 
         // FloatButton to share movie homepage to other app available on device.
-        floatingShareButton = findViewById(R.id.float_share_button);
-        floatingShareButton.setOnClickListener(new View.OnClickListener() {
+        binding.floatShareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 shareWebUrl();
@@ -258,20 +198,17 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         LanguageUtils.checkSystemLanguage(loadApiLanguage);
         // Hide the Tagline TextView due to API to provide tagline to english language only or the
         // movie occasionally may have a empty tagline value. Then the space will be shown.
-        if (loadApiLanguage.equals("")) textViewTagline.setVisibility(View.GONE);
-        else textViewTagline.setVisibility(View.VISIBLE);
+        if (loadApiLanguage.equals("")) binding.tvTagline.setVisibility(View.GONE);
+        else binding.tvTagline.setVisibility(View.VISIBLE);
 
         // Setup ToolBar
-        final Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(binding.toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         // Setup CollapsingToolbar with movie name
-        CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(movieOriginalTitle);
+        binding.collapsingToolbar.setTitle(movieOriginalTitle);
 
         checkConnectionAndStartLoader();
-//        showDetails();
-
+        showAllMovieData();
     } // Close onCreate
 
     // It's called inside onCreate method and get the movie ID and Title sent from MovieListActivity.
@@ -305,11 +242,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
     private void setupTabs() {
         /* Movie Details Tabs Navigation - start */
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_details));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_movie));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_reviews));
-        tabLayout.addTab(tabLayout.newTab().setIcon(R.drawable.ic_companies));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setIcon(R.drawable.ic_details));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setIcon(R.drawable.ic_movie));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setIcon(R.drawable.ic_reviews));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setIcon(R.drawable.ic_companies));
+        binding.tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
@@ -317,12 +254,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 switch (tabPosition) {
                     case TAB_DETAILS:
                         showAllMovieData();
-                        recyclerViewVideos.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
+                        binding.rvMoviesVideosDetails.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false));
                         break;
                     case TAB_VIDEOS:
                         int numberOfColumns = AdaptiveGridLayout.calculateNoOfColumnsForVideoGrid(getApplicationContext());
                         // Sets the adapter that provides the data and the views to represent the data in this widget.
-                        recyclerViewVideos.setLayoutManager(new GridLayoutManager(getApplicationContext(), numberOfColumns));
+                        binding.rvMoviesVideosDetails.setLayoutManager(new GridLayoutManager(getApplicationContext(), numberOfColumns));
                         showVideos();
                         break;
                     case TAB_REVIEWS:
@@ -438,7 +375,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                     companies.clear();
                     // Add new data to the list.
                     if (movieData.getCompaniesArrayList() == null) {
-                        recyclerViewCompanies.setVisibility(HIDE);
+                        binding.rvCompanies.setVisibility(HIDE);
                     }else {
                         companies.addAll(movieData.getCompaniesArrayList());
                         companyListAdapter.notifyDataSetChanged();
@@ -449,7 +386,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
                 } else {
                     warningDetails(SHOW);
-                    linearLayoutFullContent.setVisibility(HIDE);
+                    binding.sectionFullContent.setVisibility(HIDE);
                 }
 
                 progressBarStatus(INVISIBLE);
@@ -536,39 +473,39 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 .placeholder(R.drawable.poster_image_place_holder)
                 .fit().centerInside()
                 .error(R.drawable.poster_image_place_holder)
-                .into(imageViewMoviePoster);
+                .into(binding.ivMoviePoster);
 
         Picasso.get()
                 .load(movie.getMovieBackdropPath())
                 .placeholder(R.drawable.backdrop_image_place_holder)
                 .fit().centerInside()
                 .error(R.drawable.backdrop_image_place_holder)
-                .into(imageViewMovieBackdrop);
+                .into(binding.ivMovieBackdrop);
 
-        textViewOverview.setText(movie.getMovieOverview());
-        textViewVoteAverage.setText(String.valueOf(movie.getMovieVoteAverage()));
+        binding.tvOverview.setText(movie.getMovieOverview());
+        binding.tvVoteAverage.setText(String.valueOf(movie.getMovieVoteAverage()));
 
-        textViewRuntime.setText(String.valueOf(movie.getMovieRunTime() + getString(R.string.min)));
+        binding.tvRuntime.setText(String.valueOf(movie.getMovieRunTime() + getString(R.string.min)));
 
         String formatedDate = DateUtils.simpleDateFormat(movie.getMovieReleaseDate());
-        textViewReleaseDate.setText(formatedDate);
+        binding.tvReleaseDate.setText(formatedDate);
 
-        textViewTitle.setText(movie.getMovieTitle());
-        textViewOriginalLang.setText(movie.getMovieSpokenLanguage());
+        binding.tvTitle.setText(movie.getMovieTitle());
+        binding.tvOriginalLanguage.setText(movie.getMovieSpokenLanguage());
 
         String taglineWithQuotes = movie.getMovieTagline();
-        textViewTagline.setText(taglineWithQuotes);
+        binding.tvTagline.setText(taglineWithQuotes);
 
-        textViewPopularity.setText(String.valueOf(movie.getMoviePopularity()));
-        textViewVoteCount.setText(String.valueOf(movie.getMovieVoteCount()));
+        binding.tvPopularity.setText(String.valueOf(movie.getMoviePopularity()));
+        binding.tvVoteCount.setText(String.valueOf(movie.getMovieVoteCount()));
 
-        if (movie.getMovieBuget() == 0) textViewBuget.setText(R.string.unavailable);
-        else textViewBuget.setText(formatNumber(movie.getMovieBuget()));
+        if (movie.getMovieBuget() == 0) binding.tvBuget.setText(R.string.unavailable);
+        else binding.tvBuget.setText(formatNumber(movie.getMovieBuget()));
 
-        if (movie.getMovieRevenue() == 0) textViewRevenue.setText(R.string.unavailable);
-        else textViewRevenue.setText(formatNumber(movie.getMovieRevenue()));
+        if (movie.getMovieRevenue() == 0) binding.tvRevenue.setText(R.string.unavailable);
+        else binding.tvRevenue.setText(formatNumber(movie.getMovieRevenue()));
 
-        textViewGenres.setText(movie.getMovieGenres());
+        binding.tvGenres.setText(movie.getMovieGenres());
 
         progressBarStatus(INVISIBLE);
 
@@ -606,7 +543,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             contentValues.put(BookmarkEntry.COLUMN_REVENUE,         movieData.getMovieRevenue());
             contentValues.put(BookmarkEntry.COLUMN_IS_WATCHED,      watched);
             contentValues.put(BookmarkEntry.COLUMN_HOMEPAGE,        movieData.getMovieHomepage());
-            contentValues.put(BookmarkEntry.COLUMN_MOVIE_IMAGE,     convertImageViewToBytes(imageViewMoviePoster));
+            contentValues.put(BookmarkEntry.COLUMN_MOVIE_IMAGE,     convertImageViewToBytes(binding.ivMoviePoster));
 
             return getContentResolver().insert(BookmarkEntry.CONTENT_URI, contentValues);
         }
@@ -651,7 +588,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
             if (rowsDeleted > 0) {
                 floatingBookmarkButton.setImageResource(R.drawable.ic_bookmark_unsaved);
                 floatingIsWatchedButton.setImageResource(R.drawable.ic_watched_not);
-                textViewLabelWatched.setVisibility(HIDE);
+                binding.tvLabelWatched.setVisibility(HIDE);
                 doToast(getResources().getString(R.string.movie_removed));
                 isBookmarkOnDatabase = false;
                 isMovieWatched = false;
@@ -700,11 +637,11 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 if (WATCHED == 0) {
                     isMovieWatched = false;
                     floatingIsWatchedButton.setImageResource(R.drawable.ic_watched_not);
-                    animateTextFadeOut(textViewLabelWatched);
+                    animateTextFadeOut(binding.tvLabelWatched);
                 }if (WATCHED == 1){
                     isMovieWatched = true;
                     floatingIsWatchedButton.setImageResource(R.drawable.ic_watched_yes);
-                    animateTextFadeIn(textViewLabelWatched);
+                    animateTextFadeIn(binding.tvLabelWatched);
                 }
             }
             progressBarStatus(INVISIBLE);
@@ -754,12 +691,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 if (isMovieWatched){
                     floatingIsWatchedButton.setImageResource(R.drawable.ic_watched_not);
                     doToast(getResources().getString(R.string.not_watched));
-                    animateTextFadeOut(textViewLabelWatched);
+                    animateTextFadeOut(binding.tvLabelWatched);
                     isMovieWatched = false;
                 }else {
                     floatingIsWatchedButton.setImageResource(R.drawable.ic_watched_yes);
                     Toast.makeText(MovieDetailsActivity.this, getResources().getString(R.string.watched), Toast.LENGTH_SHORT).show();
-                    animateTextFadeIn(textViewLabelWatched);
+                    animateTextFadeIn(binding.tvLabelWatched);
                     isMovieWatched = true;
                 }
             }
@@ -852,46 +789,46 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
     /* === UI HIDE/SHOW CONTENTS === */
     private void showAllMovieData() {
-        linearLayoutSectionDetails.setVisibility(View.VISIBLE);
-        linearLayoutSectionVideos.setVisibility(View.VISIBLE);
-        linearLayoutSectionReviews.setVisibility(View.VISIBLE);
-        linearLayoutSectionCompanies.setVisibility(View.VISIBLE);
+        binding.sectionInfo.setVisibility(View.VISIBLE);
+        binding.sectionVideos.setVisibility(View.VISIBLE);
+        binding.sectionReviews.setVisibility(View.VISIBLE);
+        binding.sectionCompanies.setVisibility(View.VISIBLE);
     }
 
 
     private void showDetails() {
-        linearLayoutSectionDetails.setVisibility(View.VISIBLE);
-        linearLayoutSectionVideos.setVisibility(View.GONE);
-        linearLayoutSectionReviews.setVisibility(View.GONE);
-        linearLayoutSectionCompanies.setVisibility(View.GONE);
+        binding.sectionInfo.setVisibility(View.VISIBLE);
+        binding.sectionVideos.setVisibility(View.GONE);
+        binding.sectionReviews.setVisibility(View.GONE);
+        binding.sectionCompanies.setVisibility(View.GONE);
     }
 
     private void showVideos() {
-        linearLayoutSectionDetails.setVisibility(View.GONE);
-        linearLayoutSectionVideos.setVisibility(View.VISIBLE);
-        linearLayoutSectionReviews.setVisibility(View.GONE);
-        linearLayoutSectionCompanies.setVisibility(View.GONE);
+        binding.sectionInfo.setVisibility(View.GONE);
+        binding.sectionVideos.setVisibility(View.VISIBLE);
+        binding.sectionReviews.setVisibility(View.GONE);
+        binding.sectionCompanies.setVisibility(View.GONE);
     }
 
     private void showReviews() {
-        linearLayoutSectionDetails.setVisibility(View.GONE);
-        linearLayoutSectionVideos.setVisibility(View.GONE);
-        linearLayoutSectionReviews.setVisibility(View.VISIBLE);
-        linearLayoutSectionCompanies.setVisibility(View.GONE);
+        binding.sectionInfo.setVisibility(View.GONE);
+        binding.sectionVideos.setVisibility(View.GONE);
+        binding.sectionReviews.setVisibility(View.VISIBLE);
+        binding.sectionCompanies.setVisibility(View.GONE);
     }
 
     private void showCompanies() {
-        linearLayoutSectionDetails.setVisibility(View.GONE);
-        linearLayoutSectionVideos.setVisibility(View.GONE);
-        linearLayoutSectionReviews.setVisibility(View.GONE);
-        linearLayoutSectionCompanies.setVisibility(View.VISIBLE);
+        binding.sectionInfo.setVisibility(View.GONE);
+        binding.sectionVideos.setVisibility(View.GONE);
+        binding.sectionReviews.setVisibility(View.GONE);
+        binding.sectionCompanies.setVisibility(View.VISIBLE);
     }
 
     /* === UI HIDE/SHOW WARNING === */
 
     private void warningConnection(int VISIBILITY) {
-        textViewWarningNoData.setVisibility(VISIBILITY);
-        imageViewWarningNoData.setVisibility(VISIBILITY);
+        binding.tvWarningNoData.setVisibility(VISIBILITY);
+        binding.ivWarningNoData.setVisibility(VISIBILITY);
         if (VISIBILITY == SHOW) {
             setContentVisibility(HIDE);
             doToast(getString(R.string.warning_you_are_not_connected));
@@ -903,59 +840,59 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     private void setContentVisibility(int VISIBILITY) {
         floatingBookmarkButton.setVisibility(VISIBILITY);
         floatingShareButton.setVisibility(VISIBILITY);
-        imageViewMoviePoster.setVisibility(VISIBILITY);
-        linearLayoutFullContent.setVisibility(VISIBILITY);
+        binding.ivMoviePoster.setVisibility(VISIBILITY);
+        binding.sectionFullContent.setVisibility(VISIBILITY);
     }
 
     private void warningDetails(int VISIBILITY) {
-        textViewWarningNoData.setText(getResources().getText(R.string.warning_no_details));
-        textViewWarningNoData.setVisibility(VISIBILITY);
-        imageViewWarningNoData.setImageResource(R.drawable.ic_details);
-        imageViewWarningNoData.setVisibility(VISIBILITY);
+        binding.tvWarningNoData.setText(getResources().getText(R.string.warning_no_details));
+        binding.tvWarningNoData.setVisibility(VISIBILITY);
+        binding.ivWarningNoData.setImageResource(R.drawable.ic_details);
+        binding.ivWarningNoData.setVisibility(VISIBILITY);
         if (VISIBILITY == HIDE) {
-            linearLayoutSectionDetails.setVisibility(SHOW);
+            binding.sectionInfo.setVisibility(SHOW);
         } else {
-            linearLayoutSectionDetails.setVisibility(HIDE);
+            binding.sectionInfo.setVisibility(HIDE);
         }
     }
 
     private void warningVideos(int VISIBILITY) {
-        textViewWarningNoData.setText(getResources().getText(R.string.warning_no_videos));
-        textViewWarningNoData.setVisibility(VISIBILITY);
-        imageViewWarningNoData.setImageResource(R.drawable.ic_movie);
-        imageViewWarningNoData.setVisibility(VISIBILITY);
+        binding.tvWarningNoData.setText(getResources().getText(R.string.warning_no_videos));
+        binding.tvWarningNoData.setVisibility(VISIBILITY);
+        binding.ivWarningNoData.setImageResource(R.drawable.ic_movie);
+        binding.ivWarningNoData.setVisibility(VISIBILITY);
 
-        if (VISIBILITY == HIDE) linearLayoutSectionVideos.setVisibility(SHOW);
-        else linearLayoutSectionVideos.setVisibility(HIDE);
+        if (VISIBILITY == HIDE) binding.sectionVideos.setVisibility(SHOW);
+        else binding.sectionVideos.setVisibility(HIDE);
 
-        if (VISIBILITY == HIDE) recyclerViewVideos.setVisibility(SHOW);
-        else recyclerViewVideos.setVisibility(HIDE);
+        if (VISIBILITY == HIDE) binding.rvMoviesVideosDetails.setVisibility(SHOW);
+        else binding.rvMoviesVideosDetails.setVisibility(HIDE);
     }
 
     private void warningReviews(int VISIBILITY) {
-        textViewWarningNoData.setText(getResources().getText(R.string.warning_no_reviews));
-        textViewWarningNoData.setVisibility(VISIBILITY);
-        imageViewWarningNoData.setImageResource(R.drawable.ic_reviews);
-        imageViewWarningNoData.setVisibility(VISIBILITY);
+        binding.tvWarningNoData.setText(getResources().getText(R.string.warning_no_reviews));
+        binding.tvWarningNoData.setVisibility(VISIBILITY);
+        binding.ivWarningNoData.setImageResource(R.drawable.ic_reviews);
+        binding.ivWarningNoData.setVisibility(VISIBILITY);
     }
 
     private void warningCompanies(int VISIBILITY) {
-        textViewWarningNoData.setText(getResources().getText(R.string.warning_no_companies));
-        textViewWarningNoData.setVisibility(VISIBILITY);
-        imageViewWarningNoData.setImageResource(R.drawable.ic_companies);
-        imageViewWarningNoData.setVisibility(VISIBILITY);
+        binding.tvWarningNoData.setText(getResources().getText(R.string.warning_no_companies));
+        binding.tvWarningNoData.setVisibility(VISIBILITY);
+        binding.ivWarningNoData.setImageResource(R.drawable.ic_companies);
+        binding.ivWarningNoData.setVisibility(VISIBILITY);
 
-        if (VISIBILITY == HIDE) linearLayoutSectionCompanies.setVisibility(SHOW);
-        else linearLayoutSectionCompanies.setVisibility(HIDE);
+        if (VISIBILITY == HIDE) binding.sectionCompanies.setVisibility(SHOW);
+        else binding.sectionCompanies.setVisibility(HIDE);
 
-        if (VISIBILITY == HIDE) recyclerViewCompanies.setVisibility(SHOW);
-        else recyclerViewCompanies.setVisibility(HIDE);
+        if (VISIBILITY == HIDE) binding.rvCompanies.setVisibility(SHOW);
+        else binding.rvCompanies.setVisibility(HIDE);
     }
 
     private void progressBarStatus(int VISIBILITY) {
-        if (VISIBILITY == SHOW) progressBar.setIndeterminate(true);
-        else progressBar.setIndeterminate(false);
-        progressBar.setVisibility(VISIBILITY);
+        if (VISIBILITY == SHOW) binding.indeterminateBar.setIndeterminate(true);
+        else binding.indeterminateBar.setIndeterminate(false);
+        binding.indeterminateBar.setVisibility(VISIBILITY);
     }
 
 

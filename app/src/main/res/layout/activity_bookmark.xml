@@ -1,134 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/parent"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- I learnt this scroll behavior from	this article:
-     https://medium.com/@tonia.tkachuk/appbarlayout-scroll-behavior-with-layout-scrollflags-2eec41b4366b -->
-
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_bookmarks"
-            android:layout_width="match_parent"
-            android:layout_height="?android:attr/actionBarSize"
-            android:background="@color/colorPrimary"
-            app:layout_scrollFlags="scroll|snap"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        <!-- I learnt this scroll behavior from	this article:
+         https://medium.com/@tonia.tkachuk/appbarlayout-scroll-behavior-with-layout-scrollflags-2eec41b4366b -->
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tab_layout_bookmarks"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:elevation="5dp"
-            android:visibility="visible"
-            app:tabBackground="@color/colorLightGrey"
-            app:tabGravity="center"
-            app:tabMode="fixed"
-            app:tabIndicatorColor="@color/colorAccent"
-            app:tabSelectedTextColor="@color/colorAccent"
-            app:tabTextColor="@color/colorAccent">
-        </android.support.design.widget.TabLayout>
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="8dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view_bookmark"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_bookmarks"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="40dp"
-                android:padding="8dp"
-                android:visibility="visible"/>
+                android:layout_height="?android:attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                app:layout_scrollFlags="scroll|snap"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-            <ImageView
-                android:id="@+id/image_view_no_bookmarks"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="20dp"
-                android:contentDescription="@string/no_bookmarks_in_the_database"
-                android:src="@drawable/ic_bookmark_unsaved"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/text_view_no_bookmarks"
-                android:layout_width="wrap_content"
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tab_layout_bookmarks"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/image_view_no_bookmarks"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="100dp"
-                android:text="@string/you_do_not_have_any_bookmarks"
-                android:textColor="@color/colorMediumGrey"
-                android:textSize="16sp"
-                android:visibility="gone"/>
+                android:layout_gravity="bottom"
+                android:elevation="5dp"
+                android:visibility="visible"
+                app:tabBackground="@color/colorLightGrey"
+                app:tabGravity="center"
+                app:tabMode="fixed"
+                app:tabIndicatorColor="@color/colorAccent"
+                app:tabSelectedTextColor="@color/colorAccent"
+                app:tabTextColor="@color/colorAccent">
+            </android.support.design.widget.TabLayout>
 
-            <TextView
-                android:id="@+id/text_view_navigate_to_bookmarks"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_view_no_bookmarks"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:text="@string/navigate_to_bookmarks"
-                android:textColor="@color/colorMediumGrey"
-                android:textSize="16sp"
-                android:visibility="gone"/>
+        </android.support.design.widget.AppBarLayout>
 
-            <Button
-                android:id="@+id/bt_navigate_to_movies"
-                style="@style/Base.Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_view_navigate_to_bookmarks"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:text="@string/see_movies"
-                android:textColor="@color/colorAccent"
-                android:textSize="16sp"
-                android:visibility="gone"/>
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    </android.support.v4.widget.NestedScrollView>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_bookmark"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="40dp"
+                    android:padding="8dp"
+                    android:visibility="visible"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/float_load_more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/medium_layout_margin"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_forward"
-        app:layout_anchorGravity="bottom|right|end" />
+                <ImageView
+                    android:id="@+id/image_view_no_bookmarks"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="20dp"
+                    android:contentDescription="@string/no_bookmarks_in_the_database"
+                    android:src="@drawable/ic_bookmark_unsaved"
+                    android:visibility="gone" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/float_load_less"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="@dimen/medium_layout_margin"
-        android:clickable="true"
-        android:focusable="true"
-        android:src="@drawable/ic_backward"
-        app:layout_anchorGravity="bottom|right|end" />
+                <TextView
+                    android:id="@+id/text_view_no_bookmarks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/image_view_no_bookmarks"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="100dp"
+                    android:text="@string/you_do_not_have_any_bookmarks"
+                    android:textColor="@color/colorMediumGrey"
+                    android:textSize="16sp"
+                    android:visibility="gone"/>
 
-</android.support.design.widget.CoordinatorLayout>
+                <TextView
+                    android:id="@+id/text_view_navigate_to_bookmarks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_view_no_bookmarks"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/navigate_to_bookmarks"
+                    android:textColor="@color/colorMediumGrey"
+                    android:textSize="16sp"
+                    android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/bt_navigate_to_movies"
+                    style="@style/Base.Widget.AppCompat.Button.Borderless"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/text_view_navigate_to_bookmarks"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/see_movies"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="16sp"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/float_load_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/medium_layout_margin"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_forward"
+            app:layout_anchorGravity="bottom|right|end" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/float_load_less"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|start"
+            android:layout_margin="@dimen/medium_layout_margin"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_backward"
+            app:layout_anchorGravity="bottom|right|end" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

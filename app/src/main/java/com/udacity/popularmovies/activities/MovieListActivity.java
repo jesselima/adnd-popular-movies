@@ -3,6 +3,7 @@ package com.udacity.popularmovies.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -16,16 +17,11 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.udacity.popularmovies.BuildConfig;
@@ -34,6 +30,7 @@ import com.udacity.popularmovies.adapters.MovieListAdapter;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamKey;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamValue;
+import com.udacity.popularmovies.databinding.ActivityMovieListBinding;
 import com.udacity.popularmovies.loaders.MovieListLoader;
 import com.udacity.popularmovies.models.Movie;
 import com.udacity.popularmovies.utils.AdaptiveGridLayout;
@@ -70,34 +67,30 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     private String sortBy = UrlParamValue.POPULAR;
     // Global toast object to avoid toast objects queue
     private Toast toast;
-    // Vie objects to control UI warnings
-    private TextView tvNetworkStatus;
-    private ImageView ivNetworkStatus;
-    private ImageView imageViewNoMovies;
-    private TextView textViewNoImageWarning;
-    private ProgressBar loadingIndicator;
+    // Constants to control objects visibility more easily
     private static final int HIDE = View.GONE;
     private static final int SHOW = View.VISIBLE;
     private static final int INVISIBLE = View.INVISIBLE;
     // Objects ro set and control RecyclerView and the list of movie data
-    private RecyclerView recyclerView;
     private MovieListAdapter movieListAdapter;
-    private Toolbar toolbar;
     private boolean showAdultContent;
+
+    // Binding class object to access the objects in the layout.
+    ActivityMovieListBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
 
-        toolbar = findViewById(R.id.toolbar_movie_list);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_list);
+
         setToolbar();
         setupSharedPreferences();
 
         // Set and handle actions on BottonNavigation
-        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        BottomNavigationViewHelper.disableShiftMode(binding.bottomNavigationView);
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
@@ -147,32 +140,26 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
         // attaching bottom sheet behaviour - hide / show on scroll
         // Author: Android Hive, Source: https://www.androidhive.info/2017/12/android-working-with-bottom-navigation/
-        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) bottomNavigationView.getLayoutParams();
+        CoordinatorLayout.LayoutParams layoutParams = (CoordinatorLayout.LayoutParams) binding.bottomNavigationView.getLayoutParams();
         layoutParams.setBehavior(new BottomNavigationBehavior());
 
-        imageViewNoMovies = findViewById(R.id.iv_no_movies_placeholder);
-        textViewNoImageWarning = findViewById(R.id.tv_warning_no_movies);
-        tvNetworkStatus = findViewById(R.id.tv_network_status);
-        ivNetworkStatus = findViewById(R.id.iv_warning_no_connection_list);
-        loadingIndicator = findViewById(R.id.loading_indicator);
-        loadingIndicator.setIndeterminate(true);
+        binding.loadingIndicator.setIndeterminate(true);
 
         // Setup the adapter adapter and RecyclerView to receive data.
         movieListAdapter = new MovieListAdapter(this, movieList);
-        recyclerView = findViewById(R.id.rv_movies);
-        recyclerView.setAdapter(movieListAdapter);
-        ViewCompat.setNestedScrollingEnabled(recyclerView, false);
+        binding.rvMovies.setAdapter(movieListAdapter);
+        ViewCompat.setNestedScrollingEnabled(binding.rvMovies, false);
         // Calculates the number of columns in the Grip according to screen width size.
         int numberOfColumns = AdaptiveGridLayout.calculateNoOfColumns(getApplicationContext());
 
         // Sets the adapter that provides the data and the views to represent the data in this widget.
-        recyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+        binding.rvMovies.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         // RecyclerView can perform several optimizations if it can know in advance that RecyclerView's
         // size is not affected by the adapter contents. If is set true. It will allow RecyclerView
         // to avoid invalidating the whole layout when its adapter contents change.
         // In others words, set true if adapter changes cannot affect the size of the RecyclerView.
         // Official documentation: https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html#setHasFixedSize(boolean)
-        recyclerView.setHasFixedSize(true);
+        binding.rvMovies.setHasFixedSize(true);
 
         /*
          * Load the list of available api languages from {@link ApiConfig} according to api documentation.
@@ -223,9 +210,9 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
 
     public void setToolbar() {
-        toolbar.setTitle(R.string.app_name);
-        toolbar.setSubtitle(R.string.the_movie_database);
-        setSupportActionBar(toolbar);
+        binding.toolbarMovieList.setTitle(R.string.app_name);
+        binding.toolbarMovieList.setSubtitle(R.string.the_movie_database);
+        setSupportActionBar(binding.toolbarMovieList);
     }
 
     /*** Methods for BottonNavigation control ***/
@@ -417,20 +404,20 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
      */
 
     private void progressBarStatus(int VISIBILITY) {
-        loadingIndicator.setVisibility(VISIBILITY);
+        binding.loadingIndicator.setVisibility(VISIBILITY);
     }
 
     private void noResultsWarning(int VISIBILITY) {
-        imageViewNoMovies.setVisibility(VISIBILITY);
-        textViewNoImageWarning.setVisibility(VISIBILITY);
+        binding.ivNoMoviesPlaceholder.setVisibility(VISIBILITY);
+        binding.tvWarningNoMovies.setVisibility(VISIBILITY);
         if (VISIBILITY == SHOW) progressBarStatus(HIDE);
     }
 
     private void connectionWarning(int VISIBILITY) {
-        tvNetworkStatus.setVisibility(VISIBILITY);
-        ivNetworkStatus.setVisibility(VISIBILITY);
-        if (VISIBILITY == SHOW) recyclerView.setVisibility(HIDE);
-        else recyclerView.setVisibility(SHOW);
+        binding.tvNetworkStatus.setVisibility(VISIBILITY);
+        binding.ivWarningNoConnectionList.setVisibility(VISIBILITY);
+        if (VISIBILITY == SHOW) binding.rvMovies.setVisibility(HIDE);
+        else binding.rvMovies.setVisibility(SHOW);
     }
 
 
@@ -452,7 +439,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     protected void onPause() {
         super.onPause();
         bundleRecyclerView = new Bundle();
-        Parcelable parcelable = recyclerView.getLayoutManager().onSaveInstanceState();
+        Parcelable parcelable = binding.rvMovies.getLayoutManager().onSaveInstanceState();
         bundleRecyclerView.putParcelable(KEY_RECYCLER_STATE, parcelable);
     }
 
@@ -468,7 +455,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         // Check is there is a saved state.
         if (bundleRecyclerView != null) {
             Parcelable parcelable = bundleRecyclerView.getParcelable(KEY_RECYCLER_STATE);
-            recyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
+            binding.rvMovies.getLayoutManager().onRestoreInstanceState(parcelable);
         }
     }
 

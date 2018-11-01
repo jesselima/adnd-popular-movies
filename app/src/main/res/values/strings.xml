@@ -60,7 +60,7 @@
     <string name="read_more">MORE…</string>
     <string name="web">Web</string>
     <string name="hide">HIDE</string>
-    <string name="warning_device_can_not_play_video">Sorry, your device does not have support to play this video.</string>
+    <string name="warning_device_can_not_play_video">Sorry, your device does not have support to play this video. \nPlease, try in a real device.</string>
     <string name="video_site_youtube" translatable="false">YouTube</string>
     <string name="warning_only_youtube_supported">App supports YouTube videos only.</string>
     <string name="unavailable">Unavailable</string>
