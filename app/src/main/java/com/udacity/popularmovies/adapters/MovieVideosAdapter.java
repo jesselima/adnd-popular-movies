@@ -35,10 +35,10 @@ public class MovieVideosAdapter extends RecyclerView.Adapter<MovieVideosAdapter.
     private static final String LOG_TAG = MovieVideosAdapter.class.getSimpleName();
     private static final String YOUTUBE_KEY = BuildConfig.YOUTUBE_KEY;
 
-    private final ArrayList<MovieVideo> movieVideoList;
+    private final List<MovieVideo> movieVideoList;
     private final Context mContext;
 
-    public MovieVideosAdapter(Context mContext, ArrayList<MovieVideo> movieList) {
+    public MovieVideosAdapter(Context mContext, List<MovieVideo> movieList) {
         this.movieVideoList = movieList;
         this.mContext = mContext;
     }

@@ -17,7 +17,7 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_bookmarks"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="?android:attr/actionBarSize"
             android:background="@color/colorPrimary"
             app:layout_scrollFlags="scroll|snap"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -30,7 +30,8 @@
             android:elevation="5dp"
             android:visibility="visible"
             app:tabBackground="@color/colorLightGrey"
-            app:tabGravity="fill"
+            app:tabGravity="center"
+            app:tabMode="fixed"
             app:tabIndicatorColor="@color/colorAccent"
             app:tabSelectedTextColor="@color/colorAccent"
             app:tabTextColor="@color/colorAccent">

@@ -2,7 +2,9 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="350dp"
+    android:layout_gravity="center_horizontal"
+    android:gravity="center_horizontal"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -14,28 +16,30 @@
 
         <RelativeLayout
             android:id="@+id/layout_root_card_view"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/tv_video_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
                 android:layout_margin="@dimen/medium_layout_margin"
                 android:elevation="3dp"
                 android:gravity="center"
+                android:layout_centerHorizontal="true"
                 android:maxLines="2"
                 android:textAlignment="center"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
-                tools:text="Mission Impossible - Fallout" />
+                tools:text="Mission Impossible - Fallout Fallout Fallout Fallout Fallout Fallout Fallout Fallout Fallout Fallout Fallout Fallout" />
 
             <LinearLayout
                 android:id="@+id/layout_video_info"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_video_title"
                 android:gravity="center"
+                android:layout_centerHorizontal="true"
                 android:orientation="horizontal">
                     <TextView
                         android:id="@+id/tv_video_type"
@@ -68,8 +72,8 @@
 
                 <ImageView
                     android:id="@+id/iv_movie_video_poster"
-                    android:layout_width="320dp"
-                    android:layout_height="180dp"
+                    android:layout_width="280dp"
+                    android:layout_height="158dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginLeft="@dimen/medium_layout_margin"
                     android:layout_marginRight="@dimen/medium_layout_margin"
