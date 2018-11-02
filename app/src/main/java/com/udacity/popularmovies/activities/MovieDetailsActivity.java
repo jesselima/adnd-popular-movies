@@ -282,7 +282,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 // Get the movie returned from the loader and add to a global movie instance.
                 // So it can be accessed from another methods.
                 if (isMovieValid(movieData)) {
-                    warningDetails(HIDE);
                     warningConnection(HIDE);
                     // Updates the UI with details of the movie
                     updateUI(movieData);
@@ -317,7 +316,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                     binding.textViewNoVideos.setVisibility(View.VISIBLE);
                 } else {
                     warningConnection(HIDE);
-                    warningReviews(HIDE);
                 }
                 movieVideosList.clear();
                 movieVideosList.addAll(movieVideoList);
@@ -694,42 +692,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         textToFadeOut.setVisibility(HIDE);
     }
 
-    /* === UI HIDE/SHOW CONTENTS === */
-//    private void showAllMovieData() {
-//        binding.sectionInfo.setVisibility(View.VISIBLE);
-//        binding.sectionVideos.setVisibility(View.VISIBLE);
-//        binding.sectionReviews.setVisibility(View.VISIBLE);
-//        binding.sectionCompanies.setVisibility(View.VISIBLE);
-//    }
-
-
-//    private void showDetails() {
-//        binding.sectionInfo.setVisibility(View.VISIBLE);
-//        binding.sectionVideos.setVisibility(View.GONE);
-//        binding.sectionReviews.setVisibility(View.GONE);
-//        binding.sectionCompanies.setVisibility(View.GONE);
-//    }
-
-//    private void showVideos() {
-//        binding.sectionInfo.setVisibility(View.GONE);
-//        binding.sectionVideos.setVisibility(View.VISIBLE);
-//        binding.sectionReviews.setVisibility(View.GONE);
-//        binding.sectionCompanies.setVisibility(View.GONE);
-//    }
-
-//    private void showReviews() {
-//        binding.sectionInfo.setVisibility(View.GONE);
-//        binding.sectionVideos.setVisibility(View.GONE);
-//        binding.sectionReviews.setVisibility(View.VISIBLE);
-//        binding.sectionCompanies.setVisibility(View.GONE);
-//    }
-
-//    private void showCompanies() {
-//        binding.sectionInfo.setVisibility(View.GONE);
-//        binding.sectionVideos.setVisibility(View.GONE);
-//        binding.sectionReviews.setVisibility(View.GONE);
-//        binding.sectionCompanies.setVisibility(View.VISIBLE);
-//    }
 
     /* === UI HIDE/SHOW WARNING === */
 
@@ -755,29 +717,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         binding.tvWarningNoData.setText(getResources().getText(R.string.warning_no_details));
         binding.tvWarningNoData.setVisibility(VISIBILITY);
         binding.ivWarningNoData.setImageResource(R.drawable.ic_details);
-        binding.ivWarningNoData.setVisibility(VISIBILITY);
-
-    }
-
-    private void warningVideos(int VISIBILITY) {
-        binding.tvWarningNoData.setText(getResources().getText(R.string.warning_no_videos));
-        binding.tvWarningNoData.setVisibility(VISIBILITY);
-        binding.ivWarningNoData.setImageResource(R.drawable.ic_movie);
-        binding.ivWarningNoData.setVisibility(VISIBILITY);
-
-    }
-
-    private void warningReviews(int VISIBILITY) {
-        binding.tvWarningNoData.setText(getResources().getText(R.string.warning_no_reviews));
-        binding.tvWarningNoData.setVisibility(VISIBILITY);
-        binding.ivWarningNoData.setImageResource(R.drawable.ic_reviews);
-        binding.ivWarningNoData.setVisibility(VISIBILITY);
-    }
-
-    private void warningCompanies(int VISIBILITY) {
-        binding.tvWarningNoData.setText(getResources().getText(R.string.warning_no_companies));
-        binding.tvWarningNoData.setVisibility(VISIBILITY);
-        binding.ivWarningNoData.setImageResource(R.drawable.ic_companies);
         binding.ivWarningNoData.setVisibility(VISIBILITY);
 
     }
