@@ -76,6 +76,7 @@ public class CompanyListAdapter extends RecyclerView.Adapter<CompanyListAdapter.
         // Updates the UI with the company logo for the given adapter position
         Picasso.get()
                 .load(companies.get(position).getCompanyLogoPath())
+                .placeholder(R.drawable.video_poster_place_holder)
                 .into(holder.imageViewCompanyLogo);
 
         // Handling clicks on each companies item list

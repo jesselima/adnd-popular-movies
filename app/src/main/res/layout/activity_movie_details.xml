@@ -289,6 +289,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
+                            android:layout_marginBottom="16dp"
                             android:padding="@dimen/default_layout_margin">
                             <TextView
                                 android:id="@+id/tv_tagline"
@@ -327,6 +328,7 @@
                     android:id="@+id/section_videos"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
                     android:orientation="vertical"
                     android:visibility="visible">
 
@@ -352,7 +354,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         style="@style/textDetailsHeader"
@@ -438,19 +440,6 @@
 
         </android.support.v4.widget.NestedScrollView>
         <!-- Nested Scroll Only Child End-->
-
-        <!-- TABS START - Used to switch between Details, Videos, Reviews and Companies layouts-->
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="@color/colorLightGrey"
-            android:elevation="5dp"
-            android:visibility="visible"
-            app:tabGravity="fill">
-        </android.support.design.widget.TabLayout>
-        <!-- TABS END -->
 
         <!-- FLOATING BUTTONS START -->
         <android.support.design.widget.FloatingActionButton

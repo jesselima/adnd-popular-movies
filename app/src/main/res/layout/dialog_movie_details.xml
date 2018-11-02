@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:text="Overview"
+        tools:text="Overview"
         android:textAllCaps="true"
         android:textSize="14sp"
         android:textStyle="bold"
@@ -21,7 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_layout_margin"
-        android:text="Overview... ..."
+        tools:text="Overview... ..."
         android:textSize="14sp"
         android:visibility="visible"/>
 

@@ -292,6 +292,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         // When the onCreateLoader finish its job, it will pass the data do this method.
         if (movies == null || movies.isEmpty()) {
             noResultsWarning(SHOW);
+            binding.rvMovies.setVisibility(HIDE);
             // If there is no movie to show give a warning to the user in the UI.
             if (NetworkUtils.isDeviceConnected(this)) {
                 connectionWarning(HIDE);
@@ -306,6 +307,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             progressBarStatus(HIDE);
             connectionWarning(HIDE);
             noResultsWarning(HIDE);
+            binding.rvMovies.setVisibility(SHOW);
             // Clear the previous list of movies to avoid memory leaks.
             movieList.clear();
             // Add the movies returned from the loader to the movie list
@@ -356,6 +358,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.movie_list_menu, menu);

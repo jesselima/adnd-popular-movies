@@ -12,7 +12,7 @@
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/detail_backdrop_height"
+            android:layout_height="480dp"
             android:fitsSystemWindows="true"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
@@ -342,6 +342,7 @@
 
                     <TextView
                         style="@style/textDetailsHeader"
+                        android:layout_gravity="start"
                         android:text="@string/videos"/>
 
                     <include layout="@layout/divider_header"/>
@@ -363,7 +364,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         style="@style/textDetailsHeader"
@@ -388,7 +389,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         style="@style/textDetailsHeader"
@@ -449,19 +450,6 @@
 
         </android.support.v4.widget.NestedScrollView>
         <!-- Nested Scroll Only Child End-->
-
-        <!-- TABS START - Used to switch between Details, Videos, Reviews and Companies layouts-->
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:background="@color/colorLightGrey"
-            android:elevation="5dp"
-            android:visibility="visible"
-            app:tabGravity="fill">
-        </android.support.design.widget.TabLayout>
-        <!-- TABS END -->
 
         <!-- FLOATING BUTTONS START -->
         <android.support.design.widget.FloatingActionButton
