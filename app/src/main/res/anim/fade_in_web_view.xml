@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- https://www.viralandroid.com/2015/11/fade-in-animation-in-android.html -->
-<set xmlns:android="http://schemas.android.com/apk/res/android">
-    <alpha
-        android:duration="3000"
-        android:fromAlpha="0.0"
-        android:interpolator="@android:anim/accelerate_interpolator"
-        android:toAlpha="1.0" />
-</set>

@@ -55,7 +55,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     private int pageCurrent = 1; // Activity will load the page 1 by default
     private static final int pageSize = 20;
 
-    ActivityBookmarkBinding binding;
+    private ActivityBookmarkBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,7 +144,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         setupTabs();
     } // Close onCreate
 
-    public void setToolbar() {
+    private void setToolbar() {
         binding.toolbarBookmarks.setTitle(R.string.bookmarks);
         binding.toolbarBookmarks.setSubtitle(R.string.offline_database);
         setSupportActionBar(binding.toolbarBookmarks);
@@ -332,12 +332,8 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
     /* === DATABASE MANIPULATION === */
 
+    @SuppressLint("StaticFieldLeak")
     private class DeleteBookmarkAsyncTask extends AsyncTask<Long, Void, Integer> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
 
         @Override
         protected Integer doInBackground(Long... integers) {

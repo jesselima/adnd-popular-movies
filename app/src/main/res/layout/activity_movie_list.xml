@@ -65,7 +65,8 @@
 
         <ImageView
             android:id="@+id/iv_warning_no_connection_list"
-            style="@style/ImageNoConnection"/>
+            style="@style/ImageNoConnection"
+            android:contentDescription="@string/no_internet_connection" />
 
         <ProgressBar
             android:id="@+id/loading_indicator"

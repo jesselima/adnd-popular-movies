@@ -1,5 +1,6 @@
 package com.udacity.popularmovies.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -103,7 +104,7 @@ public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.Bookma
 
                 LayoutInflater layoutInflater = LayoutInflater.from(context);
                 // Inflates the layout to to show in the dialog
-                View viewDialog = layoutInflater.inflate(R.layout.dialog_movie_details, null);
+                @SuppressLint("InflateParams") View viewDialog = layoutInflater.inflate(R.layout.dialog_movie_details, null);
 
                 // Set the dialog views value values.
                 TextView textViewDialogLanguages = viewDialog.findViewById(R.id.dialog_tv_original_language_db);

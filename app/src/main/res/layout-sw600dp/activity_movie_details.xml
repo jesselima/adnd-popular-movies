@@ -106,7 +106,8 @@
 
                             <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                tools:ignore="UselessParent">
 
                                 <ImageView
                                     android:id="@+id/iv_movie_poster"
@@ -149,66 +150,60 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="@dimen/small_layout_margin"
                             android:layout_weight="5"
+                            android:gravity="center"
                             android:orientation="vertical">
 
-                            <LinearLayout
+                            <TextView
+                                android:id="@+id/tv_release_date"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:layout_gravity="center_vertical">
-                                <TextView
-                                    android:id="@+id/tv_release_date"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/colorAccent"
-                                    android:textSize="28sp"
-                                    android:textStyle="italic|bold"
-                                    tools:text="2018"/>
-                                <TextView
-                                    android:id="@+id/tv_runtime"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/colorAccent"
-                                    android:textSize="16sp"
-                                    android:textStyle="italic|bold"
-                                    tools:text="147"/>
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="28sp"
+                                android:textStyle="italic|bold"
+                                tools:text="2018"/>
+                            <TextView
+                                android:id="@+id/tv_runtime"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:textColor="@color/colorAccent"
+                                android:textSize="16sp"
+                                android:textStyle="italic|bold"
+                                tools:text="147"/>
 
-                                <LinearLayout
-                                    style="@style/DetailsItemLayout"
-                                    android:layout_gravity="center"
-                                    android:layout_marginBottom="50dp"
-                                    android:layout_marginTop="16dp"
-                                    android:background="@drawable/rounded_corner"
-                                    android:paddingEnd="4dp"
-                                    android:paddingStart="4dp"
-                                    android:paddingTop="4dp">
-                                    <RatingBar
-                                        style="?android:attr/ratingBarStyleSmall"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:numStars="1"
-                                        android:rating="1"
-                                        android:stepSize="1"/>
-                                    <TextView
-                                        android:id="@+id/tv_vote_average"
-                                        style="@style/DetailItemValueStyle"
-                                        android:textColor="@color/colorMediumGrey"
-                                        tools:text="9.9"/>
-                                    <TextView
-                                        style="@style/DetailItemLabelStyle"
-                                        android:text="@string/slash"
-                                        android:textColor="@color/colorMediumGrey"/>
-                                    <TextView
-                                        android:id="@+id/tv_vote_count"
-                                        style="@style/DetailItemValueStyle"
-                                        android:textColor="@color/colorMediumGrey"
-                                        tools:text="9999999"/>
-                                </LinearLayout>
+                            <LinearLayout
+                                style="@style/DetailsItemLayout"
+                                android:layout_gravity="center"
+                                android:layout_marginBottom="50dp"
+                                android:layout_marginTop="16dp"
+                                android:background="@drawable/rounded_corner"
+                                android:paddingEnd="4dp"
+                                android:paddingStart="4dp"
+                                android:paddingTop="4dp">
+                                <RatingBar
+                                    style="?android:attr/ratingBarStyleSmall"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:numStars="1"
+                                    android:rating="1"
+                                    android:stepSize="1"/>
+                                <TextView
+                                    android:id="@+id/tv_vote_average"
+                                    style="@style/DetailItemValueStyle"
+                                    android:textColor="@color/colorMediumGrey"
+                                    tools:text="9.9"/>
+                                <TextView
+                                    style="@style/DetailItemLabelStyle"
+                                    android:text="@string/slash"
+                                    android:textColor="@color/colorMediumGrey"/>
+                                <TextView
+                                    android:id="@+id/tv_vote_count"
+                                    style="@style/DetailItemValueStyle"
+                                    android:textColor="@color/colorMediumGrey"
+                                    tools:text="9999999"/>
                             </LinearLayout>
+
 
                         </LinearLayout>
 
@@ -432,7 +427,8 @@
 
                 <ImageView
                     android:id="@+id/iv_warning_no_connection_details"
-                    style="@style/ImageNoConnection"/>
+                    style="@style/ImageNoConnection"
+                    android:contentDescription="@string/no_internet_connection" />
 
                 <TextView
                     android:id="@+id/tv_warning_no_connection_details"

@@ -76,7 +76,7 @@ public class WebViewActivity extends AppCompatActivity {
     /**
      * Setup the toolbar with movie title and subtitle "homepage"
      */
-    public void setToolbar() {
+    private void setToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar_web_view);
         toolbar.setTitle(originalTitle);
         toolbar.setSubtitle(R.string.homepage);
@@ -142,9 +142,5 @@ public class WebViewActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
 
 }

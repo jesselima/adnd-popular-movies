@@ -52,7 +52,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     // Movie List Loader ID
     private static final int MOVIE_LOADER_ID = 100;
     private static Bundle bundleRecyclerView;
-    private ArrayList<Movie> movieList = new ArrayList<>();
+    private final ArrayList<Movie> movieList = new ArrayList<>();
     // Implementation for save state
     private final String KEY_RECYCLER_STATE = "recycler_state";
     // Global variable to be used with system language abbreviation in two letters
@@ -70,13 +70,12 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     // Constants to control objects visibility more easily
     private static final int HIDE = View.GONE;
     private static final int SHOW = View.VISIBLE;
-    private static final int INVISIBLE = View.INVISIBLE;
     // Objects ro set and control RecyclerView and the list of movie data
     private MovieListAdapter movieListAdapter;
     private boolean showAdultContent;
 
     // Binding class object to access the objects in the layout.
-    ActivityMovieListBinding binding;
+    private ActivityMovieListBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,7 +208,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     }
 
 
-    public void setToolbar() {
+    private void setToolbar() {
         binding.toolbarMovieList.setTitle(R.string.app_name);
         binding.toolbarMovieList.setSubtitle(R.string.the_movie_database);
         setSupportActionBar(binding.toolbarMovieList);
