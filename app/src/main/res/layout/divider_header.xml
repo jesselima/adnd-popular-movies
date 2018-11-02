@@ -12,6 +12,6 @@
         android:layout_marginBottom="@dimen/small_layout_margin"
         android:layout_marginLeft="@dimen/default_layout_margin"
         android:layout_marginRight="@dimen/default_layout_margin"
-        android:background="@color/colorLightGrey"/>
+        android:background="@color/colorLightGreyDarker"/>
 
 </LinearLayout>

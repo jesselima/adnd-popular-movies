@@ -67,7 +67,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
 
     private String loadApiLanguage = ApiConfig.UrlParamValue.LANGUAGE_DEFAULT;
     private int page = 1;
-//    private TabLayout tabLayout;
 
     private Movie movieData = new Movie();
     private int movieId;
@@ -190,7 +189,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         binding.collapsingToolbar.setTitle(movieOriginalTitle);
 
         checkConnectionAndStartLoader();
-//        showAllMovieData();
+
     } // Close onCreate
 
     // It's called inside onCreate method and get the movie ID and Title sent from MovieListActivity.
@@ -212,7 +211,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         } else {
             warningConnection(HIDE);
             progressBarStatus(SHOW);
-//            showDetails();
             // Shows loading indicator and Kick off the loader
             getSupportLoaderManager().initLoader(MOVIE_DETAILS_LOADER_ID, null, this);
             getSupportLoaderManager().initLoader(MOVIE_VIDEOS_LOADER_ID, null, this);
@@ -355,7 +353,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 progressBarStatus(INVISIBLE);
                 break;
         }
-//        showAllMovieData();
 
     }
 
