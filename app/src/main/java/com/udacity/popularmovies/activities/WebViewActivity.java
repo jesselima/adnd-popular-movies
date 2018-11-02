@@ -25,7 +25,6 @@ public class WebViewActivity extends AppCompatActivity {
     private String originalTitle;
     private ProgressBar loadingIndicator;
     private WebView webView;
-    private Toolbar toolbar;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -77,8 +76,8 @@ public class WebViewActivity extends AppCompatActivity {
     /**
      * Setup the toolbar with movie title and subtitle "homepage"
      */
-    public void setToolbar() {
-        toolbar = findViewById(R.id.toolbar_web_view);
+    private void setToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar_web_view);
         toolbar.setTitle(originalTitle);
         toolbar.setSubtitle(R.string.homepage);
         setSupportActionBar(toolbar);
@@ -143,9 +142,5 @@ public class WebViewActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
 
 }

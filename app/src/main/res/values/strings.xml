@@ -35,7 +35,6 @@
     <string name="movie_saved">Movie saved to bookmarks</string>
     <string name="no_bookmarks_in_the_database">No bookmarks in the database</string>
     <string name="see_movies">SEE MOVIES</string>
-    <string name="preferences">Preferences</string>
     <string name="author">Author:</string>
     <string name="comment_url_not_available">Comment url not available!</string>
     <string name="no_videos_available_for_this_movie">No videos available for this movie</string>
@@ -50,7 +49,6 @@
     <string name="yes_delete">Yes, Delete.</string>
     <string name="no_cancel">No, Cancel.</string>
     <string name="warning_delete_all_bookmarks">This action will delete all saved movie bookmarks. This action can not be undone. Are you sure?</string>
-    <string name="youtube">YouTube</string>
     <string name="share">SHARE</string>
     <string name="vertical_text_divider" translatable="false">|</string>
     <string name="movie_details">Movie Details</string>
@@ -60,7 +58,7 @@
     <string name="read_more">MORE…</string>
     <string name="web">Web</string>
     <string name="hide">HIDE</string>
-    <string name="warning_device_can_not_play_video">Sorry, your device does not have support to play this video.</string>
+    <string name="warning_device_can_not_play_video">Sorry, your device does not have support to play this video. \nPlease, try in a real device.</string>
     <string name="video_site_youtube" translatable="false">YouTube</string>
     <string name="warning_only_youtube_supported">App supports YouTube videos only.</string>
     <string name="unavailable">Unavailable</string>
@@ -69,26 +67,19 @@
     <string name="videos">Videos</string>
     <string name="slash_videos" translatable="false">/videos</string>
     <string name="slash_reviews" translatable="false">/reviews</string>
-    <string name="warning_no_videos">Ops! There is no videos available for this movie.</string>
-    <string name="warning_no_details">Ops! There is no details available for this movie.</string>
+    <string name="warning_no_videos">Ops! No videos available for this movie.</string>
+    <string name="warning_no_details">Ops! No details available for this movie.</string>
     <string name="warning_no_reviews">Ops! This movie has no reviews yet.</string>
     <string name="warning_no_companies">Ops! There is companies available for this movie</string>
     <string name="no_info_available">No info available</string>
     <string name="open_in_the_browser">Open in Browser</string>
     <string name="movie_video">Movie Video</string>
     <string name="movie_video_play_button">Movie Video Play Button</string>
-    <string name="deleted">Deleted</string>
     <string name="canceled">Canceled</string>
     <string name="watched">Movie is set as watched</string>
     <string name="not_watched">Movie is set as not watched</string>
     <string name="search">Search</string>
     <string name="watched_flag">WATCHED</string>
-    <string name="show_watched_only">Show Watched Only</string>
-    <string name="show_unwatched_only">Show Unwatched Only</string>
-    <string name="show_all_bookmarks">Show All Bookmarks</string>
-    <string name="showing_watched_only">Showing Watched Only</string>
-    <string name="showing_unwatched_only">Showing Unwatched Only</string>
-    <string name="showing_all_bookmarks">Showing All</string>
     <string name="tab_all">ALL</string>
     <string name="tab_watched">WATCHED</string>
     <string name="tab_unwatched">UNWATCHED</string>
@@ -103,12 +94,8 @@
     <string name="pref_show_adult_false" translatable="false">Hidden</string>
     <!-- USED BY PREFERENCES - END -->
     <string name="close">Close</string>
-    <string name="more">MORE</string>
     <string name="more_details">More details</string>
     <string name="full_details">Full Details</string>
-    <string name="load_more">Load more</string>
-    <string name="_1" translatable="false">1</string>
-    <string name="page_1">Page 1</string>
     <string name="no_bookmarks_to_show">No bookmarks to show</string>
     <string name="no_more_bookmarks_to_show">No more bookmarks to show</string>
 </resources>

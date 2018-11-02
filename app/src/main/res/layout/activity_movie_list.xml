@@ -1,93 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.MovieListActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.design.widget.AppBarLayout
-        android:id="@+id/appBarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_movie_list"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|snap"
-            android:background="@color/colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        tools:context=".activities.MovieListActivity">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_movies"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    </android.support.v4.widget.NestedScrollView>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_movie_list"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                app:layout_scrollFlags="scroll|snap"
+                android:background="@color/colorPrimary"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <TextView
-        android:id="@+id/tv_network_status"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/no_internet_connection"
-        android:textColor="@color/colorWarning"
-        android:visibility="gone"/>
+        </android.support.design.widget.AppBarLayout>
 
-    <ImageView
-        android:id="@+id/iv_no_movies_placeholder"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:contentDescription="@string/no_movies_found_image"
-        android:src="@drawable/film_strip_2"
-        android:visibility="gone"/>
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <TextView
-        android:id="@+id/tv_warning_no_movies"
-        android:text="@string/warning_no_movies_found"
-        style="@style/textDefaultWarning"
-        android:layout_marginTop="150dp"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_movies"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
 
-    <ImageView
-        android:id="@+id/iv_warning_no_connection_list"
-        style="@style/ImageNoConnection"/>
+        </android.support.v4.widget.NestedScrollView>
 
-    <ProgressBar
-        android:id="@+id/loading_indicator"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="49dp"/>
+        <TextView
+            android:id="@+id/tv_network_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/no_internet_connection"
+            android:textColor="@color/colorWarning"
+            android:visibility="gone"/>
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/bottom_navigation_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:itemBackground="@color/colorLightGrey"
-        android:foreground="?attr/selectableItemBackground"
-        app:itemIconTint="@color/bottom_nav_selector_icon_color"
-        app:itemTextColor="@color/bottom_nav_selector_text_color"
-        android:fitsSystemWindows="true"
-        app:menu="@menu/navigation_items" />
+        <ImageView
+            android:id="@+id/iv_no_movies_placeholder"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/no_movies_found_image"
+            android:src="@drawable/film_strip_2"
+            android:visibility="gone"/>
 
-</android.support.design.widget.CoordinatorLayout>
+        <TextView
+            android:id="@+id/tv_warning_no_movies"
+            android:text="@string/warning_no_movies_found"
+            style="@style/textDefaultWarning"
+            android:layout_marginTop="150dp"/>
 
+        <ImageView
+            android:id="@+id/iv_warning_no_connection_list"
+            style="@style/ImageNoConnection"
+            android:contentDescription="@string/no_internet_connection" />
 
+        <ProgressBar
+            android:id="@+id/loading_indicator"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="49dp"/>
 
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/bottom_navigation_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            app:itemBackground="@color/colorLightGrey"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:itemIconTint="@color/bottom_nav_selector_icon_color"
+            app:itemTextColor="@color/bottom_nav_selector_text_color"
+            android:fitsSystemWindows="true"
+            app:menu="@menu/navigation_items" />
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>
 
 
 

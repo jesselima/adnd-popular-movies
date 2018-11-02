@@ -21,15 +21,4 @@ public class AdaptiveGridLayout {
         return (int) (dpWidth / 180);
     }
 
-    public static int getDeiceWidth(Context context) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return  displayMetrics.widthPixels;
-    }
-
-    public static int calculateNoOfColumnsForVideoGrid(Context context) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        return (int) (dpWidth / 330);
-    }
-
 }

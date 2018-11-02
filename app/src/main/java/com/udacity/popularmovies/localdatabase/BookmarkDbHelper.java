@@ -10,7 +10,7 @@ import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
  * Created by jesse on 29/08/18.
  * This is a part of the project adnd-popular-movies.
  */
-public class BookmarkDbHelper extends SQLiteOpenHelper {
+class BookmarkDbHelper extends SQLiteOpenHelper {
 
     // Database name
     private static final String DATABASE_NAME = "popular_movies.db";

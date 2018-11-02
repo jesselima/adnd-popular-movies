@@ -5,11 +5,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -18,19 +18,16 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.adapters.BookmarkAdapter;
+import com.udacity.popularmovies.databinding.ActivityBookmarkBinding;
 import com.udacity.popularmovies.localdatabase.BookmarkContract;
 import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
 
@@ -42,17 +39,11 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     private static final int LOADER_ID_MOVIE_BOOKMARKS_LIST = 3;
 
     private Toast toast;
-    private Button buttonNavigateToMovies;
-    private TextView textViewNoBookmarks, textViewNavigateToBookmarks;
-    private ImageView imageViewNoBookmarks;
-    private RecyclerView recyclerViewBookmark;
     private BookmarkAdapter bookmarkAdapter;
 
-    private TabLayout tabLayout;
     private static final int TAB_ALL = 0;
     private static final int TAB_WATCHED = 1;
     private static final int TAB_UNWATCHED = 2;
-    private Toolbar toolbar;
 
     private boolean selectWatched = false;
     private boolean selectUnwatched = false;
@@ -64,34 +55,27 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     private int pageCurrent = 1; // Activity will load the page 1 by default
     private static final int pageSize = 20;
 
+    private ActivityBookmarkBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookmark);
 
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_bookmark);
+
         // References the toolbar view and call setToolbar {@link setupTabs}
-        toolbar = findViewById(R.id.toolbar_bookmarks);
         setToolbar();
 
-        tabLayout                   = findViewById(R.id.tab_layout_bookmarks);
-        textViewNoBookmarks         = findViewById(R.id.text_view_no_bookmarks);
-        textViewNavigateToBookmarks = findViewById(R.id.text_view_navigate_to_bookmarks);
-        imageViewNoBookmarks        = findViewById(R.id.image_view_no_bookmarks);
-        buttonNavigateToMovies      = findViewById(R.id.bt_navigate_to_movies);
-        recyclerViewBookmark        = findViewById(R.id.recycler_view_bookmark);
-
-        FloatingActionButton floatingButtonLoadMore = findViewById(R.id.float_load_more);
-        FloatingActionButton floatingButtonLoadLess = findViewById(R.id.float_load_less);
-
         // Setup the RecyclerView for the list of Bookmarks from the database.
-        recyclerViewBookmark.setLayoutManager(new LinearLayoutManager(this));
+        binding.recyclerViewBookmark.setLayoutManager(new LinearLayoutManager(this));
         bookmarkAdapter = new BookmarkAdapter(this);
-        recyclerViewBookmark.setHasFixedSize(true);
+        binding.recyclerViewBookmark.setHasFixedSize(true);
         bookmarkAdapter.notifyDataSetChanged();
-        recyclerViewBookmark.setAdapter(bookmarkAdapter);
+        binding.recyclerViewBookmark.setAdapter(bookmarkAdapter);
         // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
         // Author: https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
-        ViewCompat.setNestedScrollingEnabled(recyclerViewBookmark, false);
+        ViewCompat.setNestedScrollingEnabled(binding.recyclerViewBookmark, false);
 
         // Implements the delete bookmark function by swipe a bookmark card to the left of right.
         // When user swipe the action will call the showDeleteConfirmationDialog method.
@@ -111,12 +95,11 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                 long movieApiId = (long) viewHolder.itemView.getTag();
                 showDeleteConfirmationDialog(movieApiId);
             }
-        }).attachToRecyclerView(recyclerViewBookmark);
+        }).attachToRecyclerView(binding.recyclerViewBookmark);
 
         // This button is show only when there is no bookmarks saved. So the user can click on it
         // and go to MovieListActivity
-        buttonNavigateToMovies = findViewById(R.id.bt_navigate_to_movies);
-        buttonNavigateToMovies.setOnClickListener(new View.OnClickListener() {
+        binding.btNavigateToMovies.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MovieListActivity.class);
@@ -124,7 +107,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
             }
         });
 
-        floatingButtonLoadMore.setOnClickListener(new View.OnClickListener() {
+        binding.floatLoadMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (numberOfBookmarksInPage == 0) {
@@ -139,7 +122,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
             }
         });
 
-        floatingButtonLoadLess.setOnClickListener(new View.OnClickListener() {
+        binding.floatLoadLess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (numberOfBookmarksInPage == 0) {
@@ -161,10 +144,10 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         setupTabs();
     } // Close onCreate
 
-    public void setToolbar() {
-        toolbar.setTitle(R.string.bookmarks);
-        toolbar.setSubtitle(R.string.offline_database);
-        setSupportActionBar(toolbar);
+    private void setToolbar() {
+        binding.toolbarBookmarks.setTitle(R.string.bookmarks);
+        binding.toolbarBookmarks.setSubtitle(R.string.offline_database);
+        setSupportActionBar(binding.toolbarBookmarks);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }
 
@@ -172,10 +155,10 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     /* === TABS SETUP === */
 
     private void setupTabs() {
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_all));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_watched));
-        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_unwatched));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        binding.tabLayoutBookmarks.addTab(binding.tabLayoutBookmarks.newTab().setText(R.string.tab_all));
+        binding.tabLayoutBookmarks.addTab(binding.tabLayoutBookmarks.newTab().setText(R.string.tab_watched));
+        binding.tabLayoutBookmarks.addTab(binding.tabLayoutBookmarks.newTab().setText(R.string.tab_unwatched));
+        binding.tabLayoutBookmarks.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
@@ -349,12 +332,8 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
     /* === DATABASE MANIPULATION === */
 
+    @SuppressLint("StaticFieldLeak")
     private class DeleteBookmarkAsyncTask extends AsyncTask<Long, Void, Integer> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
 
         @Override
         protected Integer doInBackground(Long... integers) {
@@ -439,22 +418,22 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
      *
      */
     private void showNoBookmarkWarning() {
-        recyclerViewBookmark.setVisibility(View.GONE);
-        textViewNoBookmarks.setVisibility(View.VISIBLE);
-        imageViewNoBookmarks.setVisibility(View.VISIBLE);
-        buttonNavigateToMovies.setVisibility(View.VISIBLE);
-        textViewNavigateToBookmarks.setVisibility(View.VISIBLE);
+        binding.recyclerViewBookmark.setVisibility(View.GONE);
+        binding.textViewNoBookmarks.setVisibility(View.VISIBLE);
+        binding.imageViewNoBookmarks.setVisibility(View.VISIBLE);
+        binding.btNavigateToMovies.setVisibility(View.VISIBLE);
+        binding.textViewNavigateToBookmarks.setVisibility(View.VISIBLE);
     }
 
     /**
      *
      */
     private void hideNoBookmarkWarning() {
-        recyclerViewBookmark.setVisibility(View.VISIBLE);
-        textViewNoBookmarks.setVisibility(View.GONE);
-        imageViewNoBookmarks.setVisibility(View.GONE);
-        buttonNavigateToMovies.setVisibility(View.GONE);
-        textViewNavigateToBookmarks.setVisibility(View.GONE);
+        binding.recyclerViewBookmark.setVisibility(View.VISIBLE);
+        binding.textViewNoBookmarks.setVisibility(View.GONE);
+        binding.imageViewNoBookmarks.setVisibility(View.GONE);
+        binding.btNavigateToMovies.setVisibility(View.GONE);
+        binding.textViewNavigateToBookmarks.setVisibility(View.GONE);
     }
 
     /**
