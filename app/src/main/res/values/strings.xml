@@ -67,8 +67,8 @@
     <string name="videos">Videos</string>
     <string name="slash_videos" translatable="false">/videos</string>
     <string name="slash_reviews" translatable="false">/reviews</string>
-    <string name="warning_no_videos">Ops! There is no videos available for this movie.</string>
-    <string name="warning_no_details">Ops! There is no details available for this movie.</string>
+    <string name="warning_no_videos">Ops! No videos available for this movie.</string>
+    <string name="warning_no_details">Ops! No details available for this movie.</string>
     <string name="warning_no_reviews">Ops! This movie has no reviews yet.</string>
     <string name="warning_no_companies">Ops! There is companies available for this movie</string>
     <string name="no_info_available">No info available</string>

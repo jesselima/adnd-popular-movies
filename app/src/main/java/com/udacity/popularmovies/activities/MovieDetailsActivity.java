@@ -92,7 +92,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
-        Log.d("===>>> onCreate", " called");
+        Log.d(LOG_TAG,"===>>> onCreate called");
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details);
 
@@ -293,16 +293,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                     // Clear the companies list before add new data. It's avoid memory leaks.
                     companies.clear();
                     // Add new data to the list.
-                    if (movieData.getCompaniesArrayList() == null) {
+                    if (movieData.getCompaniesArrayList() == null || movieData.getCompaniesArrayList().size() == 0) {
                         binding.rvCompanies.setVisibility(HIDE);
+                        binding.textViewNoCompanies.setVisibility(View.VISIBLE);
                     }else {
                         companies.addAll(movieData.getCompaniesArrayList());
                         companyListAdapter.notifyDataSetChanged();
                     }
-
-                    if (companies.size() == 0) warningCompanies(SHOW);
-                    else warningCompanies(HIDE);
-
                 } else {
                     warningDetails(SHOW);
                     binding.sectionFullContent.setVisibility(HIDE);
@@ -312,24 +309,19 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 break;
 
             case MOVIE_VIDEOS_LOADER_ID:
-
                 movieVideoList = (List<MovieVideo>) data;
                 // When the onCreateLoader finish its job, it will pass the data do this method.
-                if (movieVideoList == null || movieVideoList.isEmpty()) {
+                if (movieVideoList == null || movieVideoList.isEmpty() || movieVideoList.size() == 0) {
                     // If there is no movie to show give a warning to the user in the UI.
-                    warningVideos(SHOW);
-                    doToast(getString(R.string.no_videos_available_for_this_movie));
+                    binding.rvMoviesVideosDetails.setVisibility(HIDE);
+                    binding.textViewNoVideos.setVisibility(View.VISIBLE);
                 } else {
                     warningConnection(HIDE);
                     warningReviews(HIDE);
                 }
                 movieVideosList.clear();
-                movieVideosAdapter.notifyDataSetChanged();
                 movieVideosList.addAll(movieVideoList);
-
-                if (movieVideosList.size() == 0) warningVideos(SHOW);
-                else warningVideos(HIDE);
-
+                movieVideosAdapter.notifyDataSetChanged();
                 progressBarStatus(INVISIBLE);
                 break;
 
@@ -337,16 +329,13 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 movieReviewList = (List<MovieReview>) data;
                 // When the onCreateLoader finish its job, it will pass the data do this method.
                 // If there is no movie to show give a warning to the user in the UI.
-                if (movieReviewList == null || movieReviewList.isEmpty()) warningReviews(SHOW);
-                else warningReviews(HIDE);
-
+                if (movieVideoList == null || movieVideoList.isEmpty() || movieVideoList.size() == 0) {
+                    binding.rvMoviesReviewsDetails.setVisibility(HIDE);
+                    binding.textViewNoReviews.setVisibility(View.VISIBLE);
+                }
                 movieReviewsList.clear();
-                movieReviewsAdapter.notifyDataSetChanged();
                 movieReviewsList.addAll(movieReviewList);
-
-                if (movieReviewsList.size() == 0) warningReviews(SHOW);
-                else warningReviews(HIDE);
-
+                movieReviewsAdapter.notifyDataSetChanged();
                 progressBarStatus(INVISIBLE);
                 break;
         }
@@ -767,11 +756,7 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         binding.tvWarningNoData.setVisibility(VISIBILITY);
         binding.ivWarningNoData.setImageResource(R.drawable.ic_details);
         binding.ivWarningNoData.setVisibility(VISIBILITY);
-        if (VISIBILITY == HIDE) {
-            binding.sectionInfo.setVisibility(SHOW);
-        } else {
-            binding.sectionInfo.setVisibility(HIDE);
-        }
+
     }
 
     private void warningVideos(int VISIBILITY) {
@@ -780,11 +765,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         binding.ivWarningNoData.setImageResource(R.drawable.ic_movie);
         binding.ivWarningNoData.setVisibility(VISIBILITY);
 
-        if (VISIBILITY == HIDE) binding.sectionVideos.setVisibility(SHOW);
-        else binding.sectionVideos.setVisibility(HIDE);
-
-        if (VISIBILITY == HIDE) binding.rvMoviesVideosDetails.setVisibility(SHOW);
-        else binding.rvMoviesVideosDetails.setVisibility(HIDE);
     }
 
     private void warningReviews(int VISIBILITY) {
@@ -800,11 +780,6 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
         binding.ivWarningNoData.setImageResource(R.drawable.ic_companies);
         binding.ivWarningNoData.setVisibility(VISIBILITY);
 
-        if (VISIBILITY == HIDE) binding.sectionCompanies.setVisibility(SHOW);
-        else binding.sectionCompanies.setVisibility(HIDE);
-
-        if (VISIBILITY == HIDE) binding.rvCompanies.setVisibility(SHOW);
-        else binding.rvCompanies.setVisibility(HIDE);
     }
 
     private void progressBarStatus(int VISIBILITY) {

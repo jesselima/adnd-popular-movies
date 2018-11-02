@@ -77,6 +77,7 @@
                 <!-- SECTION INFO START -->
                 <TextView
                     style="@style/textDetailsHeader"
+                    android:layout_marginTop="30dp"
                     android:text="@string/details"/>
 
                 <include layout="@layout/divider_header"/>
@@ -166,10 +167,7 @@
                                     android:textColor="@color/colorMediumGrey"
                                     tools:text="9999999"/>
                             </LinearLayout>
-
-
                         </RelativeLayout>
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -329,6 +327,12 @@
 
                     <include layout="@layout/divider_header"/>
 
+                    <TextView
+                        android:id="@+id/text_view_no_videos"
+                        style="@style/textNoInfoWarning"
+                        android:text="@string/warning_no_videos"/>
+
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rv_movies_videos_details"
                         android:layout_width="wrap_content"
@@ -353,6 +357,11 @@
 
                     <include layout="@layout/divider_header"/>
 
+                    <TextView
+                        android:id="@+id/text_view_no_reviews"
+                        style="@style/textNoInfoWarning"
+                        android:text="@string/warning_no_reviews"/>
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rv_movies_reviews_details"
                         android:layout_width="match_parent"
@@ -370,13 +379,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         style="@style/textDetailsHeader"
                         android:text="@string/production_companies"/>
 
                     <include layout="@layout/divider_header"/>
+
+                    <TextView
+                        android:id="@+id/text_view_no_companies"
+                        style="@style/textNoInfoWarning"
+                        android:text="@string/warning_no_companies"/>
 
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/rv_companies"

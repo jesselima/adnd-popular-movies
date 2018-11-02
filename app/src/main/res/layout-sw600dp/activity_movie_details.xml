@@ -141,7 +141,6 @@
                                     android:textStyle="bold"
                                     android:visibility="gone"/>
                             </RelativeLayout>
-
                         </LinearLayout>
 
                         <LinearLayout
@@ -203,7 +202,6 @@
                                     android:textColor="@color/colorMediumGrey"
                                     tools:text="9999999"/>
                             </LinearLayout>
-
 
                         </LinearLayout>
 
@@ -278,7 +276,6 @@
 
                         </LinearLayout>
 
-
                     </LinearLayout>
 
                     <TextView
@@ -343,6 +340,11 @@
 
                     <include layout="@layout/divider_header"/>
 
+                    <TextView
+                        android:id="@+id/text_view_no_videos"
+                        style="@style/textNoInfoWarning"
+                        android:text="@string/warning_no_videos"/>
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rv_movies_videos_details"
                         android:layout_width="match_parent"
@@ -368,6 +370,11 @@
 
                     <include layout="@layout/divider_header"/>
 
+                    <TextView
+                        android:id="@+id/text_view_no_reviews"
+                        style="@style/textNoInfoWarning"
+                        android:text="@string/warning_no_reviews"/>
+
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rv_movies_reviews_details"
                         android:layout_width="match_parent"
@@ -392,6 +399,11 @@
                         android:text="@string/production_companies"/>
 
                     <include layout="@layout/divider_header"/>
+
+                    <TextView
+                        android:id="@+id/text_view_no_companies"
+                        style="@style/textNoInfoWarning"
+                        android:text="@string/warning_no_companies"/>
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rv_companies"
