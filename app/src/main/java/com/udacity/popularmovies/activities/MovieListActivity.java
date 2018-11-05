@@ -17,6 +17,8 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -51,10 +53,15 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
     // Movie List Loader ID
     private static final int MOVIE_LOADER_ID = 100;
-    private static Bundle bundleRecyclerView;
-    private final ArrayList<Movie> movieList = new ArrayList<>();
+    private ArrayList<Movie> movieList = new ArrayList<>();
+
+
+    // TODO TEST IT!!!!!
     // Implementation for save state
-    private final String KEY_RECYCLER_STATE = "recycler_state";
+    private static String MOVIE_LIST_STATE = "list_state";
+    private static final String RECYCLER_VIEW_STATE = "recycler_layout";
+    private Parcelable savedRecyclerLayoutState;
+
     // Global variable to be used with system language abbreviation in two letters
     private final String loadApiLanguage = UrlParamValue.LANGUAGE_DEFAULT;
     // This object is updated to true when user do a search. Then the loader will use a search query string
@@ -77,10 +84,16 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     // Binding class object to access the objects in the layout.
     private ActivityMovieListBinding binding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
+
+        if (savedInstanceState != null){
+            movieList = savedInstanceState.getParcelableArrayList(MOVIE_LIST_STATE);
+            savedRecyclerLayoutState = savedInstanceState.getParcelable(RECYCLER_VIEW_STATE);
+        }
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_list);
 
@@ -199,15 +212,6 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        // Unregister VisualizerActivity as an OnPreferenceChangedListener to avoid any memory leaks.
-        PreferenceManager.getDefaultSharedPreferences(this)
-                .unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-
     private void setToolbar() {
         binding.toolbarMovieList.setTitle(R.string.app_name);
         binding.toolbarMovieList.setSubtitle(R.string.the_movie_database);
@@ -231,6 +235,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         page--;
         movieList.clear();
         restartLoader();
+        binding.rvMovies.scrollToPosition(0);
         doToast(getResources().getString(R.string.page) + String.valueOf(page));
     }
 
@@ -242,6 +247,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         connectionWarning(HIDE);
         page++;
         restartLoader();
+        binding.rvMovies.scrollToPosition(0);
         doToast(String.valueOf(getString(R.string.page) + page));
     }
 
@@ -371,6 +377,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
                 doToast(query);
                 searchView.clearFocus();
                 isDoingSearch = true;
+                movieList.clear();
                 queryTerm = query;
                 restartLoader();
                 // Updates the search flag back to false.
@@ -440,9 +447,6 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     @Override
     protected void onPause() {
         super.onPause();
-        bundleRecyclerView = new Bundle();
-        Parcelable parcelable = binding.rvMovies.getLayoutManager().onSaveInstanceState();
-        bundleRecyclerView.putParcelable(KEY_RECYCLER_STATE, parcelable);
     }
 
     @Override
@@ -453,11 +457,6 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             connectionWarning(HIDE);
         } else {
             connectionWarning(SHOW);
-        }
-        // Check is there is a saved state.
-        if (bundleRecyclerView != null) {
-            Parcelable parcelable = bundleRecyclerView.getParcelable(KEY_RECYCLER_STATE);
-            binding.rvMovies.getLayoutManager().onRestoreInstanceState(parcelable);
         }
     }
 
@@ -472,5 +471,28 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             connectionWarning(SHOW);
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Unregister VisualizerActivity as an OnPreferenceChangedListener to avoid any memory leaks.
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putParcelableArrayList(MOVIE_LIST_STATE, movieList);
+        savedInstanceState.putParcelable(RECYCLER_VIEW_STATE, binding.rvMovies.getLayoutManager().onSaveInstanceState());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        movieList = savedInstanceState.getParcelableArrayList(MOVIE_LIST_STATE);
+        savedRecyclerLayoutState = savedInstanceState.getParcelable(RECYCLER_VIEW_STATE);
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
 
 }

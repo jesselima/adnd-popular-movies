@@ -33,7 +33,7 @@
                 android:elevation="5dp"
                 android:visibility="visible"
                 app:tabBackground="@color/colorLightGrey"
-                app:tabGravity="center"
+                app:tabGravity="fill"
                 app:tabMode="fixed"
                 app:tabIndicatorColor="@color/colorAccent"
                 app:tabSelectedTextColor="@color/colorAccent"
