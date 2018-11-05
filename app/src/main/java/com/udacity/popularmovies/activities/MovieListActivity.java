@@ -17,8 +17,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
@@ -55,8 +53,6 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     private static final int MOVIE_LOADER_ID = 100;
     private ArrayList<Movie> movieList = new ArrayList<>();
 
-
-    // TODO TEST IT!!!!!
     // Implementation for save state
     private static String MOVIE_LIST_STATE = "list_state";
     private static final String RECYCLER_VIEW_STATE = "recycler_layout";
@@ -80,7 +76,6 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     // Objects ro set and control RecyclerView and the list of movie data
     private MovieListAdapter movieListAdapter;
     private boolean showAdultContent;
-
     // Binding class object to access the objects in the layout.
     private ActivityMovieListBinding binding;
 
@@ -185,15 +180,12 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
     private void setupSharedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
         showAdultContent = sharedPreferences.getBoolean(
                 getString(R.string.pref_show_adult_key),
                 getResources().getBoolean(R.bool.pref_show_adult_default)
         );
-
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
-
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -493,6 +485,5 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         savedRecyclerLayoutState = savedInstanceState.getParcelable(RECYCLER_VIEW_STATE);
         super.onRestoreInstanceState(savedInstanceState);
     }
-
 
 }
