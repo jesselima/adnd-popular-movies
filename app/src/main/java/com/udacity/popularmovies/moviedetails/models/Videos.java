@@ -53,4 +53,10 @@ public class Videos implements Parcelable
         return  0;
     }
 
+    @Override
+    public String toString() {
+        return "Videos{" +
+                "videos=" + videos +
+                '}';
+    }
 }

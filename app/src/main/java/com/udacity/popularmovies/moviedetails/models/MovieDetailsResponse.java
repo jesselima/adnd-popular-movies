@@ -392,4 +392,36 @@ public class MovieDetailsResponse implements Parcelable
         return  0;
     }
 
+    @Override
+    public String toString() {
+        return "MovieDetailsResponse{\n" +
+                "  adult=" + adult +
+                ", backdropPath='" + backdropPath + '\n' +
+                ", belongsToCollection=" + belongsToCollection + '\n' +
+                ", budget=" + budget + '\n' +
+                ", genres=" + genres + '\n' +
+                ", homepage='" + homepage + '\n' +
+                ", id=" + id +
+                ", imdbId='" + imdbId + '\n' +
+                ", originalLanguage='" + originalLanguage + '\n' +
+                ", originalTitle='" + originalTitle + '\n' +
+                ", overview='" + overview +  '\n' +
+                ", popularity=" + popularity + '\n' +
+                ", posterPath='" + posterPath + '\n' +
+                ", productionCompanies=" + productionCompanies + '\n' +
+                ", productionCountries=" + productionCountries + '\n' +
+                ", releaseDate='" + releaseDate + '\'' +
+                ", revenue=" + revenue + '\n' +
+                ", runtime=" + runtime + '\n' +
+                ", spokenLanguages=" + spokenLanguages + '\n' +
+                ", status='" + status +  '\n' +
+                ", tagline='" + tagline +  '\n' +
+                ", title='" + title + '\n' +
+                ", video=" + video + '\n' +
+                ", voteAverage=" + voteAverage + '\n' +
+                ", voteCount=" + voteCount +  '\n' +
+                ", videos=" + videos.getVideos().toString() + '\n' +
+                ", reviews=" + reviews.getReviews().toString() + '\n' +
+                '}';
+    }
 }

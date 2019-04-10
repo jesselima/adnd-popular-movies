@@ -93,4 +93,14 @@ public class Reviews implements Parcelable
         return  0;
     }
 
+
+    @Override
+    public String toString() {
+        return "Reviews{" +
+                "page=" + page +
+                ", totalPages=" + totalPages +
+                ", totalResults=" + totalResults +
+                ", reviews=" + reviews +
+                '}';
+    }
 }

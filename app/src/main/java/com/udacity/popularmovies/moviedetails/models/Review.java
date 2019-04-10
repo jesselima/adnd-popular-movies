@@ -92,4 +92,13 @@ public class Review implements Parcelable
         return  0;
     }
 
+    @Override
+    public String toString() {
+        return "Review{" +
+                "author='" + author + '\'' +
+                ", content='" + content + '\'' +
+                ", id='" + id + '\'' +
+                ", url='" + url + '\'' +
+                '}';
+    }
 }
