@@ -21,7 +21,7 @@
         <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing"
             android:value="true" />
         <activity
-            android:name=".activities.MovieListActivity"
+            android:name=".moviesfeed.view.MovieListActivity"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
             android:label="@string/app_name">
@@ -33,32 +33,32 @@
         </activity>
 
         <activity
-            android:name=".activities.MovieDetailsActivity"
+            android:name=".moviedetails.view.MovieDetailsActivity"
             android:label="@string/movie_details"
             android:launchMode="singleTop"
-            android:parentActivityName=".activities.MovieListActivity"
+            android:parentActivityName=".moviesfeed.view.MovieListActivity"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
 
         <!--  android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" -->
         <activity
-            android:name=".activities.BookmarkActivity"
+            android:name=".moviesbookmarks.BookmarkActivity"
             android:label="@string/bookmarks"
             android:launchMode="singleTop"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:parentActivityName=".activities.MovieListActivity"/>
+            android:parentActivityName=".moviesfeed.view.MovieListActivity"/>
 
-        <activity android:name=".activities.WebViewActivity"
+        <activity android:name=".shared.WebViewActivity"
             android:label="@string/movie_homepage"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
-            android:parentActivityName=".activities.MovieDetailsActivity"/>
+            android:parentActivityName=".moviedetails.view.MovieDetailsActivity"/>
 
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".config.SettingsActivity"
             android:label="@string/settings"
-            android:parentActivityName=".activities.MovieListActivity">
+            android:parentActivityName=".moviesfeed.view.MovieListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activities.MovieListActivity" />
+                android:value=".moviesfeed.view.MovieListActivity" />
         </activity>
 
         <!-- Bookmark Provider for Database access through ContentProvider class -->
