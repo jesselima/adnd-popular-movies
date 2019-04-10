@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="movieDetails"
+            type="com.udacity.popularmovies.moviedetails.models.MovieDetailsResponse" />
+        <!--<variable-->
+        <!--name="clickHandler"-->
+        <!--type="com.udacity.popularmovies.moviedetails.models.MovieDetailsResponse"/>-->
+    </data>
+
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -41,7 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal|bottom"
-                    android:background="@drawable/backdrop_image_overlay"/>
+                    android:background="@drawable/backdrop_image_overlay" />
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -73,15 +83,15 @@
                     android:id="@+id/indeterminateBar"
                     style="@style/Widget.AppCompat.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="8dp"/>
+                    android:layout_height="8dp" />
 
                 <!-- SECTION INFO START -->
                 <TextView
                     style="@style/textDetailsHeader"
                     android:layout_marginTop="30dp"
-                    android:text="@string/details"/>
+                    android:text="@string/details" />
 
-                <include layout="@layout/divider_header"/>
+                <include layout="@layout/divider_header" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -116,7 +126,7 @@
                                 android:scaleType="centerCrop"
                                 android:src="@drawable/poster_image_place_holder"
                                 android:textSize="30sp"
-                                android:textStyle="bold"/>
+                                android:textStyle="bold" />
 
                             <TextView
                                 android:id="@+id/tv_label_watched"
@@ -126,47 +136,53 @@
                                 android:layout_marginStart="@dimen/small_layout_margin"
                                 android:background="@color/colorAccent"
                                 android:elevation="5dp"
-                                android:paddingEnd="4dp"
                                 android:paddingStart="4dp"
+                                android:paddingEnd="4dp"
                                 android:text="@string/watched_flag"
                                 android:textAllCaps="true"
                                 android:textColor="@color/colorLightGrey"
                                 android:textSize="14sp"
                                 android:textStyle="bold"
-                                android:visibility="gone"/>
+                                android:visibility="gone" />
 
                             <LinearLayout
                                 style="@style/DetailsItemLayout"
                                 android:layout_below="@id/iv_movie_poster"
                                 android:layout_centerHorizontal="true"
                                 android:layout_gravity="center"
-                                android:layout_marginBottom="@dimen/small_layout_margin"
                                 android:layout_marginTop="4dp"
+                                android:layout_marginBottom="@dimen/small_layout_margin"
                                 android:background="@drawable/rounded_corner"
-                                android:paddingEnd="4dp"
                                 android:paddingStart="4dp"
-                                android:paddingTop="4dp">
+                                android:paddingTop="4dp"
+                                android:paddingEnd="4dp">
+
                                 <RatingBar
                                     style="?android:attr/ratingBarStyleSmall"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:numStars="1"
                                     android:rating="1"
-                                    android:stepSize="1"/>
+                                    android:stepSize="1" />
+
                                 <TextView
                                     android:id="@+id/tv_vote_average"
+
                                     style="@style/DetailItemValueStyle"
                                     android:textColor="@color/colorMediumGrey"
-                                    tools:text="9.9"/>
+                                    tools:text="9.9" />
+
                                 <TextView
                                     style="@style/DetailItemLabelStyle"
                                     android:text="@string/slash"
-                                    android:textColor="@color/colorMediumGrey"/>
+                                    android:textColor="@color/colorMediumGrey" />
+
                                 <TextView
                                     android:id="@+id/tv_vote_count"
+
                                     style="@style/DetailItemValueStyle"
                                     android:textColor="@color/colorMediumGrey"
-                                    tools:text="9999999"/>
+                                    tools:text="9999999" />
                             </LinearLayout>
                         </RelativeLayout>
                     </LinearLayout>
@@ -183,6 +199,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/medium_layout_margin">
+
                             <TextView
                                 android:id="@+id/tv_release_date"
                                 android:layout_width="0dp"
@@ -193,7 +210,8 @@
                                 android:textColor="@color/colorAccent"
                                 android:textSize="28sp"
                                 android:textStyle="italic|bold"
-                                tools:text="2018"/>
+                                tools:text="2018" />
+
                             <TextView
                                 android:id="@+id/tv_runtime"
                                 android:layout_width="0dp"
@@ -203,87 +221,92 @@
                                 android:textColor="@color/colorAccent"
                                 android:textSize="16sp"
                                 android:textStyle="italic|bold"
-                                tools:text="147"/>
+                                tools:text="147" />
                         </LinearLayout>
 
-                            <LinearLayout
-                                style="@style/DetailsItemLayoutVertical">
-                                <TextView
-                                    android:id="@+id/original_title_label"
-                                    style="@style/DetailItemLabelStyle"
+                        <LinearLayout style="@style/DetailsItemLayoutVertical">
 
-                                    android:text="@string/original_title_label"/>
-                                <TextView
-                                    android:id="@+id/tv_title"
-                                    style="@style/DetailItemValueStyle"
-                                    tools:text="Black Panther"/>
-                            </LinearLayout>
+                            <TextView
+                                android:id="@+id/original_title_label"
+                                style="@style/DetailItemLabelStyle"
+                                android:text="@string/original_title_label" />
 
-                            <LinearLayout
-                                style="@style/DetailsItemLayoutVertical">
-                                <TextView
-                                    android:id="@+id/spoken_languages_label"
-                                    style="@style/DetailItemLabelStyle"
-                                    android:text="@string/spoken_languages_label"/>
-                                <TextView
-                                    android:id="@+id/tv_original_language"
-                                    style="@style/DetailItemValueStyle"
-                                    tools:text="English"/>
-                            </LinearLayout>
+                            <TextView
+                                android:id="@+id/tv_title"
+                                style="@style/DetailItemValueStyle"
+                                tools:text="Black Panther" />
+                        </LinearLayout>
 
-                            <LinearLayout
-                                style="@style/DetailsItemLayoutVertical">
-                                <TextView
-                                    android:id="@+id/popularity_label"
-                                    style="@style/DetailItemLabelStyle"
-                                    android:text="@string/popularity_label"/>
-                                <TextView
-                                    android:id="@+id/tv_popularity"
-                                    style="@style/DetailItemValueStyle"
-                                    tools:text="198.543"/>
-                            </LinearLayout>
+                        <LinearLayout style="@style/DetailsItemLayoutVertical">
 
-                            <LinearLayout
-                                style="@style/DetailsItemLayoutVertical">
-                                <TextView
-                                    android:id="@+id/budget_label"
-                                    style="@style/DetailItemLabelStyle"
-                                    android:text="@string/budget_label"/>
-                                <TextView
-                                    android:id="@+id/tv_buget"
-                                    style="@style/DetailItemValueStyle"
-                                    tools:text="$1.780,000.00"/>
-                            </LinearLayout>
+                            <TextView
+                                android:id="@+id/spoken_languages_label"
+                                style="@style/DetailItemLabelStyle"
+                                android:text="@string/spoken_languages_label" />
 
-                            <LinearLayout
-                                style="@style/DetailsItemLayoutVertical">
-                                <TextView
-                                    android:id="@+id/revenue_label"
-                                    style="@style/DetailItemLabelStyle"
-                                    android:text="@string/revenue_label"/>
-                                <TextView
-                                    android:id="@+id/tv_revenue"
-                                    style="@style/DetailItemValueStyle"
-                                    tools:text="$3,298,111.86"/>
-                            </LinearLayout>
+                            <TextView
+                                android:id="@+id/tv_original_language"
+                                style="@style/DetailItemValueStyle"
+                                tools:text="English" />
+                        </LinearLayout>
+
+                        <LinearLayout style="@style/DetailsItemLayoutVertical">
+
+                            <TextView
+                                android:id="@+id/popularity_label"
+                                style="@style/DetailItemLabelStyle"
+                                android:text="@string/popularity_label" />
+
+                            <TextView
+                                android:id="@+id/tv_popularity"
+                                style="@style/DetailItemValueStyle"
+                                tools:text="198.543" />
+                        </LinearLayout>
+
+                        <LinearLayout style="@style/DetailsItemLayoutVertical">
+
+                            <TextView
+                                android:id="@+id/budget_label"
+                                style="@style/DetailItemLabelStyle"
+                                android:text="@string/budget_label" />
+
+                            <TextView
+                                android:id="@+id/tv_buget"
+                                style="@style/DetailItemValueStyle"
+                                tools:text="$1.780,000.00" />
+                        </LinearLayout>
+
+                        <LinearLayout style="@style/DetailsItemLayoutVertical">
+
+                            <TextView
+                                android:id="@+id/revenue_label"
+                                style="@style/DetailItemLabelStyle"
+                                android:text="@string/revenue_label" />
+
+                            <TextView
+                                android:id="@+id/tv_revenue"
+                                style="@style/DetailItemValueStyle"
+                                tools:text="$3,298,111.86" />
+                        </LinearLayout>
 
                     </LinearLayout>
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_genres"
-                    style="@style/textInfoAccent"
-                    tools:text="Avventura | Fantascienza | Fantasy | Azione"/>
 
-                <android.support.v7.widget.CardView
-                    style="@style/CardViewStyle">
+                    style="@style/textInfoAccent"
+                    tools:text="Avventura | Fantascienza | Fantasy | Azione" />
+
+                <android.support.v7.widget.CardView style="@style/CardViewStyle">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
                         android:layout_marginBottom="16dp"
+                        android:orientation="vertical"
                         android:padding="@dimen/default_layout_margin">
+
                         <TextView
                             android:id="@+id/tv_tagline"
                             android:layout_width="match_parent"
@@ -292,14 +315,16 @@
                             android:gravity="center"
                             android:textSize="16sp"
                             android:textStyle="italic|bold"
-                            tools:text="Some Missions Are Not A Choice"/>
+                            tools:text="Some Missions Are Not A Choice" />
+
                         <TextView
                             android:id="@+id/tv_overview"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
                             android:textSize="16sp"
-                            tools:text="Overview"/>
+                            tools:text="Overview" />
+
                         <Button
                             android:id="@+id/bt_home_page"
                             style="@style/Base.Widget.AppCompat.Button.Borderless"
@@ -308,7 +333,7 @@
                             android:layout_gravity="center"
                             android:text="@string/homepage"
                             android:textColor="@color/colorAccent"
-                            android:textSize="16sp"/>
+                            android:textSize="16sp" />
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
                 <!-- SECTION INFO END-->
@@ -324,23 +349,22 @@
 
                     <TextView
                         style="@style/textDetailsHeader"
-                        android:text="@string/videos"/>
-
-                    <include layout="@layout/divider_header"/>
+                        android:text="@string/videos" />
+                    <include layout="@layout/divider_header" />
 
                     <TextView
                         android:id="@+id/text_view_no_videos"
                         style="@style/textNoInfoWarning"
-                        android:text="@string/warning_no_videos"/>
-
+                        android:text="@string/warning_no_videos" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rv_movies_videos_details"
-                        android:layout_width="wrap_content"
+                        android:visibility="visible"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/very_large_layout_margin"
                         android:layout_marginLeft="@dimen/default_layout_margin"
-                        android:layout_marginRight="@dimen/default_layout_margin"/>
+                        android:layout_marginRight="@dimen/default_layout_margin"
+                        android:layout_marginBottom="@dimen/very_large_layout_margin" />
                 </LinearLayout>
                 <!-- SECTION VIDEOS END -->
 
@@ -354,22 +378,23 @@
 
                     <TextView
                         style="@style/textDetailsHeader"
-                        android:text="@string/reviews"/>
+                        android:text="@string/reviews" />
 
-                    <include layout="@layout/divider_header"/>
+                    <include layout="@layout/divider_header" />
 
                     <TextView
                         android:id="@+id/text_view_no_reviews"
                         style="@style/textNoInfoWarning"
-                        android:text="@string/warning_no_reviews"/>
+                        android:text="@string/warning_no_reviews" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/rv_movies_reviews_details"
+                        android:visibility="visible"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginBottom="@dimen/very_large_layout_margin"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/default_layout_margin"
-                        android:layout_marginRight="@dimen/default_layout_margin"/>
+                        android:layout_marginRight="@dimen/default_layout_margin"
+                        android:layout_marginBottom="@dimen/very_large_layout_margin" />
 
                 </LinearLayout>
                 <!-- SECTION REVIEWS END -->
@@ -384,20 +409,21 @@
 
                     <TextView
                         style="@style/textDetailsHeader"
-                        android:text="@string/production_companies"/>
+                        android:text="@string/production_companies" />
 
-                    <include layout="@layout/divider_header"/>
+                    <include layout="@layout/divider_header" />
 
                     <TextView
                         android:id="@+id/text_view_no_companies"
                         style="@style/textNoInfoWarning"
-                        android:text="@string/warning_no_companies"/>
+                        android:text="@string/warning_no_companies" />
 
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/rv_companies"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="@dimen/default_layout_margin"/>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/rv_companies"
+                        android:visibility="visible"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/default_layout_margin" />
 
                 </LinearLayout>
                 <!-- SECTION COMPANIES END -->
@@ -411,19 +437,19 @@
                     android:layout_marginTop="@dimen/very_large_layout_margin"
                     android:contentDescription="@string/no_info_available"
                     android:src="@drawable/ic_details"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_warning_no_data"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="20dp"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
                     android:gravity="center"
                     android:text="@string/movie_details_could_not_be_loaded"
                     android:textColor="@color/colorMediumGrey"
                     android:textSize="16sp"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/iv_warning_no_connection_details"
@@ -433,15 +459,16 @@
                 <TextView
                     android:id="@+id/tv_warning_no_connection_details"
                     style="@style/ImageNoConnection"
-                    android:text="@string/no_internet_connection"/>
+                    android:text="@string/no_internet_connection" />
 
-                <include layout="@layout/tmdb_branding"
+                <include
+                    layout="@layout/tmdb_branding"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="100dp"
                     android:layout_marginLeft="@dimen/default_layout_margin"
                     android:layout_marginRight="@dimen/default_layout_margin"
-                    android:gravity="bottom"/>
+                    android:layout_marginBottom="100dp"
+                    android:gravity="bottom" />
 
             </LinearLayout>
 

@@ -92,4 +92,13 @@ public class ProductionCompany implements Parcelable
         return  0;
     }
 
+    @Override
+    public String toString() {
+        return "ProductionCompany{\n" +
+                "       id=" + id + '\n' +
+                ",      logoPath=" + logoPath +
+                ",      name='" + name + '\n' +
+                ",      originCountry='" + originCountry + '\n' +
+                '}';
+    }
 }

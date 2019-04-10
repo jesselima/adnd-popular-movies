@@ -3,10 +3,7 @@ package com.udacity.popularmovies.service;
 
 import com.udacity.popularmovies.config.ApiConfig.UrlParamKey;
 import com.udacity.popularmovies.moviedetails.models.MovieDetailsResponse;
-import com.udacity.popularmovies.moviesfeed.models.Movie;
 import com.udacity.popularmovies.moviesfeed.models.MoviesResponse;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

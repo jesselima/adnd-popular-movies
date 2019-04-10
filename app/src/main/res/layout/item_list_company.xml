@@ -1,37 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/company_item_list"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    tools:ignore="UseCompoundDrawables">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-        <ImageView
-            android:id="@+id/iv_production_company"
-            android:layout_width="150dp"
-            android:layout_height="80dp"
-            android:layout_marginTop="@dimen/medium_layout_margin"
-            android:contentDescription="@string/production_companies"
-            android:gravity="center"
-            android:scaleType="centerInside"
-            android:layout_gravity="center"
-            android:src="@drawable/production_company_sample"/>
+        <data>
 
-        <TextView
-            android:id="@+id/tv_company_name"
+        </data>
+
+        <LinearLayout
+            android:id="@+id/company_item_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/default_layout_margin"
-            android:layout_marginTop="@dimen/medium_layout_margin"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            tools:text="Company Name"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:ignore="UseCompoundDrawables">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@color/colorLightGrey"/>
+                <ImageView
+                    android:id="@+id/iv_production_company"
+                    android:layout_width="150dp"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="@dimen/medium_layout_margin"
+                    android:contentDescription="@string/production_companies"
+                    android:gravity="center"
+                    android:scaleType="centerInside"
+                    android:layout_gravity="center"
+                    android:src="@drawable/production_company_sample" />
 
-</LinearLayout>
+                <TextView
+                    android:id="@+id/tv_company_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/default_layout_margin"
+                    android:layout_marginTop="@dimen/medium_layout_margin"
+                    android:gravity="center"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="Company Name" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/colorLightGrey" />
+
+        </LinearLayout>
+</layout>

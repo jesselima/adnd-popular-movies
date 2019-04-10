@@ -2,96 +2,152 @@
 package com.udacity.popularmovies.moviedetails.models;
 
 import java.util.List;
+
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MovieDetailsResponse implements Parcelable
-{
+public class MovieDetailsResponse extends BaseObservable implements Parcelable {
 
     @SerializedName("adult")
     @Expose
+    @Bindable
     private Boolean adult;
+
     @SerializedName("backdrop_path")
     @Expose
+    @Bindable
     private String backdropPath;
+
     @SerializedName("belongs_to_collection")
     @Expose
+    @Bindable
     private Object belongsToCollection;
+
     @SerializedName("budget")
     @Expose
+    @Bindable
     private Integer budget;
+
     @SerializedName("genres")
     @Expose
+    @Bindable
     private List<Genre> genres = null;
+
     @SerializedName("homepage")
     @Expose
+    @Bindable
     private String homepage;
     @SerializedName("id")
     @Expose
+    @Bindable
     private Integer id;
+
     @SerializedName("imdb_id")
     @Expose
+    @Bindable
     private String imdbId;
+
     @SerializedName("original_language")
     @Expose
+    @Bindable
     private String originalLanguage;
+
     @SerializedName("original_title")
     @Expose
+    @Bindable
     private String originalTitle;
+
     @SerializedName("overview")
     @Expose
+    @Bindable
     private String overview;
+
     @SerializedName("popularity")
     @Expose
+    @Bindable
     private Double popularity;
+
     @SerializedName("poster_path")
     @Expose
+    @Bindable
     private String posterPath;
+
     @SerializedName("production_companies")
     @Expose
+    @Bindable
     private List<ProductionCompany> productionCompanies = null;
+
     @SerializedName("production_countries")
     @Expose
+    @Bindable
     private List<ProductionCountry> productionCountries = null;
+
     @SerializedName("release_date")
     @Expose
+    @Bindable
     private String releaseDate;
+
     @SerializedName("revenue")
     @Expose
+    @Bindable
     private Integer revenue;
+
     @SerializedName("runtime")
     @Expose
+    @Bindable
     private Integer runtime;
+
     @SerializedName("spoken_languages")
     @Expose
+    @Bindable
     private List<SpokenLanguage> spokenLanguages = null;
+
     @SerializedName("status")
     @Expose
+    @Bindable
     private String status;
+
     @SerializedName("tagline")
     @Expose
+    @Bindable
     private String tagline;
+
     @SerializedName("title")
     @Expose
+    @Bindable
     private String title;
+
     @SerializedName("video")
     @Expose
+    @Bindable
     private Boolean video;
+
     @SerializedName("vote_average")
     @Expose
+    @Bindable
     private Double voteAverage;
+
     @SerializedName("vote_count")
     @Expose
+    @Bindable
     private Integer voteCount;
+
     @SerializedName("videos")
     @Expose
+    @Bindable
     private Videos videos;
+
     @SerializedName("reviews")
     @Expose
+    @Bindable
     private Reviews reviews;
+
+
     public final static Parcelable.Creator<MovieDetailsResponse> CREATOR = new Creator<MovieDetailsResponse>() {
 
 
