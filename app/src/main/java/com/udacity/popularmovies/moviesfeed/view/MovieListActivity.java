@@ -14,9 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
 import com.udacity.popularmovies.BuildConfig;
@@ -29,11 +32,12 @@ import com.udacity.popularmovies.moviesfeed.models.Movie;
 import com.udacity.popularmovies.moviesfeed.models.MoviesResponse;
 import com.udacity.popularmovies.service.MovieDataService;
 import com.udacity.popularmovies.service.RetrofitInstance;
-import com.udacity.popularmovies.shared.utils.AdaptiveGridLayout;
-import com.udacity.popularmovies.shared.utils.BottomNavigationBehavior;
-import com.udacity.popularmovies.shared.utils.BottomNavigationViewHelper;
-import com.udacity.popularmovies.shared.utils.LanguageUtils;
-import com.udacity.popularmovies.shared.utils.NetworkUtils;
+import com.udacity.popularmovies.shared.AdaptiveGridLayout;
+import com.udacity.popularmovies.shared.BottomNavigationBehavior;
+import com.udacity.popularmovies.shared.BottomNavigationViewHelper;
+import com.udacity.popularmovies.shared.LanguageUtils;
+import com.udacity.popularmovies.shared.NetworkUtils;
+import com.udacity.popularmovies.shared.RecyclerViewAnimator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +68,7 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
+        Log.d(LOG_TAG, ">>>>> onCreate called!");
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_list);
         LanguageUtils.checkSystemLanguage(loadApiLanguage);
@@ -288,6 +293,7 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
     @Override
     protected void onStart() {
         super.onStart();
+        Log.d(LOG_TAG, ">>>>> onStart called!");
         if (NetworkUtils.isDeviceConnected(this)) {
 //            connectionWarning(HIDE);
         } else {
@@ -298,11 +304,19 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(LOG_TAG, ">>>>> onPause called!");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(LOG_TAG, ">>>>> onStop called!");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(LOG_TAG, ">>>>> onResume called!");
         // Check internet connection when activity is resumed.
         if (NetworkUtils.isDeviceConnected(this)) {
 //            connectionWarning(HIDE);
@@ -314,6 +328,7 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
     @Override
     protected void onRestart() {
         super.onRestart();
+        Log.d(LOG_TAG, ">>>>> onRestart called!");
         // Check internet connection when activity is resumed.
         if (NetworkUtils.isDeviceConnected(this)) {
 //            connectionWarning(HIDE);
@@ -326,6 +341,7 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d(LOG_TAG, ">>>>> onDestroy called!");
         // Unregister VisualizerActivity as an OnPreferenceChangedListener to avoid any memory leaks.
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);

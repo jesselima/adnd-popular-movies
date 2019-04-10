@@ -1,4 +1,4 @@
-package com.udacity.popularmovies.shared.utils;
+package com.udacity.popularmovies.shared;
 
 import android.annotation.SuppressLint;
 import android.support.design.internal.BottomNavigationItemView;

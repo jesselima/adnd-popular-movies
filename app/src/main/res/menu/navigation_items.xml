@@ -8,6 +8,10 @@
         android:title="@string/highest_rated"
         android:icon="@drawable/ic_stars"/>
 
+    <item android:id="@+id/button_genres"
+        android:title="Genres"
+        android:icon="@drawable/ic_filter" />
+
     <item android:id="@+id/button_bookmarks"
         android:title="@string/bookmarks"
         android:icon="@drawable/ic_collections_bookmark" />

@@ -27,7 +27,7 @@ public interface MovieDataService {
             @Query(UrlParamKey.API_KEY) String apiKeyValue
     );
 
-    @GET("movie/{movieId}/append_to_response=images,videos,reviews")
+    @GET("movie/{movieId}?append_to_response=images,videos,reviews")
     Call<MovieDetailsResponse> getMovieDetails(
             @Path ("movieId") int movieId,
             @Query(UrlParamKey.LANGUAGE) String language,

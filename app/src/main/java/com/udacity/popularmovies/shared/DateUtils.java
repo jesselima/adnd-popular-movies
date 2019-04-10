@@ -1,4 +1,4 @@
-package com.udacity.popularmovies.shared.utils;
+package com.udacity.popularmovies.shared;
 
 import android.content.Context;
 import android.util.Log;

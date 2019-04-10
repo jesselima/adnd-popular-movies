@@ -23,8 +23,8 @@ import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.moviedetails.view.MovieDetailsActivity;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.localdatabase.BookmarkContract;
-import com.udacity.popularmovies.shared.utils.DateUtils;
-import com.udacity.popularmovies.shared.utils.NetworkUtils;
+import com.udacity.popularmovies.shared.DateUtils;
+import com.udacity.popularmovies.shared.NetworkUtils;
 
 import java.text.DecimalFormat;
 
