@@ -5,19 +5,22 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.config.ApiConfig;
 
 import java.util.Objects;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class WebViewActivity extends AppCompatActivity {
 
@@ -25,6 +28,7 @@ public class WebViewActivity extends AppCompatActivity {
     private String originalTitle;
     private ProgressBar loadingIndicator;
     private WebView webView;
+    private Toast toast;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -57,6 +61,7 @@ public class WebViewActivity extends AppCompatActivity {
         webView.setWebViewClient(new LoadHomepageWebClient());
         // Load the initial URL
         webView.loadUrl(urlHomepage);
+        Log.d("LOG_TAG", ">>>>>>>" + urlHomepage);
 
     }
 
@@ -113,11 +118,23 @@ public class WebViewActivity extends AppCompatActivity {
      * @param url is the url to be open in the browser.
      */
     private void openWebPage(String url) {
+        if (url == null) {
+            doToast(getString(R.string.no_home_page_available));
+            return;
+        }
         Uri uriWebPage = Uri.parse(url);
         Intent intent = new Intent(Intent.ACTION_VIEW, uriWebPage);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }
+    }
+
+    public void doToast(String toastThisText) {
+        if (toast != null) {
+            toast.cancel();
+        }
+        toast = Toast.makeText(this, toastThisText, Toast.LENGTH_LONG);
+        toast.show();
     }
 
     /**

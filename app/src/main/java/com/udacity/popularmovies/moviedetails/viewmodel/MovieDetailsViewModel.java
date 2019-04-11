@@ -1,6 +1,6 @@
 package com.udacity.popularmovies.moviedetails.viewmodel;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 /**
  * Created by JesseFariasdeLima on 4/9/2019.

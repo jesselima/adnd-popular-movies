@@ -8,9 +8,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,13 +17,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.udacity.popularmovies.R;
-import com.udacity.popularmovies.moviedetails.view.MovieDetailsActivity;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.localdatabase.BookmarkContract;
+import com.udacity.popularmovies.moviedetails.view.MovieDetailsActivity;
 import com.udacity.popularmovies.shared.DateUtils;
 import com.udacity.popularmovies.shared.NetworkUtils;
 
 import java.text.DecimalFormat;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class BookmarkAdapter extends RecyclerView.Adapter<BookmarkAdapter.BookmarkViewHolder> {

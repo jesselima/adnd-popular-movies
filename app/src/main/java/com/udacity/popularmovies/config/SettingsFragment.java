@@ -1,7 +1,7 @@
 package com.udacity.popularmovies.config;
 
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceFragmentCompat;
 
 import com.udacity.popularmovies.R;
 

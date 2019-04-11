@@ -3,9 +3,6 @@ package com.udacity.popularmovies.moviedetails.view;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.transition.TransitionManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +15,10 @@ import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.moviedetails.models.Review;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.transition.TransitionManager;
 
 /**
  * Created by jesse on 01/09/18.

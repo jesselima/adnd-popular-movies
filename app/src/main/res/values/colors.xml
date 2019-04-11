@@ -10,4 +10,6 @@
     <color name="colorMediumGreyLighter">#dcdcdc</color>
     <color name="colorWarning">#c90505</color>
     <color name="colorTextDefault">#000000</color>
+    <color name="colorBlack">#000000</color>
+    <color name="colorAlpha0">#00FFFFFF</color>
 </resources>

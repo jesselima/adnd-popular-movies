@@ -2,8 +2,6 @@ package com.udacity.popularmovies.moviesfeed.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +10,14 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.R;
-import com.udacity.popularmovies.moviedetails.view.MovieDetailsActivity;
 import com.udacity.popularmovies.config.ApiConfig;
+import com.udacity.popularmovies.moviedetails.view.MovieDetailsActivity;
 import com.udacity.popularmovies.moviesfeed.models.Movie;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * An {@link MovieListAdapter} knows how to create a list item layout for each movie item

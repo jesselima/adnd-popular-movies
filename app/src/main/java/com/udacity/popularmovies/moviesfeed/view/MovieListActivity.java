@@ -3,25 +3,14 @@ package com.udacity.popularmovies.moviesfeed.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.udacity.popularmovies.BuildConfig;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.config.ApiConfig.UrlParamValue;
@@ -34,14 +23,21 @@ import com.udacity.popularmovies.service.MovieDataService;
 import com.udacity.popularmovies.service.RetrofitInstance;
 import com.udacity.popularmovies.shared.AdaptiveGridLayout;
 import com.udacity.popularmovies.shared.BottomNavigationBehavior;
-import com.udacity.popularmovies.shared.BottomNavigationViewHelper;
 import com.udacity.popularmovies.shared.LanguageUtils;
 import com.udacity.popularmovies.shared.NetworkUtils;
-import com.udacity.popularmovies.shared.RecyclerViewAnimator;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.view.MenuItemCompat;
+import androidx.core.view.ViewCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -77,7 +73,7 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
         setupSharedPreferences();
 
         // Set and handle actions on BottomNavigation
-        BottomNavigationViewHelper.disableShiftMode(binding.bottomNavigationView);
+//        BottomNavigationViewHelper.disableShiftMode(binding.bottomNavigationView);
         binding.bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -112,7 +108,7 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
 
         binding.loadingIndicator.setIndeterminate(true);
 
-        getPopularMovies();
+       checkConnectionAndLoadContent();
 
     } // Closes onCreate
 
@@ -196,7 +192,7 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
      *
      * @param toastThisText is the text you want to show in the toast.
      */
-    private void doToast(String toastThisText) {
+    public void doToast(String toastThisText) {
         if (toast != null) {
             toast.cancel();
         }
@@ -208,13 +204,13 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
         // Check internet connection before start the loader
         if (!NetworkUtils.isDeviceConnected(this)) {
             // If device is not connected show connections warnings on the screen.
-//            progressBarStatus(HIDE);
-//            noResultsWarning(HIDE);
-//            connectionWarning(SHOW);
+            progressBarStatus(HIDE);
+            noResultsWarning(HIDE);
+            connectionWarning(SHOW);
         } else {
-//            connectionWarning(HIDE);
-//            noResultsWarning(HIDE);
-//            progressBarStatus(SHOW);
+            connectionWarning(HIDE);
+            noResultsWarning(HIDE);
+            progressBarStatus(SHOW);
             getPopularMovies();
         }
     }

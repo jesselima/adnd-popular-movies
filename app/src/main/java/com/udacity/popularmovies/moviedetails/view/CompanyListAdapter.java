@@ -1,8 +1,6 @@
 package com.udacity.popularmovies.moviedetails.view;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +11,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.R;
-
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.moviedetails.models.ProductionCompany;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * An {@link CompanyListAdapter} knows how to create a list item layout for each company item

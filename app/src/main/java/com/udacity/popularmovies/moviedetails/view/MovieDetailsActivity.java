@@ -4,14 +4,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -19,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.BuildConfig;
 import com.udacity.popularmovies.R;
@@ -29,9 +26,7 @@ import com.udacity.popularmovies.moviedetails.models.Genre;
 import com.udacity.popularmovies.moviedetails.models.MovieDetailsResponse;
 import com.udacity.popularmovies.moviedetails.models.ProductionCompany;
 import com.udacity.popularmovies.moviedetails.models.Review;
-import com.udacity.popularmovies.moviedetails.models.Reviews;
 import com.udacity.popularmovies.moviedetails.models.Video;
-import com.udacity.popularmovies.moviedetails.models.Videos;
 import com.udacity.popularmovies.moviesfeed.models.Movie;
 import com.udacity.popularmovies.service.MovieDataService;
 import com.udacity.popularmovies.service.RetrofitInstance;
@@ -43,9 +38,13 @@ import com.udacity.popularmovies.shared.WebViewActivity;
 import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -86,6 +85,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private int deviceWidth;
     private ActivityMovieDetailsBinding activityMovieDetailsBinding;
 
+
+    FloatingActionButton floatingActionButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,42 +95,52 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Log.d(LOG_TAG,"===>>> onCreate called");
 
         activityMovieDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details);
-
         // Get the movie ID and Title from the clicked item on the RecyclerView item.
+
         getIncomingIntent();
         progressBarStatus(SHOW);
-        setupToolbar();
         initViews();
         getMovieDetails();
+
+        Toolbar toolbar = findViewById(R.id.toolbar_movie_details);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        // Setup CollapsingToolbar with movie name
+        activityMovieDetailsBinding.collapsingToolbar.setTitle(movieOriginalTitle);
 
         // Button inside Overview card that send user to the movie homepage in the browser if URL is not null
         activityMovieDetailsBinding.btHomePage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            //                if (movieDetailsResponse.getMovieHomepage().equals("null")) {
-//                    doToast(getString(R.string.warning_homepage_not_available));
-//                } else if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
-//                    doToast(getString(R.string.warning_you_are_not_connected));
-//                } else {
-//                    openWebPage(movieHomepageUrl);
-//                }
+                            if (movieDetailsResponse.getHomepage().equals("null")) {
+                    doToast(getString(R.string.warning_homepage_not_available));
+                } else if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
+                    doToast(getString(R.string.warning_you_are_not_connected));
+                } else {
+                    openWebPage(movieHomepageUrl);
+                }
             }
         });
 
-        activityMovieDetailsBinding.floatIsWatched.setOnClickListener(new View.OnClickListener() {
+        activityMovieDetailsBinding.buttonIsWatched.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            //                if (!isBookmarkOnDatabase && !isMovieWatched) {
+
+            doToast("Watched ok");
+
+
+//                if (!isBookmarkOnDatabase && !isMovieWatched) {
 //                    new SaveBookmarkAsyncTask().execute();
 //                }
 //                new UpdateBookmarkAsyncTask().execute(movieDetailsResponse.getId());
             }
         });
 
-        activityMovieDetailsBinding.floatSaveBookmark.setOnClickListener(new View.OnClickListener() {
+        activityMovieDetailsBinding.buttonIsSaved.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            //                if (isBookmarkOnDatabase) {
+                doToast("Saved ok");
+//                if (isBookmarkOnDatabase) {
 //                    // if the Movie is already bookmarked, remove it from the database and update icon status to unsaved icon
 //                    new DeleteBookmarkAsyncTask().execute(movieDetailsResponse.getId());
 //                } else {
@@ -138,8 +150,8 @@ public class MovieDetailsActivity extends AppCompatActivity {
         });
 
 
-        // FloatButton to share movie homepage to other app available on device.
-        activityMovieDetailsBinding.floatShareButton.setOnClickListener(new View.OnClickListener() {
+        // MaterialButton to share movie homepage to other app available on device.
+        activityMovieDetailsBinding.buttonShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 shareWebUrl();
@@ -181,14 +193,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         ViewCompat.setNestedScrollingEnabled(activityMovieDetailsBinding.rvMoviesReviewsDetails, false);
     } // Close onCreate
 
-    private void setupToolbar() {
-        // Setup ToolBar
-        setSupportActionBar(activityMovieDetailsBinding.toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
-        // Setup CollapsingToolbar with movie name
-        activityMovieDetailsBinding.collapsingToolbar.setTitle(movieOriginalTitle);
-    }
-
 
     // It's called inside onCreate method and get the movie ID and Title sent from MovieListActivity.
     private void getIncomingIntent() {
@@ -211,18 +215,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<MovieDetailsResponse> call, Response<MovieDetailsResponse> response) {
                 if (response.body() != null) {
-
+                    // TODO: create an alerte for when data is not available.
                     movieDetailsResponse = response.body();
-
                     if (movieDetailsResponse != null) {
                             progressBarStatus(HIDE);
                             updateUI(movieDetailsResponse);
                         } else {
                             progressBarStatus(HIDE);
-//                            warningDetails(SHOW);
+                            warningDetails(SHOW);
                         }
                     }
-
                 }
 
             @Override
@@ -281,7 +283,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
         activityMovieDetailsBinding.tvOverview.setText(movieDetailsResponse.getOverview());
         activityMovieDetailsBinding.tvVoteAverage.setText(String.valueOf(movieDetailsResponse.getVoteAverage()));
-
         activityMovieDetailsBinding.tvRuntime.setText(String.valueOf(movieDetailsResponse.getRuntime() + getString(R.string.min)));
 
         String formatedDate = DateUtils.simpleDateFormat(movieDetailsResponse.getReleaseDate());
@@ -356,12 +357,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
             super.onPostExecute(aVoid);
 
             if (isBookmarkOnDatabase) {
-                activityMovieDetailsBinding.floatSaveBookmark.setImageResource(R.drawable.ic_bookmark_saved);
+//                activityMovieDetailsBinding.floatSaveBookmark.setImageResource(R.drawable.ic_bookmark_saved);
                 Toast.makeText(MovieDetailsActivity.this, getResources().getString(R.string.movie_saved), Toast.LENGTH_SHORT).show();
                 // isBookmarkOnDatabase = true;
             } else {
                 doToast(getResources().getString(R.string.warning_could_not_be_saved));
-                activityMovieDetailsBinding.floatSaveBookmark.setImageResource(R.drawable.ic_bookmark_unsaved);
+//                activityMovieDetailsBinding.floatSaveBookmark.setImageResource(R.drawable.ic_bookmark_unsaved);
                 isBookmarkOnDatabase = false;
             }
             progressBarStatus(INVISIBLE);
@@ -392,8 +393,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Integer rowsDeleted) {
             if (rowsDeleted > 0) {
-                activityMovieDetailsBinding.floatSaveBookmark.setImageResource(R.drawable.ic_bookmark_unsaved);
-                activityMovieDetailsBinding.floatIsWatched.setImageResource(R.drawable.ic_watched_not);
+
+                activityMovieDetailsBinding.buttonIsSaved.setIcon(getResources().getDrawable(R.drawable.ic_bookmark_unsaved));
+                activityMovieDetailsBinding.buttonIsWatched.setIcon(getResources().getDrawable(R.drawable.ic_watched_not));
                 activityMovieDetailsBinding.tvLabelWatched.setVisibility(HIDE);
                 doToast(getResources().getString(R.string.movie_removed));
                 isBookmarkOnDatabase = false;
@@ -495,12 +497,12 @@ public class MovieDetailsActivity extends AppCompatActivity {
 
             if (rowsUpdated > 0) {
                 if (isMovieWatched){
-                    activityMovieDetailsBinding.floatIsWatched.setImageResource(R.drawable.ic_watched_not);
+//                    activityMovieDetailsBinding.floatIsWatched.setImageResource(R.drawable.ic_watched_not);
                     doToast(getResources().getString(R.string.not_watched));
                     animateTextFadeOut(activityMovieDetailsBinding.tvLabelWatched);
                     isMovieWatched = false;
                 }else {
-                    activityMovieDetailsBinding.floatIsWatched.setImageResource(R.drawable.ic_watched_yes);
+//                    activityMovieDetailsBinding.floatIsWatched.setImageResource(R.drawable.ic_watched_yes);
                     Toast.makeText(MovieDetailsActivity.this, getResources().getString(R.string.watched), Toast.LENGTH_SHORT).show();
                     animateTextFadeIn(activityMovieDetailsBinding.tvLabelWatched);
                     isMovieWatched = true;
@@ -525,18 +527,18 @@ public class MovieDetailsActivity extends AppCompatActivity {
     }
 
     private void shareWebUrl() {
-//        if (movieDetailsResponse.getMovieHomepage().equals("null")) {
-//            doToast(getString(R.string.warning_homepage_not_available));
-//        } else {
-//            String movieInfoToShare = getString(R.string.checkout_this_movie);
-//            movieInfoToShare += "\n" + movieDetailsResponse.getMovieOriginalTitle();
-//            movieInfoToShare += "\n" + movieDetailsResponse.getMovieHomepage();
-//            Intent intent = new Intent();
-//            intent.setAction(Intent.ACTION_SEND);
-//            intent.putExtra(Intent.EXTRA_TEXT, movieInfoToShare);
-//            intent.setType("text/plain");
-//            startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_to)));
-//        }
+        if (movieDetailsResponse.getHomepage().equals("null")) {
+            doToast(getString(R.string.warning_homepage_not_available));
+        } else {
+            String movieInfoToShare = getString(R.string.checkout_this_movie);
+            movieInfoToShare += "\n" + movieDetailsResponse.getOriginalLanguage();
+            movieInfoToShare += "\n" + movieDetailsResponse.getHomepage();
+            Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                intent.putExtra(Intent.EXTRA_TEXT, movieInfoToShare);
+                intent.setType("text/plain");
+            startActivity(Intent.createChooser(intent, getResources().getString(R.string.share_to)));
+        }
     }
 
     /**
@@ -544,7 +546,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
      *
      * @param toastThisText is the text you want to show in the toast.
      */
-    private void doToast(String toastThisText) {
+    public void doToast(String toastThisText) {
         if (toast != null) {
             toast.cancel();
         }
@@ -569,7 +571,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
      *
      * @param urlHomepage is the url to be open in the browser.
      */
-
+    private void openWebPage(String urlHomepage) {
+        if (urlHomepage == null) {
+            doToast(getString(R.string.no_home_page_available));
+            return;
+        }
+        Intent intent = new Intent(this, WebViewActivity.class);
+        intent.putExtra(ApiConfig.JsonKey.HOMEPAGE, urlHomepage);
+        intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, movieOriginalTitle);
+        startActivity(intent);
+    }
 
     /**
      * When called do a fade in effect on a TextView.
@@ -595,16 +606,16 @@ public class MovieDetailsActivity extends AppCompatActivity {
         activityMovieDetailsBinding.tvWarningNoData.setVisibility(VISIBILITY);
         activityMovieDetailsBinding.ivWarningNoData.setVisibility(VISIBILITY);
         if (VISIBILITY == SHOW) {
-//            setContentVisibility(HIDE);
+            setContentVisibility(HIDE);
             doToast(getString(R.string.warning_you_are_not_connected));
         } else {
-//            setContentVisibility(SHOW);
+            setContentVisibility(SHOW);
         }
     }
 
     private void setContentVisibility(int VISIBILITY) {
-        activityMovieDetailsBinding.floatSaveBookmark.setVisibility(VISIBILITY);
-        activityMovieDetailsBinding.floatShareButton.setVisibility(VISIBILITY);
+        activityMovieDetailsBinding.buttonIsSaved.setVisibility(VISIBILITY);
+        activityMovieDetailsBinding.buttonShare.setVisibility(VISIBILITY);
         activityMovieDetailsBinding.ivMoviePoster.setVisibility(VISIBILITY);
         activityMovieDetailsBinding.sectionFullContent.setVisibility(VISIBILITY);
     }
@@ -631,10 +642,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onStart();
         Log.d("===>>> onStart", " called");
         if (NetworkUtils.isDeviceConnected(this)) {
-//            new CheckBookmarkAsyncTask().execute();
-//            warningConnection(HIDE);
+            //  TODO ->  new CheckBookmarkAsyncTask().execute();
+            warningConnection(HIDE);
         } else {
-//            warningConnection(SHOW);
+            warningConnection(SHOW);
         }
     }
 
@@ -643,9 +654,9 @@ public class MovieDetailsActivity extends AppCompatActivity {
         super.onPause();
         Log.d("===>>> onPause", " called");
         if (NetworkUtils.isDeviceConnected(this)) {
-//            warningConnection(HIDE);
+            warningConnection(HIDE);
         } else {
-//            warningConnection(SHOW);
+            warningConnection(SHOW);
         }
     }
 
@@ -655,12 +666,10 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Log.d("===>>> onResume", " called");
         // Check internet connection when activity is resumed.
         if (NetworkUtils.isDeviceConnected(this)) {
-//            warningConnection(HIDE);
-
-            // TODO: Call get data again
-
+            warningConnection(HIDE);
+            getMovieDetails();
         } else {
-//            warningConnection(SHOW);
+            warningConnection(SHOW);
         }
     }
 
