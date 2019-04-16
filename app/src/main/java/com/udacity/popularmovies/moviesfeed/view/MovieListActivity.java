@@ -10,25 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.udacity.popularmovies.BuildConfig;
-import com.udacity.popularmovies.R;
-import com.udacity.popularmovies.config.ApiConfig.UrlParamValue;
-import com.udacity.popularmovies.config.SettingsActivity;
-import com.udacity.popularmovies.databinding.ActivityMovieListBinding;
-import com.udacity.popularmovies.moviesbookmarks.BookmarkActivity;
-import com.udacity.popularmovies.moviesfeed.models.Movie;
-import com.udacity.popularmovies.moviesfeed.models.MoviesResponse;
-import com.udacity.popularmovies.service.MovieDataService;
-import com.udacity.popularmovies.service.RetrofitInstance;
-import com.udacity.popularmovies.shared.AdaptiveGridLayout;
-import com.udacity.popularmovies.shared.BottomNavigationBehavior;
-import com.udacity.popularmovies.shared.LanguageUtils;
-import com.udacity.popularmovies.shared.NetworkUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -36,11 +17,27 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.view.MenuItemCompat;
 import androidx.core.view.ViewCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.GridLayoutManager;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.udacity.popularmovies.R;
+import com.udacity.popularmovies.config.ApiConfig.UrlParamValue;
+import com.udacity.popularmovies.config.SettingsActivity;
+import com.udacity.popularmovies.databinding.ActivityMovieListBinding;
+import com.udacity.popularmovies.moviesbookmarks.BookmarkActivity;
+import com.udacity.popularmovies.moviesfeed.models.Movie;
+import com.udacity.popularmovies.moviesfeed.viewmodel.MovieListActivityViewModel;
+import com.udacity.popularmovies.shared.AdaptiveGridLayout;
+import com.udacity.popularmovies.shared.BottomNavigationBehavior;
+import com.udacity.popularmovies.shared.LanguageUtils;
+import com.udacity.popularmovies.shared.NetworkUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MovieListActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -60,20 +57,25 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
     private boolean showAdultContent;
     private ActivityMovieListBinding binding;
 
+    private MovieListActivityViewModel movieListActivityViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
         Log.d(LOG_TAG, ">>>>> onCreate called!");
 
+        movieListActivityViewModel = ViewModelProviders.of(this).get(MovieListActivityViewModel.class);
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_movie_list);
         LanguageUtils.checkSystemLanguage(loadApiLanguage);
 
         setToolbar();
         setupSharedPreferences();
+        setRecyclerViewAdapter();
 
         // Set and handle actions on BottomNavigation
-//        BottomNavigationViewHelper.disableShiftMode(binding.bottomNavigationView);
+        //BottomNavigationViewHelper.disableShiftMode(binding.bottomNavigationView);
         binding.bottomNavigationView.setOnNavigationItemSelectedListener(
                 new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -84,6 +86,7 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
                             doToast(getResources().getString(R.string.warning_check_internet_connection));
                         } else {
                             sortBy = UrlParamValue.POPULAR;
+                            movieList.clear();
                             getPopularMovies();
                         }
                         break;
@@ -92,6 +95,7 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
                             doToast(getResources().getString(R.string.warning_check_internet_connection));
                         } else {
                             sortBy = UrlParamValue.TOP_RATED;
+                            movieList.clear();
                             getPopularMovies();
                         }
                         break;
@@ -108,50 +112,59 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
 
         binding.loadingIndicator.setIndeterminate(true);
 
-       checkConnectionAndLoadContent();
+        checkConnectionAndLoadContent();
 
     } // Closes onCreate
 
 
+    private void checkConnectionAndLoadContent() {
+        // Check internet connection before start the loader
+        if (!NetworkUtils.isDeviceConnected(this)) {
+            // If device is not connected show connections warnings on the screen.
+            progressBarStatus(HIDE);
+            noResultsWarning(HIDE);
+            connectionWarning(SHOW);
+        } else {
+            connectionWarning(HIDE);
+            noResultsWarning(HIDE);
+            progressBarStatus(SHOW);
+            getPopularMovies();
+        }
+    }
+
+    private void setRecyclerViewAdapter() {
+        movieListAdapter = new MovieListAdapter(getApplicationContext(), movieList);
+        binding.rvMovies.setAdapter(movieListAdapter);
+        ViewCompat.setNestedScrollingEnabled(binding.rvMovies, false);
+        int numberOfColumns = AdaptiveGridLayout.calculateNoOfColumns(getApplicationContext());
+        binding.rvMovies.setLayoutManager(new GridLayoutManager(getApplicationContext(), numberOfColumns));
+        binding.rvMovies.setItemAnimator(new DefaultItemAnimator());
+        binding.rvMovies.setHasFixedSize(true);
+        movieListAdapter.notifyDataSetChanged();
+    }
 
     private void getPopularMovies() {
 
-        MovieDataService movieDataService = RetrofitInstance.getService();
-
-        Call<MoviesResponse> call = movieDataService.getMovies(sortBy, loadApiLanguage, BuildConfig.API_KEY);
-        call.enqueue(new Callback<MoviesResponse>() {
+        movieListActivityViewModel.getAllMovies(sortBy).observe(this, new Observer<List<Movie>>() {
             @Override
-            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-                if (response.body() != null) {
+            public void onChanged(List<Movie> moviesFromLiveData) {
+                movieList.clear();
+                movieList.addAll(moviesFromLiveData);
+                movieListAdapter.notifyDataSetChanged();
 
-                    List<Movie> movies = response.body().getMovies();
-                    MovieListAdapter moviesAdapter = new MovieListAdapter(getApplicationContext(), movies);
-                    binding.rvMovies.setAdapter(moviesAdapter);
-                    ViewCompat.setNestedScrollingEnabled(binding.rvMovies, false);
-                    int numberOfColumns = AdaptiveGridLayout.calculateNoOfColumns(getApplicationContext());
-                    binding.rvMovies.setLayoutManager(new GridLayoutManager(getApplicationContext(), numberOfColumns));
-                    binding.rvMovies.setHasFixedSize(true);
-                    moviesAdapter.notifyDataSetChanged();
-
-                    if (movies != null) {
-                        if (movies.size() > 0){
-                            progressBarStatus(HIDE);
-                        } else {
-                            progressBarStatus(HIDE);
-                            noResultsWarning(SHOW);
-                        }
-                    }
+                if (movieList.size() > 0) {
+                    progressBarStatus(HIDE);
+                    noResultsWarning(HIDE);
+                    connectionWarning(HIDE);
                 }
-            }
 
-            @Override
-            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                for(Movie movie:  movieList) {
+                    Log.d(">>> getPopularMovies()", " Movie Name: " + movie.getOriginalTitle());
+                }
             }
         });
 
     }
-
-    // TODO: Helpers methods and preferences
 
     private void setupSharedPreferences() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -200,21 +213,6 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
         toast.show();
     }
 
-    private void checkConnectionAndLoadContent() {
-        // Check internet connection before start the loader
-        if (!NetworkUtils.isDeviceConnected(this)) {
-            // If device is not connected show connections warnings on the screen.
-            progressBarStatus(HIDE);
-            noResultsWarning(HIDE);
-            connectionWarning(SHOW);
-        } else {
-            connectionWarning(HIDE);
-            noResultsWarning(HIDE);
-            progressBarStatus(SHOW);
-            getPopularMovies();
-        }
-    }
-
     @SuppressWarnings("deprecation")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -231,7 +229,7 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
                 isDoingSearch = true;
                 movieList.clear();
                 queryTerm = query;
-                getPopularMovies();
+//                getPopularMovies();
                 // Updates the search flag back to false.
                 isDoingSearch = false;
                 return true;
@@ -291,9 +289,21 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
         super.onStart();
         Log.d(LOG_TAG, ">>>>> onStart called!");
         if (NetworkUtils.isDeviceConnected(this)) {
-//            connectionWarning(HIDE);
+            connectionWarning(HIDE);
         } else {
-//            connectionWarning(SHOW);
+            connectionWarning(SHOW);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, ">>>>> onResume called!");
+        // Check internet connection when activity is resumed.
+        if (NetworkUtils.isDeviceConnected(this)) {
+            connectionWarning(HIDE);
+        } else {
+            connectionWarning(SHOW);
         }
     }
 
@@ -310,27 +320,15 @@ public class MovieListActivity extends AppCompatActivity implements SharedPrefer
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d(LOG_TAG, ">>>>> onResume called!");
-        // Check internet connection when activity is resumed.
-        if (NetworkUtils.isDeviceConnected(this)) {
-//            connectionWarning(HIDE);
-        } else {
-//            connectionWarning(SHOW);
-        }
-    }
-
-    @Override
     protected void onRestart() {
         super.onRestart();
         Log.d(LOG_TAG, ">>>>> onRestart called!");
         // Check internet connection when activity is resumed.
         if (NetworkUtils.isDeviceConnected(this)) {
-//            connectionWarning(HIDE);
-//            noResultsWarning(HIDE);
+            connectionWarning(HIDE);
+            noResultsWarning(HIDE);
         } else {
-//            connectionWarning(SHOW);
+            connectionWarning(SHOW);
         }
     }
 

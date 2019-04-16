@@ -1,15 +1,16 @@
 
 package com.udacity.popularmovies.moviedetails.models;
 
-import java.util.List;
-
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class MovieDetailsResponse extends BaseObservable implements Parcelable {
 
@@ -36,7 +37,7 @@ public class MovieDetailsResponse extends BaseObservable implements Parcelable {
     @SerializedName("genres")
     @Expose
     @Bindable
-    private List<Genre> genres = null;
+    private List<Genre> genres;
 
     @SerializedName("homepage")
     @Expose
@@ -80,12 +81,12 @@ public class MovieDetailsResponse extends BaseObservable implements Parcelable {
     @SerializedName("production_companies")
     @Expose
     @Bindable
-    private List<ProductionCompany> productionCompanies = null;
+    private List<ProductionCompany> productionCompanies;
 
     @SerializedName("production_countries")
     @Expose
     @Bindable
-    private List<ProductionCountry> productionCountries = null;
+    private List<ProductionCountry> productionCountries;
 
     @SerializedName("release_date")
     @Expose
@@ -105,7 +106,7 @@ public class MovieDetailsResponse extends BaseObservable implements Parcelable {
     @SerializedName("spoken_languages")
     @Expose
     @Bindable
-    private List<SpokenLanguage> spokenLanguages = null;
+    private List<SpokenLanguage> spokenLanguages;
 
     @SerializedName("status")
     @Expose

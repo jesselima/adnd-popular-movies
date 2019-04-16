@@ -1,57 +1,99 @@
 
 package com.udacity.popularmovies.moviesfeed.models;
 
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.ImageView;
+
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
+import androidx.databinding.BindingAdapter;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.squareup.picasso.Picasso;
+import com.udacity.popularmovies.R;
+import com.udacity.popularmovies.config.ApiConfig;
 
-public class Movie implements Parcelable {
+import java.util.List;
+
+public class Movie extends BaseObservable implements Parcelable {
 
     @SerializedName("vote_count")
     @Expose
     private Integer voteCount;
+
     @SerializedName("id")
     @Expose
     private Integer id;
+
     @SerializedName("video")
     @Expose
     private Boolean video;
+
     @SerializedName("vote_average")
     @Expose
     private Double voteAverage;
+
     @SerializedName("title")
     @Expose
     private String title;
+
     @SerializedName("popularity")
     @Expose
     private Double popularity;
+
     @SerializedName("poster_path")
     @Expose
     private String posterPath;
-    @SerializedName("original_language")
-    @Expose
-    private String originalLanguage;
-    @SerializedName("original_title")
-    @Expose
-    private String originalTitle;
-    @SerializedName("genre_ids")
-    @Expose
-    private List<Integer> genreIds = null;
+    @BindingAdapter({ "posterPath"})
+    public static void loadPosterPathImage(ImageView imageViewMoviePoster, String posterPathID) {
+        Picasso.get()
+                .load(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W342 + posterPathID)
+                .placeholder(R.drawable.poster_image_place_holder)
+                .fit().centerInside()
+                .error(R.drawable.poster_image_place_holder)
+                .into(imageViewMoviePoster);
+    }
+
     @SerializedName("backdrop_path")
     @Expose
     private String backdropPath;
+    @BindingAdapter({ "backdropPath"})
+    public static void loadBackdropImage(ImageView imageViewMoviePoster, String backDropID) {
+        Picasso.get()
+                .load(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_BACKDROP_W780 + backDropID)
+                .placeholder(R.drawable.backdrop_image_place_holder)
+                .fit().centerInside()
+                .error(R.drawable.poster_image_place_holder)
+                .into(imageViewMoviePoster);
+    }
+
+    @SerializedName("original_language")
+    @Expose
+    private String originalLanguage;
+
+    @SerializedName("original_title")
+    @Expose
+    private String originalTitle;
+
+    @SerializedName("genre_ids")
+    @Expose
+    private List<Integer> genreIds;
+
     @SerializedName("adult")
     @Expose
     private Boolean adult;
+
     @SerializedName("overview")
     @Expose
     private String overview;
+
     @SerializedName("release_date")
     @Expose
     private String releaseDate;
+
+
     public final static Parcelable.Creator<Movie> CREATOR = new Creator<Movie>() {
 
         @SuppressWarnings({
@@ -65,8 +107,7 @@ public class Movie implements Parcelable {
             return (new Movie[size]);
         }
 
-    }
-    ;
+    };
 
     protected Movie(Parcel in) {
         this.voteCount = ((Integer) in.readValue((Integer.class.getClassLoader())));
@@ -88,6 +129,7 @@ public class Movie implements Parcelable {
     public Movie() {
     }
 
+    @Bindable
     public Integer getVoteCount() {
         return voteCount;
     }
@@ -96,6 +138,7 @@ public class Movie implements Parcelable {
         this.voteCount = voteCount;
     }
 
+    @Bindable
     public Integer getId() {
         return id;
     }
@@ -104,6 +147,7 @@ public class Movie implements Parcelable {
         this.id = id;
     }
 
+    @Bindable
     public Boolean getVideo() {
         return video;
     }
@@ -112,6 +156,7 @@ public class Movie implements Parcelable {
         this.video = video;
     }
 
+    @Bindable
     public Double getVoteAverage() {
         return voteAverage;
     }
@@ -120,6 +165,7 @@ public class Movie implements Parcelable {
         this.voteAverage = voteAverage;
     }
 
+    @Bindable
     public String getTitle() {
         return title;
     }
@@ -128,6 +174,7 @@ public class Movie implements Parcelable {
         this.title = title;
     }
 
+    @Bindable
     public Double getPopularity() {
         return popularity;
     }
@@ -136,6 +183,7 @@ public class Movie implements Parcelable {
         this.popularity = popularity;
     }
 
+    @Bindable
     public String getPosterPath() {
         return posterPath;
     }
@@ -144,6 +192,7 @@ public class Movie implements Parcelable {
         this.posterPath = posterPath;
     }
 
+    @Bindable
     public String getOriginalLanguage() {
         return originalLanguage;
     }
@@ -152,6 +201,7 @@ public class Movie implements Parcelable {
         this.originalLanguage = originalLanguage;
     }
 
+    @Bindable
     public String getOriginalTitle() {
         return originalTitle;
     }
@@ -160,6 +210,7 @@ public class Movie implements Parcelable {
         this.originalTitle = originalTitle;
     }
 
+    @Bindable
     public List<Integer> getGenreIds() {
         return genreIds;
     }
@@ -168,6 +219,7 @@ public class Movie implements Parcelable {
         this.genreIds = genreIds;
     }
 
+    @Bindable
     public String getBackdropPath() {
         return backdropPath;
     }
@@ -176,6 +228,7 @@ public class Movie implements Parcelable {
         this.backdropPath = backdropPath;
     }
 
+    @Bindable
     public Boolean getAdult() {
         return adult;
     }
@@ -184,6 +237,7 @@ public class Movie implements Parcelable {
         this.adult = adult;
     }
 
+    @Bindable
     public String getOverview() {
         return overview;
     }
@@ -192,6 +246,7 @@ public class Movie implements Parcelable {
         this.overview = overview;
     }
 
+    @Bindable
     public String getReleaseDate() {
         return releaseDate;
     }

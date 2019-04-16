@@ -1,12 +1,13 @@
 
 package com.udacity.popularmovies.moviesfeed.models;
 
-import java.util.List;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class MoviesResponse implements Parcelable {
 
@@ -24,7 +25,7 @@ public class MoviesResponse implements Parcelable {
 
     @SerializedName("results")
     @Expose
-    private List<Movie> movies = null;
+    private List<Movie> movies;
 
 
     public final static Parcelable.Creator<MoviesResponse> CREATOR = new Creator<MoviesResponse>() {

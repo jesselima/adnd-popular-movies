@@ -5,19 +5,17 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.udacity.popularmovies.R;
-import com.udacity.popularmovies.config.ApiConfig;
+import com.udacity.popularmovies.databinding.ItemListMovieBinding;
 import com.udacity.popularmovies.moviedetails.view.MovieDetailsActivity;
 import com.udacity.popularmovies.moviesfeed.models.Movie;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * An {@link MovieListAdapter} knows how to create a list item layout for each movie item
@@ -32,8 +30,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     @SuppressWarnings("unused")
     private static final String LOG_TAG = MovieListAdapter.class.getSimpleName();
 
-    private final List<Movie> movieList;
-    private final Context mContext;
+    private List<Movie> movieList;
+    private Context context;
 
     /**
      * Constructs a new {@link MovieListAdapter}.
@@ -43,7 +41,7 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
      */
     public MovieListAdapter(Context context, List<Movie> movieList) {
        this.movieList = movieList;
-       this.mContext = context;
+       this.context = context;
     }
 
     /**
@@ -57,8 +55,14 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
     @NonNull
     @Override
     public MovieViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_list_movie, viewGroup, false);
-        return new MovieViewHolder(view);
+
+        ItemListMovieBinding itemListMovieBinding = DataBindingUtil.inflate(LayoutInflater.from(
+                        viewGroup.getContext()),
+                        R.layout.item_list_movie,
+                        viewGroup,
+                        false);
+
+        return new MovieViewHolder(itemListMovieBinding);
     }
 
     /**
@@ -71,46 +75,8 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
      */
     @Override
     public void onBindViewHolder(@NonNull MovieListAdapter.MovieViewHolder holder, int position) {
-
-        final int adapterPosition = holder.getAdapterPosition();
-
-        // Updates the UI for the given adapter position
-        holder.textViewOriginalTitle.setText(movieList.get(adapterPosition).getOriginalTitle());
-        holder.textViewReleaseDate.setText(movieList.get(adapterPosition).getReleaseDate());
-        holder.textViewVoteAverage.setText(String.valueOf(movieList.get(adapterPosition).getVoteAverage()));
-
-        String posterPathId = movieList.get(adapterPosition).getPosterPath();
-
-        // Load the movie poster using Picasso library to make asynchronous http request.
-        // Puts a placeholder on the ImageView while the image from the server is not complete load
-        // String releaseDate = DateUtils.simpleDateFormat(currentMovieResult.optString(JsonKey.RELEASE_DATE));
-        Picasso.get()
-            .load(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W342 + posterPathId)
-            .placeholder(R.drawable.poster_image_place_holder)
-            .fit().centerInside()
-            .error(R.drawable.poster_image_place_holder)
-            .into(holder.imageViewMoviePoster);
-
-        // Makes the each movie poster clickable. When user clicks on the poster the MovieDetailsActivity is called.
-        // The movie Id and Title is sent to MovieDetailsActivity.
-        // The ID will be used to make a request od movie details. The title will be used to set the title on the screen on the MovieDetailsActivity launch.
-        holder.imageViewMoviePoster.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            int    id      =  movieList.get(adapterPosition).getId();
-            String title   =  movieList.get(adapterPosition).getOriginalTitle();
-
-            Intent intent = new Intent(mContext, MovieDetailsActivity.class);
-                intent.putExtra(ApiConfig.JsonKey.ID, id);
-                intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, title);
-
-                // Allows you to make a activity call from outside of an Activity context
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            mContext.startActivity(intent);
-            }
-        });
+        Movie movie = movieList.get(position);
+        holder.itemListMovieBinding.setMovie(movie);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -124,19 +90,40 @@ public class MovieListAdapter extends RecyclerView.Adapter<MovieListAdapter.Movi
      * RecyclerView.Adapter implementations should subclass ViewHolder and add fields for caching potentially expensive findViewById(int) results.
      * All UI references in the item list does not require recall all IDs over and over again while the view is recycled.
      */
-    public static class MovieViewHolder extends RecyclerView.ViewHolder {
+    public class MovieViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView imageViewMoviePoster;
-        private final TextView textViewOriginalTitle;
-        private final TextView textViewReleaseDate;
-        private final TextView textViewVoteAverage;
+        private ItemListMovieBinding itemListMovieBinding;
 
-        private MovieViewHolder(View itemView) {
-            super(itemView);
-            imageViewMoviePoster = itemView.findViewById(R.id.iv_movie_poster);
-            textViewOriginalTitle = itemView.findViewById(R.id.tv_movie_original_title);
-            textViewReleaseDate = itemView.findViewById(R.id.tv_release_date);
-            textViewVoteAverage = itemView.findViewById(R.id.tv_vote_average);
+        private MovieViewHolder(@NonNull ItemListMovieBinding mItemListMovieBinding) {
+            super(mItemListMovieBinding.getRoot());
+
+            this.itemListMovieBinding = mItemListMovieBinding;
+
+            itemListMovieBinding.ivMoviePoster.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToDetailsActivities();
+                }
+            });
+
+            itemListMovieBinding.cardMovieItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goToDetailsActivities();
+                }
+            });
+        }
+
+        private void goToDetailsActivities() {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                Movie movie = movieList.get(position);
+                Intent intent = new Intent(context, MovieDetailsActivity.class);
+                    intent.putExtra("movieId",      movie.getId());
+                    intent.putExtra("movieTitle",   movie.getTitle());
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
         }
     }
 }

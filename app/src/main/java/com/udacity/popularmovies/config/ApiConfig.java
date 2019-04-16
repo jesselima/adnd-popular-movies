@@ -211,6 +211,7 @@ public final class ApiConfig {
 
     public static final class JsonKey {
 
+        public static final String MOVIE            = "movie";
         public static final String RESULTS          = "results";
         public static final String VOTE_COUNT       = "vote_count";
         public static final String ID               = "id";

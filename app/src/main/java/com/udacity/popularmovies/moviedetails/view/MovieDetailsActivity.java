@@ -15,14 +15,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.databinding.DataBindingUtil;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.squareup.picasso.Picasso;
 import com.udacity.popularmovies.BuildConfig;
 import com.udacity.popularmovies.R;
 import com.udacity.popularmovies.config.ApiConfig;
 import com.udacity.popularmovies.databinding.ActivityMovieDetailsBinding;
 import com.udacity.popularmovies.localdatabase.BookmarkContract.BookmarkEntry;
-import com.udacity.popularmovies.moviedetails.models.Genre;
 import com.udacity.popularmovies.moviedetails.models.MovieDetailsResponse;
 import com.udacity.popularmovies.moviedetails.models.ProductionCompany;
 import com.udacity.popularmovies.moviedetails.models.Review;
@@ -30,7 +32,6 @@ import com.udacity.popularmovies.moviedetails.models.Video;
 import com.udacity.popularmovies.moviesfeed.models.Movie;
 import com.udacity.popularmovies.service.MovieDataService;
 import com.udacity.popularmovies.service.RetrofitInstance;
-import com.udacity.popularmovies.shared.DateUtils;
 import com.udacity.popularmovies.shared.LanguageUtils;
 import com.udacity.popularmovies.shared.NetworkUtils;
 import com.udacity.popularmovies.shared.WebViewActivity;
@@ -40,11 +41,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.ViewCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,6 +60,7 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private String loadApiLanguage = ApiConfig.UrlParamValue.LANGUAGE_DEFAULT;
     private int page = 1;
 
+    private Movie movie;
     private MovieDetailsResponse movieDetailsResponse;
     private int movieId;
     private String movieHomepageUrl;
@@ -95,7 +92,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         Log.d(LOG_TAG,"===>>> onCreate called");
 
         activityMovieDetailsBinding = DataBindingUtil.setContentView(this, R.layout.activity_movie_details);
-        // Get the movie ID and Title from the clicked item on the RecyclerView item.
 
         getIncomingIntent();
         progressBarStatus(SHOW);
@@ -108,99 +104,37 @@ public class MovieDetailsActivity extends AppCompatActivity {
         // Setup CollapsingToolbar with movie name
         activityMovieDetailsBinding.collapsingToolbar.setTitle(movieOriginalTitle);
 
-        // Button inside Overview card that send user to the movie homepage in the browser if URL is not null
-        activityMovieDetailsBinding.btHomePage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                            if (movieDetailsResponse.getHomepage().equals("null")) {
-                    doToast(getString(R.string.warning_homepage_not_available));
-                } else if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
-                    doToast(getString(R.string.warning_you_are_not_connected));
-                } else {
-                    openWebPage(movieHomepageUrl);
-                }
-            }
-        });
-
-        activityMovieDetailsBinding.buttonIsWatched.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            doToast("Watched ok");
-
-
-//                if (!isBookmarkOnDatabase && !isMovieWatched) {
-//                    new SaveBookmarkAsyncTask().execute();
-//                }
-//                new UpdateBookmarkAsyncTask().execute(movieDetailsResponse.getId());
-            }
-        });
-
-        activityMovieDetailsBinding.buttonIsSaved.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doToast("Saved ok");
-//                if (isBookmarkOnDatabase) {
-//                    // if the Movie is already bookmarked, remove it from the database and update icon status to unsaved icon
-//                    new DeleteBookmarkAsyncTask().execute(movieDetailsResponse.getId());
-//                } else {
-//                    new SaveBookmarkAsyncTask().execute();
-//                }
-            }
-        });
-
-
-        // MaterialButton to share movie homepage to other app available on device.
-        activityMovieDetailsBinding.buttonShare.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                shareWebUrl();
-            }
-        });
-
         LanguageUtils.checkSystemLanguage(loadApiLanguage);
         // Hide the Tagline TextView due to API to provide tagline to english language only or the
         // movie occasionally may have a empty tagline value. Then the space will be shown.
         if (loadApiLanguage.equals("")) activityMovieDetailsBinding.tvTagline.setVisibility(View.GONE);
         else activityMovieDetailsBinding.tvTagline.setVisibility(View.VISIBLE);
 
-
-        // RecyclerView for the list of companies
-        companyListAdapter = new CompanyListAdapter(this, productionCompaniesList);
-        activityMovieDetailsBinding.rvCompanies.setAdapter(companyListAdapter);
-        activityMovieDetailsBinding.rvCompanies.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        activityMovieDetailsBinding.rvCompanies.setHasFixedSize(true);
-        // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
-        // https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
-        ViewCompat.setNestedScrollingEnabled(activityMovieDetailsBinding.rvCompanies, false);
-
-        // RecyclerView for the list of movie videos
-        movieVideosAdapter = new MovieVideosAdapter(this, movieVideosList);
-        activityMovieDetailsBinding.rvMoviesVideosDetails.setAdapter(movieVideosAdapter);
-        activityMovieDetailsBinding.rvMoviesVideosDetails.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        activityMovieDetailsBinding.rvMoviesVideosDetails.setHasFixedSize(true);
-        // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
-        // Author: https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
-        ViewCompat.setNestedScrollingEnabled(activityMovieDetailsBinding.rvMoviesVideosDetails, false);
-
-        // RecyclerView references and setups
-        movieReviewsAdapter = new MovieReviewsAdapter(this, movieReviewsList);
-        activityMovieDetailsBinding.rvMoviesReviewsDetails.setAdapter(movieReviewsAdapter);
-        activityMovieDetailsBinding.rvMoviesReviewsDetails.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        activityMovieDetailsBinding.rvMoviesReviewsDetails.setHasFixedSize(true);
-        // The method ViewCompat.setNestedScrollingEnabled allows the recycler view scroll smoothly.
-        // Author: https://medium.com/@mdmasudparvez/where-to-put-this-line-viewcompat-setnestedscrollingenabled-recyclerview-false-b87ff2c7847e
-        ViewCompat.setNestedScrollingEnabled(activityMovieDetailsBinding.rvMoviesReviewsDetails, false);
     } // Close onCreate
 
+    // TODO: FIX IT!!!
+//    @BindingAdapter({"bind:genres"})
+//    public static void setGenres(LinearLayout linearLayout, MovieDetailsResponse movieDetailsResponse) {
+//        for (Genre genre : movieDetailsResponse.getGenres()) {
+//            TextView textView = new TextView(linearLayout.getContext());
+//            textView.setText(genre.getName());
+//            textView.append(" ");
+//            linearLayout.addView(textView);
+//        }
+//    }
 
     // It's called inside onCreate method and get the movie ID and Title sent from MovieListActivity.
     private void getIncomingIntent() {
-        if (getIntent().hasExtra(ApiConfig.JsonKey.ID) && getIntent().hasExtra(ApiConfig.JsonKey.ORIGINAL_TITLE)) {
+        Intent intent = getIntent();
+
+        if (intent.hasExtra("movieId")) {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
-                movieId = bundle.getInt(ApiConfig.JsonKey.ID);
-                movieOriginalTitle = bundle.getString(ApiConfig.JsonKey.ORIGINAL_TITLE);
+                movieId = bundle.getInt("movieId");
+                movieOriginalTitle = bundle.getString("movieTitle");
+                activityMovieDetailsBinding.tvTitle.setText(movieOriginalTitle);
+
+                Log.d(LOG_TAG, ">>> getIncomingIntent - Movie Name: " + movieOriginalTitle + " - Id: " + movieId);
             }
         }
     }
@@ -209,17 +143,15 @@ public class MovieDetailsActivity extends AppCompatActivity {
     private void getMovieDetails() {
 
         MovieDataService movieDataService = RetrofitInstance.getService();
-
         Call<MovieDetailsResponse> call = movieDataService.getMovieDetails(movieId, loadApiLanguage, BuildConfig.API_KEY);
         call.enqueue(new Callback<MovieDetailsResponse>() {
             @Override
             public void onResponse(Call<MovieDetailsResponse> call, Response<MovieDetailsResponse> response) {
                 if (response.body() != null) {
-                    // TODO: create an alerte for when data is not available.
                     movieDetailsResponse = response.body();
                     if (movieDetailsResponse != null) {
                             progressBarStatus(HIDE);
-                            updateUI(movieDetailsResponse);
+                            activityMovieDetailsBinding.setMovieDetailsResponse(movieDetailsResponse);
                         } else {
                             progressBarStatus(HIDE);
                             warningDetails(SHOW);
@@ -244,12 +176,11 @@ public class MovieDetailsActivity extends AppCompatActivity {
         }
 
         private void openWebPage(String urlHomepage) {
-        Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
-            intent.putExtra(ApiConfig.JsonKey.HOMEPAGE, urlHomepage);
-            intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, movieDetailsResponse.getOriginalTitle());
-        startActivity(intent);
+            Intent intent = new Intent(getApplicationContext(), WebViewActivity.class);
+                intent.putExtra(ApiConfig.JsonKey.HOMEPAGE, urlHomepage);
+                intent.putExtra(ApiConfig.JsonKey.ORIGINAL_TITLE, movieDetailsResponse.getOriginalTitle());
+            startActivity(intent);
         }
-
     }
 
     private void initViews() {
@@ -257,80 +188,6 @@ public class MovieDetailsActivity extends AppCompatActivity {
         // TODO: Review the use of this method
 
     }
-
-    /* === UPDATE UI === */
-
-    /**
-     * When called receives the movieDetailsResponse object with movieDetailsResponse details and updates the UI.
-     *
-     * @param movieDetailsResponse is the {@link Movie} object with movieDetailsResponse details.
-     */
-    private void updateUI(MovieDetailsResponse movieDetailsResponse) {
-
-        Picasso.get()
-                .load(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W500 + movieDetailsResponse.getPosterPath())
-                .placeholder(R.drawable.poster_image_place_holder)
-                .fit().centerInside()
-                .error(R.drawable.poster_image_place_holder)
-                .into(activityMovieDetailsBinding.ivMoviePoster);
-
-        Picasso.get()
-                .load(ApiConfig.getMovieBaseImageUrl() + ApiConfig.UrlParamKey.IMAGE_POSTER_W500 + movieDetailsResponse.getBackdropPath())
-                .placeholder(R.drawable.backdrop_image_place_holder)
-                .fit().centerInside()
-                .error(R.drawable.backdrop_image_place_holder)
-                .into(activityMovieDetailsBinding.ivMovieBackdrop);
-
-        activityMovieDetailsBinding.tvOverview.setText(movieDetailsResponse.getOverview());
-        activityMovieDetailsBinding.tvVoteAverage.setText(String.valueOf(movieDetailsResponse.getVoteAverage()));
-        activityMovieDetailsBinding.tvRuntime.setText(String.valueOf(movieDetailsResponse.getRuntime() + getString(R.string.min)));
-
-        String formatedDate = DateUtils.simpleDateFormat(movieDetailsResponse.getReleaseDate());
-        activityMovieDetailsBinding.tvReleaseDate.setText(formatedDate);
-
-        activityMovieDetailsBinding.tvTitle.setText(movieDetailsResponse.getTitle());
-        activityMovieDetailsBinding.tvOriginalLanguage.setText(movieDetailsResponse.getOriginalLanguage());
-
-        String taglineWithQuotes = movieDetailsResponse.getTagline();
-        activityMovieDetailsBinding.tvTagline.setText(taglineWithQuotes);
-
-        activityMovieDetailsBinding.tvPopularity.setText(String.valueOf(movieDetailsResponse.getPopularity()));
-        activityMovieDetailsBinding.tvVoteCount.setText(String.valueOf(movieDetailsResponse.getVoteCount()));
-
-        if (movieDetailsResponse.getBudget() == 0) activityMovieDetailsBinding.tvBuget.setText(R.string.unavailable);
-        else activityMovieDetailsBinding.tvBuget.setText(formatNumber(movieDetailsResponse.getBudget()));
-
-        if (movieDetailsResponse.getRevenue() == 0) activityMovieDetailsBinding.tvRevenue.setText(R.string.unavailable);
-        else activityMovieDetailsBinding.tvRevenue.setText(formatNumber(movieDetailsResponse.getRevenue()));
-
-        for (Genre genre : movieDetailsResponse.getGenres()) {
-            activityMovieDetailsBinding.tvGenres.append(genre.getName() + " ");
-        }
-
-        movieVideosList.clear();
-        movieVideosList.addAll(movieDetailsResponse.getVideos().getVideos());
-        movieVideosAdapter.notifyDataSetChanged();
-
-        movieReviewsList.clear();
-        movieReviewsList.addAll(movieDetailsResponse.getReviews().getReviews());
-        movieReviewsAdapter.notifyDataSetChanged();
-
-        productionCompaniesList.clear();
-        productionCompaniesList.addAll(movieDetailsResponse.getProductionCompanies());
-        companyListAdapter.notifyDataSetChanged();
-
-
-        // TODO: Just logging \o/
-//        for (Review review : reviewsList) {
-//            Log.d(LOG_TAG, ">>>> Review Author and Content:  " + review.getAuthor() + " : " + review.getContent());
-//        }
-//        for (ProductionCompany productionCompany : productionCompanyList) {
-//            Log.d(LOG_TAG, ">>>> Prodution Company Name:  " + productionCompany.getName());
-//        }
-
-        progressBarStatus(INVISIBLE);
-
-    }// Closes updateUI method
 
 
     /* === SQLITE DATABASE MANAGEMENT METHODS === */

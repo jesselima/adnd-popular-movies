@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Popular Movies</string>
+    <string name="app_name">Movies</string>
     <string name="tmdb_notice">This product uses data from TMDb API (The Movie Database API) but is not endorsed or certified by TMDb.</string>
     <string name="tmdb_official_link">https://www.themoviedb.org/</string>
     <string name="tmdb_branding_reference">The Movie Database</string>
@@ -99,4 +99,6 @@
     <string name="no_bookmarks_to_show">No bookmarks to show</string>
     <string name="no_more_bookmarks_to_show">No more bookmarks to show</string>
     <string name="no_home_page_available">This movie has no homepage available.</string>
+
+    <string name="appbar_scrolling_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string>
 </resources>
