@@ -1,7 +1,8 @@
 package dev.jesselima.jmovies.loaders;
 
 import android.content.Context;
-import android.support.v4.content.AsyncTaskLoader;
+
+import androidx.loader.content.AsyncTaskLoader;
 
 import dev.jesselima.jmovies.models.Movie;
 import dev.jesselima.jmovies.utils.QueryUtilsMovieDetails;

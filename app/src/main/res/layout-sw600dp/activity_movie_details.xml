@@ -4,19 +4,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
             android:layout_height="480dp"
             android:fitsSystemWindows="true"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <android.support.design.widget.CollapsingToolbarLayout
+            <com.google.android.material.appbar.CollapsingToolbarLayout
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -43,18 +43,18 @@
                     android:layout_gravity="center_horizontal|bottom"
                     android:background="@drawable/backdrop_image_overlay"/>
 
-                <android.support.v7.widget.Toolbar
+                <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?android:attr/actionBarSize"
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-            </android.support.design.widget.CollapsingToolbarLayout>
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/nested_scroll_movie_details"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -284,7 +284,7 @@
                         style="@style/textInfoAccent"
                         tools:text="Avventura | Fantascienza | Fantasy | Azione"/>
 
-                    <android.support.v7.widget.CardView
+                    <androidx.cardview.widget.CardView
                         style="@style/CardViewStyle">
 
                         <LinearLayout
@@ -320,7 +320,7 @@
                                 android:textSize="16sp"/>
 
                         </LinearLayout>
-                    </android.support.v7.widget.CardView>
+                    </androidx.cardview.widget.CardView>
                 </LinearLayout>
                 <!-- SECTION INFO END-->
 
@@ -346,7 +346,7 @@
                         style="@style/textNoInfoWarning"
                         android:text="@string/warning_no_videos"/>
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_movies_videos_details"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -376,7 +376,7 @@
                         style="@style/textNoInfoWarning"
                         android:text="@string/warning_no_reviews"/>
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_movies_reviews_details"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -406,7 +406,7 @@
                         style="@style/textNoInfoWarning"
                         android:text="@string/warning_no_companies"/>
 
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rv_companies"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -458,11 +458,11 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
         <!-- Nested Scroll Only Child End-->
 
         <!-- FLOATING BUTTONS START -->
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/float_share_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -474,7 +474,7 @@
             app:layout_anchor="@id/appbar"
             app:layout_anchorGravity="bottom|right|end" />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/float_save_bookmark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -485,7 +485,7 @@
             app:layout_anchor="@id/appbar"
             app:layout_anchorGravity="bottom|right|end" />
 
-        <android.support.design.widget.FloatingActionButton
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/float_is_watched"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -497,6 +497,6 @@
             app:layout_anchorGravity="bottom|right|end" />
         <!-- FLOATING BUTTONS END -->
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </layout>

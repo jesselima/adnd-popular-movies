@@ -1,14 +1,12 @@
 package dev.jesselima.jmovies.activities;
 
 import android.os.Bundle;
-import android.support.v7.preference.PreferenceFragmentCompat;
+
+import androidx.preference.PreferenceFragmentCompat;
 
 import dev.jesselima.jmovies.R;
 
-/**
- * Created by jesse on 25/09/18.
- * This is a part of the project adnd-popular-movies.
- */
+
 public class SettingsFragment extends PreferenceFragmentCompat {
 
     @Override

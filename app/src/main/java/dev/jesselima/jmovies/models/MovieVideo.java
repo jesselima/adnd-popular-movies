@@ -1,9 +1,5 @@
 package dev.jesselima.jmovies.models;
 
-/**
- * Created by jesse on 31/08/18.
- * This is a part of the project adnd-popular-movies.
- */
 public class MovieVideo {
     private final String videoKey;
     private final String videoName;

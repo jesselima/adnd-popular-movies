@@ -57,7 +57,7 @@
             android:label="@string/settings"
             android:parentActivityName="dev.jesselima.jmovies.activities.MovieListActivity">
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
+                android:name="androidx.PARENT_ACTIVITY"
                 android:value="dev.jesselima.jmovies.activities.MovieListActivity" />
         </activity>
 

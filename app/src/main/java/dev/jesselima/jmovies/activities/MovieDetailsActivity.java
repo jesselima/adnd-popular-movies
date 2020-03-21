@@ -3,17 +3,11 @@ package dev.jesselima.jmovies.activities;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -21,7 +15,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.ViewCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import dev.jesselima.jmovies.BuildConfig;
 import dev.jesselima.jmovies.R;
 import dev.jesselima.jmovies.adapters.CompanyListAdapter;
@@ -41,14 +51,8 @@ import dev.jesselima.jmovies.utils.DateUtils;
 import dev.jesselima.jmovies.utils.LanguageUtils;
 import dev.jesselima.jmovies.utils.NetworkUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
-@SuppressWarnings("ALL")
-public class MovieDetailsActivity extends AppCompatActivity implements LoaderCallbacks {
+public class MovieDetailsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks {
 
     private static final String API_KEY = BuildConfig.API_KEY;
 
@@ -379,6 +383,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 .fit().centerInside()
                 .error(R.drawable.poster_image_place_holder)
                 .into(binding.ivMoviePoster);
+//        Glide.with(this)
+//                .load(movie.getMoviePosterPath())
+//                .placeholder(R.drawable.poster_image_place_holder)
+//                .centerInside()
+//                .error(R.drawable.poster_image_place_holder)
+//                .into(binding.ivMoviePoster);
 
         Picasso.get()
                 .load(movie.getMovieBackdropPath())
@@ -386,6 +396,12 @@ public class MovieDetailsActivity extends AppCompatActivity implements LoaderCal
                 .fit().centerInside()
                 .error(R.drawable.backdrop_image_place_holder)
                 .into(binding.ivMovieBackdrop);
+//        Glide.with(this)
+//                .load(movie.getMovieBackdropPath())
+//                .placeholder(R.drawable.backdrop_image_place_holder)
+//                .centerInside()
+//                .error(R.drawable.backdrop_image_place_holder)
+//                .into(binding.ivMovieBackdrop);
 
         binding.tvOverview.setText(movie.getMovieOverview());
         binding.tvVoteAverage.setText(String.valueOf(movie.getMovieVoteAverage()));

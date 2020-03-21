@@ -1,7 +1,8 @@
 package dev.jesselima.jmovies.loaders;
 
-import android.support.v4.content.AsyncTaskLoader;
 import android.content.Context;
+
+import androidx.loader.content.AsyncTaskLoader;
 
 import dev.jesselima.jmovies.models.Movie;
 import dev.jesselima.jmovies.utils.QueryUtilsMovieList;
@@ -12,7 +13,7 @@ import java.util.List;
  * Created by jesse on 12/06/18.
  * This is a part of the project adnd-popular-movies.
  */
-@SuppressWarnings("unused")
+
 public class MovieListLoader extends AsyncTaskLoader<List<Movie>> {
 
     /**

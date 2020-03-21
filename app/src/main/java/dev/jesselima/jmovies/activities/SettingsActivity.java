@@ -1,17 +1,15 @@
 package dev.jesselima.jmovies.activities;
 
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NavUtils;
 
 import dev.jesselima.jmovies.R;
 
-/**
- * Created by jesse on 25/09/18.
- * This is a part of the project adnd-popular-movies.
- */
+
 public class SettingsActivity extends AppCompatActivity {
 
     @Override

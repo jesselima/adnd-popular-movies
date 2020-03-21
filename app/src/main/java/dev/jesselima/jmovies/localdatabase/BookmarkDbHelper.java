@@ -13,7 +13,7 @@ import dev.jesselima.jmovies.localdatabase.BookmarkContract.BookmarkEntry;
 class BookmarkDbHelper extends SQLiteOpenHelper {
 
     // Database name
-    private static final String DATABASE_NAME = "popular_movies.db";
+    private static final String DATABASE_NAME = "jmovies.db";
     // If you change the database schema, database version must be incremented
     private static final int DATABASE_VERSION = 4;
 

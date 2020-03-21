@@ -78,4 +78,5 @@
             style="@style/DialogItemValueStyle"
             tools:text="$3,298,111.86"/>
     </LinearLayout>
+
 </LinearLayout>

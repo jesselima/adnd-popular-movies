@@ -8,8 +8,9 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import dev.jesselima.jmovies.localdatabase.BookmarkContract.BookmarkEntry;
 
@@ -59,7 +60,7 @@ public class BookmarkContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(
-            @NonNull  Uri       uri,
+            @NonNull Uri       uri,
             @Nullable String[]  projection,
             @Nullable String    selection,
             @Nullable String[]  selectionArgs,
