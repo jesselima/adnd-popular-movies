@@ -53,7 +53,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     private int numberOfBookmarksInPage;
     private int pagination = 0; // Must start from 0 and increase in 20 by 20.
     private int pageCurrent = 1; // Activity will load the page 1 by default
-    private static final int pageSize = 20;
+    private static final int pageSize = 1000;
 
     private ActivityBookmarkBinding binding;
 
@@ -104,38 +104,6 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), MovieListActivity.class);
                 startActivity(intent);
-            }
-        });
-
-        binding.floatLoadMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (numberOfBookmarksInPage == 0) {
-                    doToast(getString(R.string.no_bookmarks_to_show));
-                }else if (numberOfBookmarksInPage < 20) {
-                    doToast(getString(R.string.no_more_bookmarks_to_show));
-                }else {
-                    pagination = pageCurrent * pageSize;
-                    pageCurrent++;
-                    restartLoaderBookmarks();
-                }
-            }
-        });
-
-        binding.floatLoadLess.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (numberOfBookmarksInPage == 0) {
-                    doToast(getString(R.string.no_bookmarks_to_show));
-                    return;
-                }
-                if (pageCurrent == 1) {
-                    doToast(getResources().getString(R.string.you_are_at_page_1));
-                } else {
-                    pagination = pagination - pageSize;
-                    pageCurrent--;
-                    restartLoaderBookmarks();
-                }
             }
         });
 
@@ -216,16 +184,19 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
             case TAB_ALL:
                 selectWatched = false;
                 selectUnwatched = false;
+                binding.progressBarCircular.setVisibility(View.VISIBLE);
                 restartLoaderBookmarks();
                 break;
             case TAB_WATCHED:
                 selectWatched = true;
                 selectUnwatched = false;
+                binding.progressBarCircular.setVisibility(View.VISIBLE);
                 restartLoaderBookmarks();
                 break;
             case TAB_UNWATCHED:
                 selectUnwatched = true;
                 selectWatched = false;
+                binding.progressBarCircular.setVisibility(View.VISIBLE);
                 restartLoaderBookmarks();
                 break;
         }
@@ -237,6 +208,8 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     @NonNull
     @Override
     public Loader<Cursor> onCreateLoader(final int id, @Nullable final Bundle loaderArgs) {
+
+        binding.progressBarCircular.setVisibility(View.VISIBLE);
 
          return new AsyncTaskLoader<Cursor>(this) {
 
@@ -261,8 +234,10 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
                                 BookmarkEntry._ID + " FROM " +
                                 BookmarkEntry.TABLE_NAME + " ORDER BY " +
                                 BookmarkEntry.COLUMN_TIMESTAMP + " ASC LIMIT " +
-                                String.valueOf(pagination) + ") LIMIT " +
-                                String.valueOf(pageSize) +  ";";
+                                pagination + ") LIMIT " +
+                                pageSize +  ";";
+
+                String DEFAULT_PAGINATION_QUERY_SAMPLE = "_id NOT IN (SELECT _id FROM movie_bookmark ORDER BY saved_date ASC LIMIT 20) LIMIT 20;";
 
                 String selection = DEFAULT_PAGINATION_QUERY;
                 String[] selectionArgs = null;
@@ -297,7 +272,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
 
                 if (cursor != null) numberOfBookmarksInPage = cursor.getCount();
 
-                String currentPageWithLabel = getResources().getString(R.string.page) + String.valueOf(pageCurrent);
+                String currentPageWithLabel = String.valueOf(numberOfBookmarksInPage + " Movies");
                 if (numberOfBookmarksInPage == 0) {
                     Toast.makeText(BookmarkActivity.this, R.string.no_bookmarks_to_show, Toast.LENGTH_SHORT).show();
                     showNoBookmarkWarning();
@@ -311,6 +286,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
     @Override
     public void onLoadFinished(@NonNull Loader<Cursor> loader, Cursor data) {
         if (data.getCount() < 1) {
+            binding.progressBarCircular.setVisibility(View.GONE);
             if (numberOfBookmarksInPage < 20) return;
             else showNoBookmarkWarning();
         } else {
@@ -445,7 +421,7 @@ public class BookmarkActivity extends AppCompatActivity implements LoaderManager
         if (toast != null) {
             toast.cancel();
         }
-        toast = Toast.makeText(this, toastThisText, Toast.LENGTH_LONG);
+        toast = Toast.makeText(this, toastThisText, Toast.LENGTH_SHORT);
         toast.show();
     }
 

@@ -22,6 +22,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import java.io.ByteArrayOutputStream;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 import dev.jesselima.jmovies.BuildConfig;
 import dev.jesselima.jmovies.R;
 import dev.jesselima.jmovies.adapters.CompanyListAdapter;
@@ -41,13 +48,7 @@ import dev.jesselima.jmovies.utils.DateUtils;
 import dev.jesselima.jmovies.utils.LanguageUtils;
 import dev.jesselima.jmovies.utils.NetworkUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
-@SuppressWarnings("ALL")
 public class MovieDetailsActivity extends AppCompatActivity implements LoaderCallbacks {
 
     private static final String API_KEY = BuildConfig.API_KEY;

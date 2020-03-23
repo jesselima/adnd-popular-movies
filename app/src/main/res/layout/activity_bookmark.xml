@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/parent"
@@ -108,31 +108,16 @@
                     android:textSize="16sp"
                     android:visibility="gone"/>
 
+                <ProgressBar
+                    android:id="@+id/progress_bar_circular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    />
+
             </RelativeLayout>
 
         </android.support.v4.widget.NestedScrollView>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/float_load_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/medium_layout_margin"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/ic_forward"
-            app:layout_anchorGravity="bottom|right|end" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/float_load_less"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|start"
-            android:layout_margin="@dimen/medium_layout_margin"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/ic_backward"
-            app:layout_anchorGravity="bottom|right|end" />
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

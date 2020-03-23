@@ -1,6 +1,7 @@
 package dev.jesselima.jmovies.activities;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
@@ -21,8 +22,12 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import dev.jesselima.jmovies.BuildConfig;
 import dev.jesselima.jmovies.R;
@@ -39,9 +44,6 @@ import dev.jesselima.jmovies.utils.BottomNavigationViewHelper;
 import dev.jesselima.jmovies.utils.LanguageUtils;
 import dev.jesselima.jmovies.utils.NetworkUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class MovieListActivity extends AppCompatActivity implements LoaderCallbacks<List<Movie>>, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String API_KEY = BuildConfig.API_KEY;
@@ -51,7 +53,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
 
     // Movie List Loader ID
     private static final int MOVIE_LOADER_ID = 100;
-    private ArrayList<Movie> movieList = new ArrayList<>();
+
 
     // Implementation for save state
     private static String MOVIE_LIST_STATE = "list_state";
@@ -65,7 +67,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     // This object is updated with a string when the user runs a search
     private String queryTerm = "";
     // Page value for pagination control
-    private int page = 1;
+    private static int currentPage = 1;
     // Sort by default value. The first list off
     private String sortBy = UrlParamValue.POPULAR;
     // Global toast object to avoid toast objects queue
@@ -74,12 +76,22 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     private static final int HIDE = View.GONE;
     private static final int SHOW = View.VISIBLE;
     // Objects ro set and control RecyclerView and the list of movie data
-    private MovieListAdapter movieListAdapter;
+
     private boolean showAdultContent;
     // Binding class object to access the objects in the layout.
     private ActivityMovieListBinding binding;
 
+    GridLayoutManager gridLayoutManager;
+    MovieListAdapter movieListAdapter;
+    ArrayList<Movie> movieList = new ArrayList<>();
+    // Flags to control on scrollListener
+//    Boolean isScrolling = false;
+//    int currentItems;
+//    int totalItems;
+//    int scrollOutItems;
 
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,7 +117,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
                         if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
                             doToast(getResources().getString(R.string.warning_check_internet_connection));
                         } else {
-                            page = 1;
+                            currentPage = 1;
                             sortBy = UrlParamValue.POPULAR;
                             restartLoader();
                         }
@@ -114,27 +126,9 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
                         if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
                             doToast(getResources().getString(R.string.warning_check_internet_connection));
                         } else {
-                            page = 1;
+                            currentPage = 1;
                             sortBy = UrlParamValue.TOP_RATED;
                             restartLoader();
-                        }
-                        break;
-                    case R.id.button_pagination_backward:
-                        if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
-                            doToast(getResources().getString(R.string.warning_check_internet_connection));
-                        } else {
-                            if (page == 1) {
-                                doToast(getResources().getString(R.string.you_are_at_page_1));
-                            }else {
-                                paginationBackward();
-                            }
-                        }
-                        break;
-                    case R.id.button_pagination_forward:
-                        if (!NetworkUtils.isDeviceConnected(getApplicationContext())) {
-                            doToast(getResources().getString(R.string.warning_check_internet_connection));
-                        } else {
-                            paginationForward();
                         }
                         break;
                     case R.id.button_bookmarks:
@@ -156,17 +150,72 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         movieListAdapter = new MovieListAdapter(this, movieList);
         binding.rvMovies.setAdapter(movieListAdapter);
         ViewCompat.setNestedScrollingEnabled(binding.rvMovies, false);
-        // Calculates the number of columns in the Grip according to screen width size.
+        // Calculates the number of columns in the grid according to screen width size.
         int numberOfColumns = AdaptiveGridLayout.calculateNoOfColumns(getApplicationContext());
-
+        gridLayoutManager = new GridLayoutManager(this, numberOfColumns);
         // Sets the adapter that provides the data and the views to represent the data in this widget.
-        binding.rvMovies.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+        binding.rvMovies.setLayoutManager(gridLayoutManager);
         // RecyclerView can perform several optimizations if it can know in advance that RecyclerView's
         // size is not affected by the adapter contents. If is set true. It will allow RecyclerView
         // to avoid invalidating the whole layout when its adapter contents change.
         // In others words, set true if adapter changes cannot affect the size of the RecyclerView.
         // Official documentation: https://developer.android.com/reference/android/support/v7/widget/RecyclerView.html#setHasFixedSize(boolean)
         binding.rvMovies.setHasFixedSize(true);
+
+//        binding.btNextPage.setOnTouchListener(new View.OnTouchListener(){
+//            @Override
+//            public boolean onTouch(View view, MotionEvent event) {
+//                if (MotionEvent.ACTION_UP == event.getAction())
+//                {
+//                    view.performClick();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        });
+
+        binding.btNextPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                paginationForward();
+            }
+        });
+
+        //binding.btPreviousPage.setFocusableInTouchMode(false);
+        binding.btPreviousPage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                paginationBackward();
+            }
+        });
+
+        // TODO: Fix it!
+        /*binding.rvMovies.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if(newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    isScrolling = true;
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                currentItems    = gridLayoutManager.getChildCount();
+                totalItems      = gridLayoutManager.getItemCount();
+                scrollOutItems  = gridLayoutManager.findFirstVisibleItemPosition();
+
+                if(isScrolling && (currentItems + scrollOutItems == totalItems)) {
+                    // Fetch more data
+                    binding.loadingIndicator.setVisibility(SHOW);
+                    isScrolling = false;
+                    paginationForward();
+                }
+            }
+        });*/
 
         /*
          * Load the list of available api languages from {@link ApiConfig} according to api documentation.
@@ -224,11 +273,11 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         connectionWarning(HIDE);
         // The validation if the user is already at page 1 is done in the switch on the
         // BottonNavigationMenu because this method should even called if the current page == 1.
-        page--;
+        currentPage--;
         movieList.clear();
         restartLoader();
         binding.rvMovies.scrollToPosition(0);
-        doToast(getResources().getString(R.string.page) + String.valueOf(page));
+        doToast(getResources().getString(R.string.page) + String.valueOf(currentPage));
     }
 
     // When clicked, restart the loader with the current page + 1. So the loader will make another
@@ -237,10 +286,10 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
         movieList.clear();
         noResultsWarning(HIDE);
         connectionWarning(HIDE);
-        page++;
+        currentPage++;
         restartLoader();
         binding.rvMovies.scrollToPosition(0);
-        doToast(String.valueOf(getString(R.string.page) + page));
+        doToast(String.valueOf(getString(R.string.page) + currentPage));
     }
 
     /* IMPLEMENTATION FOR LoaderCallbacks */
@@ -271,7 +320,7 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             uriBuilder.appendQueryParameter(UrlParamKey.API_KEY, API_KEY);
             uriBuilder.appendQueryParameter(UrlParamKey.LANGUAGE, loadApiLanguage);
             uriBuilder.appendQueryParameter(UrlParamKey.INCLUDE_ADULT, String.valueOf(showAdultContent));
-            uriBuilder.appendQueryParameter(UrlParamKey.PAGE, String.valueOf(page));
+            uriBuilder.appendQueryParameter(UrlParamKey.PAGE, String.valueOf(currentPage));
             return new MovieListLoader(this, uriBuilder.toString());
         }
     }
@@ -304,6 +353,9 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
             progressBarStatus(HIDE);
             connectionWarning(HIDE);
             noResultsWarning(HIDE);
+            binding.tvLoading.setVisibility(HIDE);
+            binding.layoutControls.setVisibility(SHOW);
+            binding.tvCurrentPage.setText(String.valueOf(currentPage));
             binding.rvMovies.setVisibility(SHOW);
             // Clear the previous list of movies to avoid memory leaks.
             movieList.clear();
@@ -411,12 +463,16 @@ public class MovieListActivity extends AppCompatActivity implements LoaderCallba
     private void noResultsWarning(int VISIBILITY) {
         binding.ivNoMoviesPlaceholder.setVisibility(VISIBILITY);
         binding.tvWarningNoMovies.setVisibility(VISIBILITY);
-        if (VISIBILITY == SHOW) progressBarStatus(HIDE);
+        if (VISIBILITY == SHOW){
+            progressBarStatus(HIDE);
+            binding.layoutControls.setVisibility(VISIBILITY);
+        }
     }
 
     private void connectionWarning(int VISIBILITY) {
         binding.tvNetworkStatus.setVisibility(VISIBILITY);
         binding.ivWarningNoConnectionList.setVisibility(VISIBILITY);
+        binding.layoutControls.setVisibility(VISIBILITY);
         if (VISIBILITY == SHOW) binding.rvMovies.setVisibility(HIDE);
         else binding.rvMovies.setVisibility(SHOW);
     }
